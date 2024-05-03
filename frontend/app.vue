@@ -1,8 +1,6 @@
 <template>
   <div>
-    <Signup />
+    <NuxtPage />
   </div>
 </template>
-<script setup lang="ts">
-import Signup from "~/pages/signup.vue";
-</script>
+<script setup lang="ts"></script>
