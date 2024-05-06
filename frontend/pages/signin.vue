@@ -19,12 +19,12 @@ const email = ref('');
 const password = ref('');
 const router = useRouter();
 
-const {$api} = useNuxtApp();
-
 const form = reactive<ILoginInput>({
   email: '',
   password: '',
 });
+
+const { $api } = useNuxtApp()
 
 const handleSubmit2 = async () => {
 
@@ -34,7 +34,7 @@ const handleSubmit2 = async () => {
       password
     };
 
-    const response = await $api.auth.login(credentials);
+    const response = await $api.get('/users/sign_in');
     console.log(response)
 // allow user access into the app
   } catch (error) {

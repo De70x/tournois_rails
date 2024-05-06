@@ -12,16 +12,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import {ref} from 'vue';
+import {useRouter} from 'vue-router';
 
 const email = ref('');
 const password = ref('');
 const router = useRouter();
 
+const {$api} = useNuxtApp();
+
 const handleSubmit = async () => {
   try {
-    const response = await $api.post('/users/sign_up', {email, password});
+    const credentials: ILoginInput = {
+      email,
+      password
+    };
+    const response = await $api.get('/users/sign_up');
     console.log('Sign-up response:', response);
     // Redirect the user to the sign-in page after successful sign-up
     router.push('/signin');
