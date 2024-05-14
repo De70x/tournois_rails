@@ -15,7 +15,6 @@ const {$api} = useNuxtApp()
 const state = reactive({
   email: undefined,
   password: undefined,
-  errors: []
 })
 
 const handleSubmit = async (event: FormSubmitEvent<User>) => {
@@ -23,7 +22,7 @@ const handleSubmit = async (event: FormSubmitEvent<User>) => {
     await $api.post(props.apiUrl, {user: event.data});
     await router.push(props.redirectUrl);
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 };
 </script>
