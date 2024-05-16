@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import {user, type User} from "~/types/User";
 import type {FormSubmitEvent} from "#ui/types";
+import {useAuthStore} from "~/store/auth_store";
 
 const props = defineProps({
   btnText: String,
   fallbackText: String,
+  linkText: String,
+  fallbackLink: {type: String, required: true},
   apiUrl: {type: String, required: true},
-  redirectUrl: {type: String, required: true},
+  redirectUrl: String
 });
 
 const router = useRouter();
 const {$api} = useNuxtApp()
+const authStore = useAuthStore()
 
 const state = reactive({
   email: undefined,
@@ -19,8 +23,11 @@ const state = reactive({
 
 const handleSubmit = async (event: FormSubmitEvent<User>) => {
   try {
-    await $api.post(props.apiUrl, {user: event.data});
-    await router.push(props.redirectUrl);
+    const response = await $api.post(props.apiUrl, {user: event.data});
+    authStore.setAuthToken(response.data.token);
+    if (props.redirectUrl) {
+      await router.push(props.redirectUrl);
+    }
   } catch (error) {
     console.error(error)
   }
@@ -44,7 +51,13 @@ const handleSubmit = async (event: FormSubmitEvent<User>) => {
       <br>
       <span>
         {{ fallbackText }}
-        <slot/>
+          <ULink
+              :to=fallbackLink
+              active-class="text-primary"
+              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+          >
+          {{ linkText }}
+        </ULink>
       </span>
     </UForm>
   </UCard>

@@ -1,40 +1,49 @@
+import axios from "axios";
+import {useAuthStore} from "~/store/auth_store";
+
 export default defineNuxtPlugin
 (() => {
-    const $fetchApi = (url: string, params: any) => {
-        return $fetch(url, {...params, baseURL: useRuntimeConfig().public.BASE_URL})
-    }
+    const authStore = useAuthStore()
+    axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
+    axios.interceptors.request.use((config) => {
+        const authToken = authStore.authToken;
+        if (authToken) {
+            config.headers.Authorization = `Bearer ${authToken}`;
+        }
+        return config;
+    })
     return {
         provide: {
             api: {
-                async get<T>(url: string, config?: any): Promise<T> {
+                async get(url: string, config?: any) {
                     try {
-                        const response = await $fetchApi(url, {method: 'GET', ...config});
-                        return response.data;
-                    } catch (error) {
+                        return await axios.get(url, config);
+                    } catch (error : any) {
+                        console.error(error.response)
                         throw new Error(error.response?.data?.message || error.message);
                     }
                 },
-                async post<T>(url: string, data: any, config?: any): Promise<T> {
+                async post(url: string, data: any, config?: any){
                     try {
-                        const response = await $fetchApi(url, {method: 'POST', body: JSON.stringify(data), ...config});
-                        return response.data;
-                    } catch (error) {
+                        return await axios.post(url, data, config);
+                    } catch (error: any) {
+                        console.error(error.response)
                         throw new Error(error.response?.data?.message || error.message);
                     }
                 },
-                async put<T>(url: string, data: any, config?: any): Promise<T> {
+                async put(url: string, data: any, config?: any) {
                     try {
-                        const response = await $fetchApi(url, {method: 'PUT', body: JSON.stringify(data), ...config});
-                        return response.data;
-                    } catch (error) {
+                        return await axios.put(url, data, config);
+                    } catch (error: any) {
+                        console.error(error.response)
                         throw new Error(error.response?.data?.message || error.message);
                     }
                 },
-                async delete<T>(url: string, config?: any): Promise<T> {
+                async delete(url: string, config?: any) {
                     try {
-                        const response = await $fetchApi(url, {method: 'DELETE', ...config});
-                        return response.data;
-                    } catch (error) {
+                        return await axios.delete(url, config);
+                    } catch (error: any) {
+                        console.error(error.response)
                         throw new Error(error.response?.data?.message || error.message);
                     }
                 },

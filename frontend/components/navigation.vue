@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const route = useRoute()
-
 const links = [{
   label: 'Profile',
   avatar: {
@@ -8,18 +6,15 @@ const links = [{
   },
   to: '/'
 }, {
-  label: 'Installation',
+  label: 'Log-in',
   icon: 'i-heroicons-home',
-  to: '/getting-started/installation'
+  to: '/connexion'
 }, {
-  label: 'Horizontal Navigation',
-  icon: 'i-heroicons-chart-bar',
-  to: `${route.path.startsWith('/dev') ? '/dev' : ''}/components/horizontal-navigation`
-}, {
-  label: 'Command Palette',
+  label: 'Utilisateurs',
   icon: 'i-heroicons-command-line',
-  to: '/components/command-palette'
+  to: '/users'
 }]
+
 </script>
 
 <template>
