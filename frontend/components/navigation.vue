@@ -14,6 +14,7 @@ const links = [{
   icon: 'i-heroicons-command-line',
   to: '/users'
 }]
+
 </script>
 
 <template>

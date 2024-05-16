@@ -1,8 +1,17 @@
 import axios from "axios";
+import {useAuthStore} from "~/store/auth_store";
 
 export default defineNuxtPlugin
 (() => {
+    const authStore = useAuthStore()
     axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
+    axios.interceptors.request.use((config) => {
+        const authToken = authStore.authToken;
+        if (authToken) {
+            config.headers.Authorization = `Bearer ${authToken}`;
+        }
+        return config;
+    })
     return {
         provide: {
             api: {
