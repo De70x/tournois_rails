@@ -4,9 +4,8 @@ import {computedAsync} from "@vueuse/core";
 const {$api} = useNuxtApp()
 
 const users = computedAsync(async () => {
-  const test = await $api.get('/member-data')
-  console.log(test)
-  return test
+  const response = await $api.get('/member-data')
+  return response.data
 })
 
 </script>

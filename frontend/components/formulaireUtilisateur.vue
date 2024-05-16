@@ -23,8 +23,15 @@ const state = reactive({
 
 const handleSubmit = async (event: FormSubmitEvent<User>) => {
   try {
-    const response = await $api.post(props.apiUrl, {user: event.data});
-    authStore.setAuthToken(response.data.token);
+    const response = await $api.post(props.apiUrl, {user: {...event.data, role: 0}});
+    const token = response.data.token;
+
+    if (token) {
+      authStore.setAuthToken(token);
+      const authToken = useCookie('auth-token', {sameSite: 'strict'});
+      authToken.value = token
+    }
+
     if (props.redirectUrl) {
       await router.push(props.redirectUrl);
     }

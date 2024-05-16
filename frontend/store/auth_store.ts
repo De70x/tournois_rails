@@ -1,11 +1,11 @@
 interface AuthState {
-    authToken: string | null;
+    authToken: string | null | undefined;
 }
 
-export const useAuthStore = defineStore("auth-store",{
+export const useAuthStore = defineStore("auth-store", {
     state: (): AuthState => {
         return {
-            authToken: null,
+            authToken: useCookie('auth-token').value,
         }
     },
     actions: {
