@@ -6,4 +6,10 @@ class User < ApplicationRecord
          :registerable,
          :jwt_authenticatable,
          jwt_revocation_strategy: JwtDenylist
+
+  def self.jwt_revoked?(payload, user)
+    # Check if the token has expired
+    payload['exp'] && Time.at(payload['exp']) < Time.now
+  end
+  
 end

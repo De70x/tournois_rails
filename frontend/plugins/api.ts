@@ -4,11 +4,15 @@ import {useAuthStore} from "~/store/auth_store";
 export default defineNuxtPlugin
 (() => {
     const authStore = useAuthStore()
+    const router = useRouter()
     axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
     axios.interceptors.request.use((config) => {
-        const authToken = authStore.authToken;
+        const authToken = useCookie('authToken')
         if (authToken) {
             config.headers.Authorization = `Bearer ${authToken}`;
+        }
+        else{
+            router.push('/connexion')
         }
         return config;
     })
@@ -18,6 +22,7 @@ export default defineNuxtPlugin
         (error) => {
             if (error.response && error.response.status === 401) {
                 const authStore = useAuthStore()
+                console.log('intercept response error and logout')
                 authStore.logout()
             }
             return Promise.reject(error)

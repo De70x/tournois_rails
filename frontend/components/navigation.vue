@@ -26,6 +26,10 @@ links.push({
   label: 'Utilisateurs',
   icon: 'i-heroicons-command-line',
   to: '/users'
+}, {
+  label: 'Présentation',
+  icon: 'i-heroicons-home',
+  to: '/presentation'
 })
 
 
