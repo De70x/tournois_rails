@@ -17,7 +17,6 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async logout() {
-            console.log('logout from store')
             const {$api} = useNuxtApp()
             try {
                 await $api.delete('/users/sign_out')

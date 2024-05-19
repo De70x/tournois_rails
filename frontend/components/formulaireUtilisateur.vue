@@ -38,11 +38,11 @@ const state = reactive({
 
 const handleSubmit = async (event: FormSubmitEvent<User>) => {
   if (props.typeFormulaire === 'connexion') {
-    await authStore.login({email: event.data.email, password: event.data.password})
+    await authStore.login(event.data)
   }
 
   if (props.typeFormulaire === 'inscription') {
-    await authStore.signup({email: event.data.email, password: event.data.password})
+    await authStore.signup(event.data)
   }
 
   if (redirectUrl) {

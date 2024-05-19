@@ -7,13 +7,14 @@ export default function () {
 
     const checkSessionExpiration = () => {
         console.log('checkig session')
-        const authToken = localStorage.getItem('authToken')
+        const authToken = useCookie('authToken').value
         if (authToken) {
             const tokenPayload = JSON.parse(atob(authToken.split('.')[1]))
             const expirationTime = tokenPayload.exp * 1000 // Convert to milliseconds
             if (expirationTime < Date.now()) {
-                authStore.logout()
-                router.push('/login')
+                authStore.logout().then(
+                    () => router.push('/connexion')
+                )
             }
         }
     }
