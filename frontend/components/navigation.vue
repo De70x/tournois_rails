@@ -1,19 +1,33 @@
 <script setup lang="ts">
-const links = [{
-  label: 'Profile',
-  avatar: {
-    src: '/tennis.png'
-  },
-  to: '/'
-}, {
-  label: 'Log-in',
-  icon: 'i-heroicons-home',
-  to: '/connexion'
-}, {
+import {useAuthStore} from "~/store/auth_store";
+
+const authStore = useAuthStore()
+const token = computed(() => {
+  return authStore.authToken
+})
+
+const links: any[] = []
+
+if (token) {
+  links.push({
+    label: 'Log-out',
+    icon: 'i-heroicons-user-minus',
+    to: '/deconnexion'
+  })
+} else {
+  links.push({
+    label: 'Log-in',
+    icon: 'i-heroicons-home',
+    to: '/connexion'
+  })
+}
+
+links.push({
   label: 'Utilisateurs',
   icon: 'i-heroicons-command-line',
   to: '/users'
-}]
+})
+
 
 </script>
 

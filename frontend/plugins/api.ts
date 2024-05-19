@@ -12,6 +12,18 @@ export default defineNuxtPlugin
         }
         return config;
     })
+
+    axios.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            if (error.response && error.response.status === 401) {
+                const authStore = useAuthStore()
+                authStore.logout()
+            }
+            return Promise.reject(error)
+        }
+    )
+
     return {
         provide: {
             api: {

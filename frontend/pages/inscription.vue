@@ -1,6 +1,5 @@
 <template>
-  <FormulaireUtilisateur redirect-url="/connexion" btn-text="Inscription" api-url="/users"
-                         fallback-text="Déjà un compte ?" fallback-link="/connexion" link-text="Connexion"/>
+  <FormulaireUtilisateur type-formulaire="inscription"/>
 </template>
 
 <script setup lang="ts">
