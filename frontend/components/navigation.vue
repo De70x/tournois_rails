@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import {useAuthStore} from "~/store/auth_store";
 
-const authStore = useAuthStore()
-const token = computed(() => {
-  return authStore.authToken
-})
+const token = useCookie('authToken')
 
 const links: any[] = []
 
-if (token) {
+if (token.value) {
   links.push({
     label: 'Log-out',
     icon: 'i-heroicons-user-minus',
@@ -31,6 +28,7 @@ links.push({
   icon: 'i-heroicons-home',
   to: '/presentation'
 })
+
 
 
 </script>
