@@ -1,12 +1,10 @@
 <script setup lang="ts">
+
 import {computedAsync} from "@vueuse/core";
 
 const {$api} = useNuxtApp()
 
-const users = computedAsync(async () => {
-  const response = await $api.get('/member-data')
-  return response.data
-})
+const {data:users} = await $api.get('member-data')
 
 </script>
 
