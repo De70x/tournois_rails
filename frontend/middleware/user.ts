@@ -1,8 +1,11 @@
+import axios from "axios";
+
 export default defineNuxtRouteMiddleware(async () => {
-    const {$api} = useNuxtApp()
 
     try {
-        await $api.get('member-data')
+        if (useCookie('authToken').value) {
+            await axios.get('member-data')
+        }
     } catch (error: any) {
         useCookie('authToken').value = null
     }
