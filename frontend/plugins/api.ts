@@ -6,24 +6,22 @@ export default defineNuxtPlugin
     const authStore = useAuthStore()
     const router = useRouter()
     axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
-    axios.interceptors.request.use((config) => {
+    axios.interceptors.request.use(async (config) => {
         const authToken = useCookie('authToken')
         if (authToken.value) {
             config.headers.Authorization = `Bearer ${authToken.value}`;
-        }
-        else{
-            router.push('/connexion')
+        } else {
+            await router.push('/connexion')
         }
         return config;
     })
 
     axios.interceptors.response.use(
         (response) => response,
-        (error) => {
+        async (error) => {
             if (error.response && error.response.status === 401) {
                 const authStore = useAuthStore()
-                console.log('intercept response error and logout')
-                authStore.logout()
+                await authStore.logout()
             }
             return Promise.reject(error)
         }
@@ -35,12 +33,12 @@ export default defineNuxtPlugin
                 async get(url: string, config?: any) {
                     try {
                         return await axios.get(url, config);
-                    } catch (error : any) {
+                    } catch (error: any) {
                         console.error(error.response)
                         throw new Error(error.response?.data?.message || error.message);
                     }
                 },
-                async post(url: string, data: any, config?: any){
+                async post(url: string, data: any, config?: any) {
                     try {
                         return await axios.post(url, data, config);
                     } catch (error: any) {

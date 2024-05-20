@@ -1,7 +1,7 @@
 import {useRouter} from 'vue-router'
 import {useAuthStore} from "~/store/auth_store";
 
-export default function () {
+export default defineNuxtPlugin(() => {
     const authStore = useAuthStore()
     const router = useRouter()
 
@@ -22,4 +22,4 @@ export default function () {
     onNuxtReady(() => {
         setInterval(checkSessionExpiration, 60000) // Check every minute
     })
-}
+})
