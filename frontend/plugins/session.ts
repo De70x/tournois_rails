@@ -6,7 +6,7 @@ export default defineNuxtPlugin(() => {
     const router = useRouter()
 
     const checkSessionExpiration = () => {
-        console.log('checkig session')
+        console.log('checking session')
         const authToken = useCookie('auth-token', {sameSite:'strict'}).value
         if (authToken) {
             const tokenPayload = JSON.parse(atob(authToken.split('.')[1]))
