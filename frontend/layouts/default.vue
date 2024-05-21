@@ -2,19 +2,12 @@
 </script>
 
 <template>
-  <div class="m-auto">
+  <div class="flex h-screen flex-col items-center justify-center text-center">
     <Navigation/>
-    <div class="main-content">
-      <slot/>
-    </div>
-    <UNotifications />
+    <slot/>
+    <UNotifications/>
   </div>
 </template>
 
 <style scoped>
-.main-content {
-  display: flex;
-  justify-content: center;
-  margin: 20px;
-}
 </style>
