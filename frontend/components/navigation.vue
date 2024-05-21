@@ -1,37 +1,40 @@
 <script setup lang="ts">
-import {useAuthStore} from "~/store/auth_store";
+import { computed } from 'vue';
 
-const token = computed(() => useCookie('authToken'))
+const token = computed(() => useCookie('authToken').value);
 
-const links: any[] = []
+const links = computed(() => {
+  const dynamicLinks = [
+    {
+      label: 'Utilisateurs',
+      icon: 'i-heroicons-command-line',
+      to: '/users'
+    },
+    {
+      label: 'Présentation',
+      icon: 'i-heroicons-home',
+      to: '/presentation'
+    }
+  ];
 
-if (token.value.value) {
-  links.push({
-    label: 'Log-out',
-    icon: 'i-heroicons-user-minus',
-    to: '/deconnexion'
-  })
-} else {
-  links.push({
-    label: 'Log-in',
-    icon: 'i-heroicons-home',
-    to: '/connexion'
-  })
-}
+  if (token.value) {
+    dynamicLinks.unshift({
+      label: 'Log-out',
+      icon: 'i-heroicons-user-minus',
+      to: '/deconnexion'
+    });
+  } else {
+    dynamicLinks.unshift({
+      label: 'Log-in',
+      icon: 'i-heroicons-home',
+      to: '/connexion'
+    });
+  }
 
-links.push({
-  label: 'Utilisateurs',
-  icon: 'i-heroicons-command-line',
-  to: '/users'
-}, {
-  label: 'Présentation',
-  icon: 'i-heroicons-home',
-  to: '/presentation'
-})
-
-
+  return dynamicLinks;
+});
 </script>
 
 <template>
-  <UHorizontalNavigation :links="links" class="border-b border-gray-200 dark:border-gray-800"/>
+  <UHorizontalNavigation :links="links" class="border-b border-gray-200 dark:border-gray-800" />
 </template>
