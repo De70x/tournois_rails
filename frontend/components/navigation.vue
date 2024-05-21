@@ -1,21 +1,25 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import {computed} from 'vue';
+import {useAuthStore} from "~/store/auth_store";
+import type {HorizontalNavigationLink} from "#ui/types";
 
-const token = computed(() => useCookie('authToken').value);
+const token = computed(() => useCookie('auth-token', {sameSite: 'strict'}).value);
+const email = computed(() => useAuthStore().user?.email)
 
 const links = computed(() => {
-  const dynamicLinks = [
-    {
-      label: 'Utilisateurs',
-      icon: 'i-heroicons-command-line',
-      to: '/users'
-    },
+  const dynamicLinks: HorizontalNavigationLink[] = [
     {
       label: 'Présentation',
       icon: 'i-heroicons-home',
       to: '/presentation'
     }
   ];
+
+  if (email.value) {
+    dynamicLinks.unshift({
+      label: email.value,
+    })
+  }
 
   if (token.value) {
     dynamicLinks.unshift({
@@ -36,5 +40,5 @@ const links = computed(() => {
 </script>
 
 <template>
-  <UHorizontalNavigation :links="links" class="border-b border-gray-200 dark:border-gray-800" />
+  <UHorizontalNavigation :links="links" class="border-b border-gray-200 dark:border-gray-800"/>
 </template>

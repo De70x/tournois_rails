@@ -3,10 +3,10 @@ import axios from "axios";
 export default defineNuxtRouteMiddleware(async () => {
 
     try {
-        if (useCookie('authToken').value) {
+        if (useCookie('auth-token', {sameSite: 'strict'}).value) {
             await axios.get('member-data')
         }
     } catch (error: any) {
-        useCookie('authToken').value = null
+        useCookie('auth-token', {sameSite:'strict'}).value = null
     }
 })

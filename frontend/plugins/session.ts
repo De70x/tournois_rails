@@ -7,7 +7,7 @@ export default defineNuxtPlugin(() => {
 
     const checkSessionExpiration = () => {
         console.log('checkig session')
-        const authToken = useCookie('authToken').value
+        const authToken = useCookie('auth-token', {sameSite:'strict'}).value
         if (authToken) {
             const tokenPayload = JSON.parse(atob(authToken.split('.')[1]))
             const expirationTime = tokenPayload.exp * 1000 // Convert to milliseconds

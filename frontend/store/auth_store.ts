@@ -1,7 +1,9 @@
+import type {User} from "~/types/User";
+
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         authToken: null as string | null,
-        user: null as object | null,
+        user: null as User | null,
     }),
     actions: {
         async login(credentials: { email: string; password: string }) {
@@ -10,7 +12,7 @@ export const useAuthStore = defineStore('auth', {
                 const response = await $api.post('/users/sign_in', {user: credentials})
                 this.authToken = response?.headers['authorization'].replace('Bearer ', '')
                 this.user = response?.data.user
-                const authCookie = useCookie('authToken', {maxAge: 1000 * 60 * 1000, sameSite: 'strict'})
+                const authCookie = useCookie('auth-token', {maxAge: 1000 * 60 * 1000, sameSite: 'strict'})
                 authCookie.value = this.authToken
             } catch (error) {
                 throw new Error('Failed to log in')
@@ -22,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
                 await $api.delete('/users/sign_out')
                 this.authToken = null
                 this.user = null
-                useCookie('authToken').value = null
+                useCookie('auth-token', {sameSite:'strict'}).value = null
             } catch (error) {
                 throw new Error('Failed to log out')
             }
