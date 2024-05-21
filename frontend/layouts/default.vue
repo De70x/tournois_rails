@@ -6,6 +6,7 @@
     <Navigation/>
     <slot/>
     <UNotifications/>
+    <Footer/>
   </div>
 </template>
 
