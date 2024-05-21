@@ -1,4 +1,5 @@
 import type {User} from "~/types/User";
+import {usePermissionsStore} from "~/store/permissions_store";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -14,6 +15,7 @@ export const useAuthStore = defineStore('auth', {
                 this.user = response?.data.user
                 const authCookie = useCookie('auth-token', {maxAge: 1000 * 60 * 1000, sameSite: 'strict'})
                 authCookie.value = this.authToken
+                await usePermissionsStore().fetchPermissions()
             } catch (error) {
                 throw new Error('Failed to log in')
             }

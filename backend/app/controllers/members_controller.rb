@@ -1,5 +1,4 @@
 class MembersController < ApplicationController
-  before_action -> { authorize_role(:admin) }, only: [:show]
 
   def show
     render json: {
