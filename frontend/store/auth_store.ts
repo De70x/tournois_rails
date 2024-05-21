@@ -8,9 +8,9 @@ export const useAuthStore = defineStore('auth', {
             const {$api} = useNuxtApp()
             try {
                 const response = await $api.post('/users/sign_in', {user: credentials})
-                this.authToken = response.headers['authorization'].replace('Bearer ', '')
-                this.user = response.data.user
-                const authCookie = useCookie('authToken', {maxAge: 1000 * 60 * 1000})
+                this.authToken = response?.headers['authorization'].replace('Bearer ', '')
+                this.user = response?.data.user
+                const authCookie = useCookie('authToken', {maxAge: 1000 * 60 * 1000, sameSite: 'strict'})
                 authCookie.value = this.authToken
             } catch (error) {
                 throw new Error('Failed to log in')
@@ -25,16 +25,6 @@ export const useAuthStore = defineStore('auth', {
                 useCookie('authToken').value = null
             } catch (error) {
                 throw new Error('Failed to log out')
-            }
-        },
-        async fetchUser() {
-            const {$api} = useNuxtApp()
-            try {
-                const {data} = await $api.get('/users/me')
-                this.user = data
-            } catch (error) {
-                this.authToken = null
-                this.user = null
             }
         },
         async signup(credentials: { email: string; password: string }) {
