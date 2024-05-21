@@ -52,7 +52,7 @@ const handleSubmit = async (event: FormSubmitEvent<User>) => {
 </script>
 
 <template>
-  <UCard class="max-w-sm w-full">
+  <UCard class="max-h-auto mx-auto max-w-xl w-full">
     <UForm :schema="user" :state="state" class="space-y-4" @submit="handleSubmit">
       <UFormGroup label="Email" name="email">
         <UInput v-model="state.email"/>
@@ -65,8 +65,7 @@ const handleSubmit = async (event: FormSubmitEvent<User>) => {
       <UButton type="submit">
         {{ btnText }}
       </UButton>
-      <br>
-      <span>
+      <div>
         {{ fallbackText }}
           <ULink
               :to=fallbackLink
@@ -75,7 +74,7 @@ const handleSubmit = async (event: FormSubmitEvent<User>) => {
           >
           {{ linkText }}
         </ULink>
-      </span>
+      </div>
     </UForm>
   </UCard>
 </template>

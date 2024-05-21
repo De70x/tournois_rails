@@ -1,8 +1,8 @@
 <script setup lang="ts">
-const {$api} = useNuxtApp()
-const router = useRouter();
-await $api.delete('/users/sign_out')
-await router.push('/');
+import {useAuthStore} from "~/store/auth_store";
+
+useAuthStore().logout()
+useRouter().push('/connexion')
 </script>
 
 <template>

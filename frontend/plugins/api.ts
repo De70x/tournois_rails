@@ -1,12 +1,11 @@
 import axios from "axios";
-import {useAuthStore} from "~/store/auth_store";
 
 export default defineNuxtPlugin
 (() => {
     const router = useRouter()
     axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
     axios.interceptors.request.use(async (config) => {
-        const authToken = useCookie('authToken', {sameSite: 'strict'})
+        const authToken = useCookie('auth-token', {sameSite: 'strict'})
         if (authToken.value) {
             config.headers.Authorization = `Bearer ${authToken.value}`;
         } else {
@@ -14,17 +13,6 @@ export default defineNuxtPlugin
         }
         return config;
     })
-
-    axios.interceptors.response.use(
-        (response) => response,
-        async (error) => {
-            if (error.response && error.response.status === 401) {
-                const authStore = useAuthStore()
-                await authStore.logout()
-            }
-            return Promise.reject(error)
-        }
-    )
 
     return {
         provide: {
@@ -64,9 +52,10 @@ export default defineNuxtPlugin
 
 const handleError = (error: any) => {
     const toast = useToast()
+    const description = error.data.error ? error.data.error : error.data
     toast.add({
         title: error.statusText,
-        description: `${error.status} : ${error.data}`,
+        description: `${error.status} : ${description}`,
         timeout: 5000,
         icon: 'i-heroicons-exclamation-circle',
         color: 'red'
