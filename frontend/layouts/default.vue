@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 </script>
 
 <template>
@@ -8,6 +7,7 @@
     <div class="main-content">
       <slot/>
     </div>
+    <UNotifications />
   </div>
 </template>
 
