@@ -40,5 +40,5 @@ const links = computed(() => {
 </script>
 
 <template>
-  <UHorizontalNavigation :links="links" class="border-b border-gray-200 dark:border-gray-800"/>
+  <UHorizontalNavigation :links="links" class="border-b border-gray-200 dark:border-gray-800 fixed top-0"/>
 </template>
