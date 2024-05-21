@@ -3,9 +3,9 @@
 <script setup lang="ts">
 import {useAuthStore} from "~/store/auth_store";
 
-const auth = useAuthStore()
+const authStore = useAuthStore()
 
-if(auth.authToken) {
+if(authStore.authToken) {
   useRouter().push('/users')
 }
 else{

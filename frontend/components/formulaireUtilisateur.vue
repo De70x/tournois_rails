@@ -4,16 +4,31 @@ import type {FormSubmitEvent} from "#ui/types";
 import {useAuthStore} from "~/store/auth_store";
 
 const props = defineProps({
-  btnText: String,
-  fallbackText: String,
-  linkText: String,
-  fallbackLink: {type: String, required: true},
-  apiUrl: {type: String, required: true},
-  redirectUrl: String
+  typeFormulaire: String,
 });
 
+let btnText = ''
+let fallbackText = ''
+let linkText = ''
+let fallbackLink = ''
+let redirectUrl = ''
+
+if (props.typeFormulaire === 'connexion') {
+  btnText = 'Connexion'
+  fallbackText = 'Pas encore de compte ?'
+  linkText = 'Inscription'
+  fallbackLink = '/inscription'
+  redirectUrl = '/users'
+}
+if (props.typeFormulaire === 'inscription') {
+  btnText = 'Inscription'
+  fallbackText = 'Déjà un compte ?'
+  linkText = 'Connexion'
+  redirectUrl = '/connexion'
+  fallbackLink = '/connexion'
+}
+
 const router = useRouter();
-const {$api} = useNuxtApp()
 const authStore = useAuthStore()
 
 const state = reactive({
@@ -22,14 +37,16 @@ const state = reactive({
 })
 
 const handleSubmit = async (event: FormSubmitEvent<User>) => {
-  try {
-    const response = await $api.post(props.apiUrl, {user: event.data});
-    authStore.setAuthToken(response.data.token);
-    if (props.redirectUrl) {
-      await router.push(props.redirectUrl);
-    }
-  } catch (error) {
-    console.error(error)
+  if (props.typeFormulaire === 'connexion') {
+    await authStore.login(event.data)
+  }
+
+  if (props.typeFormulaire === 'inscription') {
+    await authStore.signup(event.data)
+  }
+
+  if (redirectUrl) {
+    await router.push(redirectUrl);
   }
 };
 </script>
