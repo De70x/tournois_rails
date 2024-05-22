@@ -2,10 +2,22 @@ import axios from "axios";
 
 export default defineNuxtPlugin
 (() => {
+    const handleError = (error: any) => {
+        const toast = useToast()
+        const description = error.data.error ? error.data.error : error.data
+        toast.add({
+            title: error.statusText,
+            description: `${error.status} : ${description}`,
+            timeout: 5000,
+            icon: 'i-heroicons-exclamation-circle',
+            color: 'red'
+        })
+    }
     const router = useRouter()
     axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
     axios.interceptors.request.use(async (config) => {
         const authToken = useCookie('auth-token', {sameSite: 'strict'})
+        console.log(authToken.value)
         if (authToken.value) {
             config.headers.Authorization = `Bearer ${authToken.value}`;
         } else {
@@ -49,15 +61,3 @@ export default defineNuxtPlugin
         }
     }
 })
-
-const handleError = (error: any) => {
-    const toast = useToast()
-    const description = error.data.error ? error.data.error : error.data
-    toast.add({
-        title: error.statusText,
-        description: `${error.status} : ${description}`,
-        timeout: 5000,
-        icon: 'i-heroicons-exclamation-circle',
-        color: 'red'
-    })
-}

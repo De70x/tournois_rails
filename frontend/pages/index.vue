@@ -1,11 +1,10 @@
 <template>
 </template>
 <script setup lang="ts">
-import {useAuthStore} from "~/store/auth_store";
 
-const authStore = useAuthStore()
+const authCookie = useCookie('auth-token')
 
-if(authStore.authToken) {
+if(authCookie.value) {
   useRouter().push('/users')
 }
 else{

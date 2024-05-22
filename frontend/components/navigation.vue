@@ -9,8 +9,13 @@ const email = computed(() => useAuthStore().user?.email)
 const links = computed(() => {
   const dynamicLinks: HorizontalNavigationLink[] = [
     {
-      label: 'Présentation',
+      label: 'Accueil',
       icon: 'i-heroicons-home',
+      to: '/'
+    },
+    {
+      label: 'Présentation',
+      icon: 'i-heroicons-beaker',
       to: '/presentation'
     }
   ];
