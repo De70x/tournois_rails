@@ -3,7 +3,7 @@ import {computed} from 'vue';
 import {useAuthStore} from "~/store/auth_store";
 import type {HorizontalNavigationLink} from "#ui/types";
 
-const token = computed(() => useCookie('auth-token', {sameSite: 'strict'}).value);
+const token = computed(() => useCookie('auth-token').value);
 const email = computed(() => useAuthStore().user?.email)
 
 const links = computed(() => {
