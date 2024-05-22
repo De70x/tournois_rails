@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {user, type User} from "~/types/User";
+import {userSchema, type User} from "~/types/User";
 import type {FormSubmitEvent} from "#ui/types";
 import {useAuthStore} from "~/store/auth_store";
 
@@ -53,7 +53,7 @@ const handleSubmit = async (event: FormSubmitEvent<User>) => {
 
 <template>
   <UCard class="max-h-auto mx-auto max-w-xl w-full">
-    <UForm :schema="user" :state="state" class="space-y-4" @submit="handleSubmit">
+    <UForm :schema="userSchema" :state="state" class="space-y-4" @submit="handleSubmit">
       <UFormGroup label="Email" name="email">
         <UInput v-model="state.email"/>
       </UFormGroup>

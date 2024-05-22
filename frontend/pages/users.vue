@@ -8,7 +8,8 @@ const product = ref({
   name: 'Sample Product',
   description: 'This is a sample product.',
   quantity: 100,
-  price: 29.99
+  price: 29.99,
+  dateAdded: Date.now()
 });
 
 provide('object', product);
@@ -21,12 +22,10 @@ provide('object', product);
     {{ user }}
   </div>
 
-  <FormWithPermission object-type="product">
-    <InputWithPermission propertyName="name" />
-    <InputWithPermission propertyName="description" />
-    <InputWithPermission propertyName="quantity" />
-    <InputWithPermission propertyName="price" />
-  </FormWithPermission>
+  <ObjectDetail
+      objectType="product"
+      :object="product"
+  />
 
 </template>
 
