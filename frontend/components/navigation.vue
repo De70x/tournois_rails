@@ -3,14 +3,19 @@ import {computed} from 'vue';
 import {useAuthStore} from "~/store/auth_store";
 import type {HorizontalNavigationLink} from "#ui/types";
 
-const token = computed(() => useCookie('auth-token', {sameSite: 'strict'}).value);
+const token = computed(() => useCookie('auth-token').value);
 const email = computed(() => useAuthStore().user?.email)
 
 const links = computed(() => {
   const dynamicLinks: HorizontalNavigationLink[] = [
     {
-      label: 'Présentation',
+      label: 'Accueil',
       icon: 'i-heroicons-home',
+      to: '/'
+    },
+    {
+      label: 'Présentation',
+      icon: 'i-heroicons-beaker',
       to: '/presentation'
     }
   ];
@@ -18,6 +23,8 @@ const links = computed(() => {
   if (email.value) {
     dynamicLinks.unshift({
       label: email.value,
+      icon: 'i-heroicons-user',
+      to: '/users'
     })
   }
 
