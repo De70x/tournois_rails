@@ -10,7 +10,7 @@ export default defineNuxtPlugin(() => {
         const authToken = useCookie('auth-token', {sameSite:'strict'}).value
         if (authToken) {
             const tokenPayload = JSON.parse(atob(authToken.split('.')[1]))
-            const expirationTime = tokenPayload.exp * 1000 // Convert to milliseconds
+            const expirationTime = tokenPayload.exp * 1000
             if (expirationTime < Date.now()) {
                 authStore.logout().then(
                     () => router.push('/connexion')
@@ -20,6 +20,6 @@ export default defineNuxtPlugin(() => {
     }
 
     onNuxtReady(() => {
-        setInterval(checkSessionExpiration, 60000) // Check every minute
+        setInterval(checkSessionExpiration, 1800000) // Check every 30 minutes
     })
 })
