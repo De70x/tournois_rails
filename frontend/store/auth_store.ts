@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', {
                 const response = await $api.post('/users/sign_in', {user: credentials})
                 this.authToken = response?.headers['authorization'].replace('Bearer ', '')
                 this.user = response?.data.user
-                const authCookie = useCookie('auth-token', {maxAge: 1000 * 60 * 1000, sameSite: 'strict'})
+                const authCookie = useCookie('auth-token', {sameSite: 'strict'})
                 authCookie.value = this.authToken
                 await usePermissionsStore().fetchPermissions()
             } catch (error) {
@@ -21,6 +21,7 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async logout() {
+            console.log('logout')
             const {$api} = useNuxtApp()
             try {
                 await $api.delete('/users/sign_out')
