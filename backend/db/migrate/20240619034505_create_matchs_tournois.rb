@@ -7,7 +7,7 @@ class CreateMatchsTournois < ActiveRecord::Migration[7.1]
       t.integer :score_2, default: 0, null: false
       t.integer :statut, default: 0, null: false
       t.references :stade, null: false, foreign_key: true
-      t.integer :phase
+      t.integer :phase, default: -1, null: false
       t.integer :indice
 
       t.timestamps
