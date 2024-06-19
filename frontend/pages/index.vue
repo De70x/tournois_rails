@@ -1,7 +1,4 @@
-<template>
-</template>
 <script setup lang="ts">
-
 const authCookie = useCookie('auth-token')
 
 if(authCookie.value) {
@@ -10,5 +7,4 @@ if(authCookie.value) {
 else{
   useRouter().push('/connexion')
 }
-
 </script>

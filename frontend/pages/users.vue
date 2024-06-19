@@ -18,15 +18,10 @@ provide('object', product);
 
 <template>
   <div>Users</div>
-  <div v-for="user in users?.data">
-    {{ user }}
-  </div>
-
   <ObjectDetail
-      objectType="product"
-      :object="product"
+      objectType="user"
+      :object="users?.data.user"
   />
-
 </template>
 
 <style scoped>
