@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_21_120619) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "joueurs", force: :cascade do |t|
+    t.string "nom"
+    t.integer "type_joueur"
+    t.bigint "poule_id"
+    t.bigint "tournoi_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["poule_id"], name: "index_joueurs_on_poule_id"
+    t.index ["tournoi_id"], name: "index_joueurs_on_tournoi_id"
+  end
 
   create_table "jwt_denylist", force: :cascade do |t|
     t.string "jti", null: false
@@ -22,10 +33,34 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_21_120619) do
     t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
+  create_table "matchs_tournois", force: :cascade do |t|
+    t.bigint "joueur_1_id", null: false
+    t.bigint "joueur_2_id", null: false
+    t.integer "score_1"
+    t.integer "score_2"
+    t.integer "statut"
+    t.bigint "stade_id", null: false
+    t.integer "phase"
+    t.integer "indice"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["joueur_1_id"], name: "index_matchs_tournois_on_joueur_1_id"
+    t.index ["joueur_2_id"], name: "index_matchs_tournois_on_joueur_2_id"
+    t.index ["stade_id"], name: "index_matchs_tournois_on_stade_id"
+  end
+
   create_table "permissions", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "poules", force: :cascade do |t|
+    t.string "nom"
+    t.bigint "tournoi_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tournoi_id"], name: "index_poules_on_tournoi_id"
   end
 
   create_table "role_permissions", force: :cascade do |t|
@@ -39,6 +74,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_21_120619) do
 
   create_table "roles", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "stades", force: :cascade do |t|
+    t.string "nom"
+    t.bigint "tournoi_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tournoi_id"], name: "index_stades_on_tournoi_id"
+  end
+
+  create_table "tournois", force: :cascade do |t|
+    t.string "nom"
+    t.integer "annee"
+    t.boolean "actif"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -64,8 +115,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_21_120619) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "joueurs", "poules"
+  add_foreign_key "joueurs", "tournois"
+  add_foreign_key "matchs_tournois", "joueurs", column: "joueur_1_id"
+  add_foreign_key "matchs_tournois", "joueurs", column: "joueur_2_id"
+  add_foreign_key "matchs_tournois", "stades"
+  add_foreign_key "poules", "tournois"
   add_foreign_key "role_permissions", "permissions"
   add_foreign_key "role_permissions", "roles"
+  add_foreign_key "stades", "tournois"
   add_foreign_key "user_roles", "roles"
   add_foreign_key "user_roles", "users"
 end
