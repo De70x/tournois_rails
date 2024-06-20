@@ -4,7 +4,7 @@ export default defineNuxtPlugin
 (() => {
     const handleError = (error: any) => {
         const toast = useToast()
-        const description = error.data.error ? error.data.error : error.data
+        const description = error.data.message ? error.data.message : error.data.error ? error.data.error : error.data
         toast.add({
             title: error.statusText,
             description: `${error.status} : ${description}`,

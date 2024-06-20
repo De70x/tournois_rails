@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  joueur_1: one
+  joueur_2: one
+  score_1: 1
+  score_2: 1
+  statut: 1
+  stade: one
+  phase: 1
+  indice: 1
+
+two:
+  joueur_1: two
+  joueur_2: two
+  score_1: 1
+  score_2: 1
+  statut: 1
+  stade: two
+  phase: 1
+  indice: 1
