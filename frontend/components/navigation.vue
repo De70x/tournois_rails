@@ -11,7 +11,7 @@ const links = computed(() => {
     {
       label: 'Accueil',
       icon: 'i-heroicons-home',
-      to: '/'
+      to: '/tournoi/liste'
     },
     {
       label: 'Présentation',

@@ -18,7 +18,7 @@ if (props.typeFormulaire === 'connexion') {
   fallbackText = 'Pas encore de compte ?'
   linkText = 'Inscription'
   fallbackLink = '/inscription'
-  redirectUrl = '/users'
+  redirectUrl = '/'
 }
 if (props.typeFormulaire === 'inscription') {
   btnText = 'Inscription'
