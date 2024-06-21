@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import {userSchema} from "~/types/User";
 import {productSchema} from "~/types/Product";
+import {tournoiSchema} from "~/types/Tournoi";
 
 export function getInputType(yupSchema: any, property: string | number): string {
     const schemaField = yupSchema.fields[property];
@@ -21,7 +22,7 @@ export function getSchema(objectType: String) {
     if (objectType === 'user') {
         return userSchema
     }
-    if (objectType === 'product') {
-        return productSchema
+    if (objectType === 'tournoi') {
+        return tournoiSchema
     }
 }

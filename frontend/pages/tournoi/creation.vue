@@ -3,7 +3,6 @@ import {tournoiSchema, type Tournoi} from "~/types/Tournoi";
 import type {FormSubmitEvent} from "#ui/types";
 import {useTournoisStore} from "~/store/tournois_store";
 
-const router = useRouter();
 const tournoisStore = useTournoisStore();
 const annee = new Date().getFullYear()
 
@@ -13,7 +12,7 @@ const state = reactive({
 
 const handleSubmit = async (event: FormSubmitEvent<Tournoi>) => {
   await tournoisStore.createTournoi({...event.data, annee})
-  await router.push("/tournoi/liste");
+  await useRouter().push("/tournoi/liste");
 };
 </script>
 

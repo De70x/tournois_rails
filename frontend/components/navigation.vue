@@ -14,9 +14,9 @@ const links = computed(() => {
       to: '/tournoi/liste'
     },
     {
-      label: 'Présentation',
+      label: 'Tournoi en cours',
       icon: 'i-heroicons-beaker',
-      to: '/presentation'
+      to: '/tournoi/detail'
     }
   ];
 

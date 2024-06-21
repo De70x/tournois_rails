@@ -7,7 +7,7 @@ const router = useRouter()
 const creationTournoi = () => {
   router.push("/tournoi/creation")
 }
-const supprimerTournoi = (id) => {
+const supprimerTournoi = (id: number) => {
   tournoiStore.deleteTournoi(id)
 }
 
@@ -22,14 +22,25 @@ const columns = [{
   key: 'actions'
 }]
 
+const select = (row: any) => {
+  tournoiStore.setActif(row.id)
+  useRouter().push('/tournoi/detail')
+}
+
 </script>
 
 <template>
-  <p>Liste des tournois</p>
-  <UTable :rows="tournoiStore.tournois" :columns="columns">
-    <template #actions-data="{ row }">
-        <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerTournoi(row.id)"/>
+  <NuxtLayout name="default">
+    <template #header>
+      <h1 class="text-xl">Liste des tournois</h1>
     </template>
-  </UTable>
-  <UButton @click="creationTournoi()">Créer un tournoi</UButton>
+    <template #default>
+      <UTable :rows="tournoiStore.tournois" :columns="columns" @select="select" class="w-full">
+        <template #actions-data="{ row }">
+          <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerTournoi(row.id)"/>
+        </template>
+      </UTable>
+      <UButton @click="creationTournoi()">Créer un tournoi</UButton>
+    </template>
+  </NuxtLayout>
 </template>

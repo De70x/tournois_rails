@@ -28,7 +28,6 @@ if (props.typeFormulaire === 'inscription') {
   fallbackLink = '/connexion'
 }
 
-const router = useRouter();
 const authStore = useAuthStore()
 
 const state = reactive({
@@ -46,7 +45,7 @@ const handleSubmit = async (event: FormSubmitEvent<User>) => {
   }
 
   if (redirectUrl) {
-    await router.push(redirectUrl);
+    await useRouter().push(redirectUrl);
   }
 };
 </script>
