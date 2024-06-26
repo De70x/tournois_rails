@@ -17,11 +17,10 @@ export default defineNuxtPlugin
 
     const router = useRouter()
     axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
-    const authToken = useCookie('auth-token')
 
     axios.interceptors.request.use(async (config) => {
-        if (authToken.value) {
-            config.headers.Authorization = `Bearer ${authToken.value}`;
+        if (useCookie('auth-token').value) {
+            config.headers.Authorization = `Bearer ${useCookie('auth-token').value}`;
         } else {
             await router.push('/connexion')
         }
