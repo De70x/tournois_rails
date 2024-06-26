@@ -2,7 +2,6 @@ import {usePermissionsStore} from "~/store/permissions_store";
 
 export const hasPermission =  (permission: String) => {
     const permissions = usePermissionsStore().permissions
-    console.log(permission)
     const permissionItems = permission.split('_')
     const rootPermission = permissionItems[0]
     const parentPermission = `${permissionItems[0]}_${permissionItems[1]}`
