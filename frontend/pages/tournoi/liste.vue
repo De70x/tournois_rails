@@ -7,7 +7,8 @@ const router = useRouter()
 const creationTournoi = () => {
   router.push("/tournoi/creation")
 }
-const supprimerTournoi = (id: number) => {
+const supprimerTournoi = (id: number, e:any) => {
+  e.stopPropagation()
   tournoiStore.deleteTournoi(id)
 }
 
@@ -37,7 +38,7 @@ const select = async (row: any) => {
     <template #default>
       <UTable :rows="tournoiStore.tournois" :columns="columns" @select="select" class="w-full">
         <template #actions-data="{ row }" v-if="hasPermission('edit_tournoi')">
-          <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerTournoi(row.id)"/>
+          <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="(e) => supprimerTournoi(row.id, e)"/>
         </template>
       </UTable>
       <UButton @click="creationTournoi()">Créer un tournoi</UButton>
