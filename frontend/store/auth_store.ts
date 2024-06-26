@@ -26,6 +26,7 @@ export const useAuthStore = defineStore('auth', {
                 await $api.delete('/users/sign_out')
                 this.authToken = null
                 this.user = null
+                usePermissionsStore().clearPermissions()
                 useCookie('auth-token', {sameSite:'strict'}).value = null
             } catch (error) {
                 throw new Error('Failed to log out')

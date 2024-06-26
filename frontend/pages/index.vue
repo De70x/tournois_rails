@@ -3,7 +3,7 @@
 const authCookie = useCookie('auth-token')
 
 if (authCookie.value) {
-  useRouter().push('/users')
+  useRouter().push('/tournoi/liste')
 } else {
   useRouter().push('/connexion')
 }

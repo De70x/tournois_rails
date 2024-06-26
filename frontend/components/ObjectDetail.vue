@@ -1,4 +1,3 @@
-<!-- components/ObjectDetails.vue -->
 <template>
   <UCard>
     <h3>{{ objectType }} Details</h3>

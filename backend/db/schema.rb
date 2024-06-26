@@ -16,7 +16,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
 
   create_table "joueurs", force: :cascade do |t|
     t.string "nom"
-    t.integer "type_joueur"
+    t.integer "type_joueur", default: 0, null: false
     t.bigint "poule_id"
     t.bigint "tournoi_id"
     t.datetime "created_at", null: false
@@ -36,11 +36,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
   create_table "matchs_tournois", force: :cascade do |t|
     t.bigint "joueur_1_id", null: false
     t.bigint "joueur_2_id", null: false
-    t.integer "score_1"
-    t.integer "score_2"
-    t.integer "statut"
+    t.integer "score_1", default: 0, null: false
+    t.integer "score_2", default: 0, null: false
+    t.integer "statut", default: 0, null: false
     t.bigint "stade_id", null: false
-    t.integer "phase"
+    t.integer "phase", default: -1, null: false
     t.integer "indice"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

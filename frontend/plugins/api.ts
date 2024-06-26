@@ -1,9 +1,10 @@
-import axios from "axios";
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
 
 export default defineNuxtPlugin
 (() => {
-    const handleError = (error: any) => {
-        const toast = useToast()
+    const toast = useToast()
+
+    const handleError = (error: AxiosResponse) => {
         const description = error.data.message ? error.data.message : error.data.error ? error.data.error : error.data
         toast.add({
             title: error.statusText,
@@ -13,12 +14,13 @@ export default defineNuxtPlugin
             color: 'red'
         })
     }
+
     const router = useRouter()
     axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
+
     axios.interceptors.request.use(async (config) => {
-        const authToken = useCookie('auth-token')
-        if (authToken.value) {
-            config.headers.Authorization = `Bearer ${authToken.value}`;
+        if (useCookie('auth-token').value) {
+            config.headers.Authorization = `Bearer ${useCookie('auth-token').value}`;
         } else {
             await router.push('/connexion')
         }
@@ -28,28 +30,28 @@ export default defineNuxtPlugin
     return {
         provide: {
             api: {
-                async get(url: string, config?: any) {
+                async get(url: string, config?: AxiosRequestConfig) {
                     try {
                         return await axios.get(url, config);
                     } catch (error: any) {
                         handleError(error.response)
                     }
                 },
-                async post(url: string, data: any, config?: any) {
+                async post(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
                         return await axios.post(url, data, config);
                     } catch (error: any) {
                         handleError(error.response)
                     }
                 },
-                async put(url: string, data: any, config?: any) {
+                async put(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
                         return await axios.put(url, data, config);
                     } catch (error: any) {
                         handleError(error.response)
                     }
                 },
-                async delete(url: string, config?: any) {
+                async delete(url: string, config?: AxiosRequestConfig) {
                     try {
                         return await axios.delete(url, config);
                     } catch (error: any) {
