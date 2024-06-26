@@ -36,7 +36,7 @@ const select = (row: any) => {
     </template>
     <template #default>
       <UTable :rows="tournoiStore.tournois" :columns="columns" @select="select" class="w-full">
-        <template #actions-data="{ row }">
+        <template #actions-data="{ row }" v-if="hasPermission('edit_tournoi')">
           <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerTournoi(row.id)"/>
         </template>
       </UTable>
