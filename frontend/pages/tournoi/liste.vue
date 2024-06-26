@@ -22,9 +22,9 @@ const columns = [{
   key: 'actions'
 }]
 
-const select = (row: any) => {
-  tournoiStore.setActif(row.id)
-  useRouter().push('/tournoi/detail')
+const select = async (row: any) => {
+  await tournoiStore.setActif(row.id)
+  await useRouter().push('/tournoi/detail')
 }
 
 </script>
