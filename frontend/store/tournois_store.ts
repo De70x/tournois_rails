@@ -1,4 +1,5 @@
 import type {Tournoi} from "~/types/Tournoi";
+import type {Joueur} from "~/types/Joueur";
 
 export const useTournoisStore = defineStore('tournois', {
     state: () => ({
@@ -46,6 +47,9 @@ export const useTournoisStore = defineStore('tournois', {
                 console.error('Erreur à la suppression du tournoi:', error, id);
             }
         },
+        ajouterJoueur(joueur: Joueur) {
+            this.tournoiActif.joueurs.push(joueur)
+        }
 
     }
 });
