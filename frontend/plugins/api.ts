@@ -1,10 +1,16 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import {useAuthStore} from "~/store/auth_store";
 
 export default defineNuxtPlugin
 (() => {
     const toast = useToast()
+    const router = useRouter()
+    const authStore = useAuthStore()
 
     const handleError = (error: AxiosResponse) => {
+        if(error.status === 401){
+            authStore.logout()
+        }
         const description = error.data.message ? error.data.message : error.data.error ? error.data.error : error.data
         toast.add({
             title: error.statusText,
@@ -15,7 +21,6 @@ export default defineNuxtPlugin
         })
     }
 
-    const router = useRouter()
     axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
 
     axios.interceptors.request.use(async (config) => {
