@@ -28,6 +28,8 @@ const select = async (row: any) => {
   await useRouter().push('/tournoi/detail')
 }
 
+const hasPerm = await hasPermission('edit_tournoi')
+
 </script>
 
 <template>
@@ -37,7 +39,7 @@ const select = async (row: any) => {
     </template>
     <template #default>
       <UTable :rows="tournoiStore.tournois" :columns="columns" @select="select" class="w-full">
-        <template #actions-data="{ row }" v-if="hasPermission('edit_tournoi')">
+        <template #actions-data="{ row }" v-if="hasPerm">
           <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="(e) => supprimerTournoi(row.id, e)"/>
         </template>
       </UTable>

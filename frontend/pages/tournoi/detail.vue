@@ -7,8 +7,10 @@ const tournoisStore = useTournoisStore()
 </script>
 
 <template>
-  <ListeJoueursSansPoule/>
-  <ObjectDetail :object="tournoisStore.tournoiActif" object-type="tournoi"/>
+  <div class="grid grid-cols-[300px_minmax(500px,_1fr)] gap-2">
+    <ListeJoueursSansPoule/>
+    <ObjectDetail :object="tournoisStore.tournoiActif" object-type="tournoi" class=""/>
+  </div>
 </template>
 
 <style scoped>
