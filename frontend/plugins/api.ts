@@ -56,6 +56,13 @@ export default defineNuxtPlugin
                         handleError(error.response)
                     }
                 },
+                async patch(url: string, data: any, config?: AxiosRequestConfig) {
+                    try {
+                        return await axios.patch(url, data, config);
+                    } catch (error: any) {
+                        handleError(error.response)
+                    }
+                },
                 async delete(url: string, config?: AxiosRequestConfig) {
                     try {
                         return await axios.delete(url, config);
