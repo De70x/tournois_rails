@@ -3,14 +3,27 @@ import {useTournoisStore} from "~/store/tournois_store";
 
 export const useJoueursStore = defineStore('joueurs', {
     state: () => ({
-        joueurs: useTournoisStore().tournoiActif.joueurs as Joueur[],
+        joueurs: [] as Joueur[],
+        joueurFictif: {} as Joueur,
+        joueurEnEttente: {} as Joueur
     }),
+    getters: {
+        getJoueursSansPoules: (state) => {
+            return state.joueurs.filter(j => !j.poule_id)
+        },
+        getJoueurParPoule: (state) => (pouleId: number) => {
+            return state.joueurs.filter(j => j.poule_id === pouleId)
+        }
+    },
     actions: {
+        setJoueurs(joueurs: Joueur[]) {
+          this.joueurs = joueurs;
+        },
         async createJoueur(joueur: Joueur) {
             const {$api} = useNuxtApp()
             try {
                 await $api.post('/joueurs', joueur)
-                useTournoisStore().tournoiActif.joueurs.push(joueur)
+                this.joueurs.push(joueur)
             } catch (error) {
                 console.error('Erreur à la création du joueur:', error, joueur);
             }
@@ -19,7 +32,7 @@ export const useJoueursStore = defineStore('joueurs', {
             const {$api} = useNuxtApp()
             try {
                 await $api.patch(`/joueurs/${joueur.id}`, {nom: joueur.nom})
-                useTournoisStore().tournoiActif.joueurs = useTournoisStore().tournoiActif.joueurs.map(j => j.id === joueur.id ? {
+                this.joueurs = this.joueurs.map(j => j.id === joueur.id ? {
                     ...j,
                     nom: joueur.nom!
                 } : j)
@@ -31,7 +44,7 @@ export const useJoueursStore = defineStore('joueurs', {
             const {$api} = useNuxtApp()
             try {
                 await $api.delete(`/joueurs/${id}`)
-                useTournoisStore().tournoiActif.joueurs = useTournoisStore().tournoiActif.joueurs.filter(t => t.id !== id)
+                this.joueurs = this.joueurs.filter(t => t.id !== id)
             } catch (error) {
                 console.error('Erreur à la suppression du joueur:', error, id);
             }

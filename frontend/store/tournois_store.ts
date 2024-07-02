@@ -1,5 +1,6 @@
 import type {Tournoi} from "~/types/Tournoi";
 import type {Joueur} from "~/types/Joueur";
+import {useJoueursStore} from "~/store/joueurs_store";
 
 export const useTournoisStore = defineStore('tournois', {
     state: () => ({
@@ -41,7 +42,10 @@ export const useTournoisStore = defineStore('tournois', {
             try {
                 const response = await $api.get(`/tournois/${id}`)
                 if (response) {
+                    const joueursStore = useJoueursStore()
                     this.tournoiActif = response.data
+                    joueursStore.setJoueurs(response.data.joueurs)
+                    this.tournoiActif.joueurs = joueursStore.joueurs
                 }
             } catch (error) {
                 console.error('Erreur à la suppression du tournoi:', error, id);
@@ -50,6 +54,5 @@ export const useTournoisStore = defineStore('tournois', {
         ajouterJoueur(joueur: Joueur) {
             this.tournoiActif.joueurs.push(joueur)
         }
-
     }
 });
