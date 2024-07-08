@@ -7,9 +7,9 @@ export default defineNuxtPlugin
     const router = useRouter()
     const authStore = useAuthStore()
 
-    const handleError = (error: AxiosResponse) => {
+    const handleError = async (error: AxiosResponse) => {
         if(error.status === 401){
-            authStore.logout()
+            await authStore.logout()
         }
         const description = error.data.message ? error.data.message : error.data.error ? error.data.error : error.data
         toast.add({
@@ -39,35 +39,35 @@ export default defineNuxtPlugin
                     try {
                         return await axios.get(url, config);
                     } catch (error: any) {
-                        handleError(error.response)
+                        await handleError(error.response)
                     }
                 },
                 async post(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
                         return await axios.post(url, data, config);
                     } catch (error: any) {
-                        handleError(error.response)
+                        await handleError(error.response)
                     }
                 },
                 async put(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
                         return await axios.put(url, data, config);
                     } catch (error: any) {
-                        handleError(error.response)
+                        await handleError(error.response)
                     }
                 },
                 async patch(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
                         return await axios.patch(url, data, config);
                     } catch (error: any) {
-                        handleError(error.response)
+                        await handleError(error.response)
                     }
                 },
                 async delete(url: string, config?: AxiosRequestConfig) {
                     try {
                         return await axios.delete(url, config);
                     } catch (error: any) {
-                        handleError(error.response)
+                        await handleError(error.response)
                     }
                 },
             }
