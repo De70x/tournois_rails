@@ -1,6 +1,7 @@
 import type {Tournoi} from "~/types/Tournoi";
 import type {Joueur} from "~/types/Joueur";
 import {useJoueursStore} from "~/store/joueurs_store";
+import {usePoulesStore} from "~/store/poules_store";
 
 export const useTournoisStore = defineStore('tournois', {
     state: () => ({
@@ -28,11 +29,14 @@ export const useTournoisStore = defineStore('tournois', {
         async setActif(id: number) {
             const {$api} = useNuxtApp()
             const joueursStore = useJoueursStore()
+            const poulesStore = usePoulesStore()
             const response = await $api.get(`/tournois/${id}`)
             if (response) {
                 this.tournoiActif = response.data
                 joueursStore.setJoueurs(response.data.joueurs)
                 this.tournoiActif.joueurs = joueursStore.joueurs
+                poulesStore.setPoules(response.data.poules)
+                this.tournoiActif.poules = poulesStore.poules
             }
         },
         ajouterJoueur(joueur: Joueur) {
