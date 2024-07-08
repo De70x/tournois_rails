@@ -27,9 +27,9 @@ export const useTournoisStore = defineStore('tournois', {
         },
         async setActif(id: number) {
             const {$api} = useNuxtApp()
+            const joueursStore = useJoueursStore()
             const response = await $api.get(`/tournois/${id}`)
             if (response) {
-                const joueursStore = useJoueursStore()
                 this.tournoiActif = response.data
                 joueursStore.setJoueurs(response.data.joueurs)
                 this.tournoiActif.joueurs = joueursStore.joueurs
