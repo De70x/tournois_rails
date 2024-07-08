@@ -1,11 +1,10 @@
 import type {Joueur} from "~/types/Joueur";
-import {useTournoisStore} from "~/store/tournois_store";
 
 export const useJoueursStore = defineStore('joueurs', {
     state: () => ({
         joueurs: [] as Joueur[],
         joueurFictif: {} as Joueur,
-        joueurEnEttente: {} as Joueur
+        joueurEnAttente: {} as Joueur
     }),
     getters: {
         getJoueursSansPoules: (state) => {
