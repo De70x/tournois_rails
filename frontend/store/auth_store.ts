@@ -9,37 +9,24 @@ export const useAuthStore = defineStore('auth', {
     actions: {
         async login(credentials: { email: string; password: string }) {
             const {$api} = useNuxtApp()
-            try {
-                const response = await $api.post('/users/sign_in', {user: credentials})
-                this.authToken = response?.headers['authorization'].replace('Bearer ', '')
-                this.user = response?.data.user
-                const authCookie = useCookie('auth-token', {sameSite: 'strict'})
-                authCookie.value = this.authToken
-                await usePermissionsStore().fetchPermissions()
-            } catch (error) {
-                throw new Error('Failed to log in')
-            }
+            const response = await $api.post('/users/sign_in', {user: credentials})
+            this.authToken = response?.headers['authorization'].replace('Bearer ', '')
+            this.user = response?.data.user
+            const authCookie = useCookie('auth-token', {sameSite: 'strict'})
+            authCookie.value = this.authToken
+            await usePermissionsStore().fetchPermissions()
         },
         async logout() {
             const {$api} = useNuxtApp()
-            try {
-                await $api.delete('/users/sign_out')
-                this.authToken = null
-                this.user = null
-                usePermissionsStore().clearPermissions()
-                useCookie('auth-token', {sameSite:'strict'}).value = null
-            } catch (error) {
-                throw new Error('Failed to log out')
-            }
+            await $api.delete('/users/sign_out')
+            this.authToken = null
+            this.user = null
+            usePermissionsStore().clearPermissions()
+            useCookie('auth-token', {sameSite: 'strict'}).value = null
         },
         async signup(credentials: { email: string; password: string }) {
             const {$api} = useNuxtApp()
-            try {
-                await $api.post('/users', {user: credentials})
-            } catch (error) {
-                this.authToken = null
-                this.user = null
-            }
+            await $api.post('/users', {user: credentials})
         }
-    },
+    }
 })

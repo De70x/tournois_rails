@@ -10,45 +10,29 @@ export const useTournoisStore = defineStore('tournois', {
     actions: {
         async fetchTournois() {
             const {$api} = useNuxtApp()
-            try {
-                const response = await $api.get('/tournois');
-                if (response) {
-                    this.tournois = response.data
-                }
-            } catch (error) {
-                console.error('Erreur à la récupération des tournois:', error);
+            const response = await $api.get('/tournois');
+            if (response) {
+                this.tournois = response.data
             }
         },
         async createTournoi(tournoi: Tournoi) {
             const {$api} = useNuxtApp()
-            try {
-                await $api.post('/tournois', tournoi)
-                this.tournois.push(tournoi)
-            } catch (error) {
-                console.error('Erreur à la création du tournoi:', error, tournoi);
-            }
+            await $api.post('/tournois', tournoi)
+            this.tournois.push(tournoi)
         },
         async deleteTournoi(id: number) {
             const {$api} = useNuxtApp()
-            try {
-                await $api.delete(`/tournois/${id}`)
-                this.tournois = this.tournois.filter(t => t.id !== id)
-            } catch (error) {
-                console.error('Erreur à la suppression du tournoi:', error, id);
-            }
+            await $api.delete(`/tournois/${id}`)
+            this.tournois = this.tournois.filter(t => t.id !== id)
         },
         async setActif(id: number) {
             const {$api} = useNuxtApp()
-            try {
-                const response = await $api.get(`/tournois/${id}`)
-                if (response) {
-                    const joueursStore = useJoueursStore()
-                    this.tournoiActif = response.data
-                    joueursStore.setJoueurs(response.data.joueurs)
-                    this.tournoiActif.joueurs = joueursStore.joueurs
-                }
-            } catch (error) {
-                console.error('Erreur à la suppression du tournoi:', error, id);
+            const response = await $api.get(`/tournois/${id}`)
+            if (response) {
+                const joueursStore = useJoueursStore()
+                this.tournoiActif = response.data
+                joueursStore.setJoueurs(response.data.joueurs)
+                this.tournoiActif.joueurs = joueursStore.joueurs
             }
         },
         ajouterJoueur(joueur: Joueur) {
