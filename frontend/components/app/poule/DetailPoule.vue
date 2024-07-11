@@ -39,17 +39,19 @@ const supprimerPoule = async (pouleId: number) => {
 <template>
   <UCard :key="poule.id" class="w-full h-full">
     <template #header>
-      <UForm v-if="creationPouleEnCours" :state="formState" @submit="creationTerminee" class="flex gap-2 justify-center">
+      <UForm v-if="creationPouleEnCours" :state="formState" @submit="creationTerminee"
+             class="flex gap-2 justify-center">
         <UInput v-model="formState.nom"></UInput>
         <UButton type="submit">Valider</UButton>
       </UForm>
       <div v-else @dblclick="editerPoule(poule)" class="flex items-center relative">
         <span class="flex-grow text-center">{{ poule.nom }}</span>
-        <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerPoule(poule.id!)" class="absolute right-0"/>
+        <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerPoule(poule.id!)"
+                 class="absolute right-0"/>
       </div>
 
     </template>
-    <h3 @dblclick="editerPoule(poule)">{{ poule.nom }}</h3>
+    <UTable :rows="poule.joueurs" :ui="{td:{base: 'text-center'},th:{base: 'text-center'}}"/>
   </UCard>
 </template>
 

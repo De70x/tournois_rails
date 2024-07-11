@@ -54,9 +54,9 @@ const supprimerJoueur = async (id: number) => {
       <UInput v-model="formState.nom"></UInput>
       <UButton type="submit">Valider</UButton>
     </UForm>
-    <div>{{joueursSansPoule.length}} joueurs inscrits</div>
+    <div>{{tournoisStore.tournoiActif.joueurs.length}} joueurs inscrits</div>
     <div v-for="joueur in joueursSansPoule" @dblclick="editerJoueur(joueur)" class="flex items-center justify-between">
-      <div>{{ joueur.nom }}</div>
+      <div class="truncate" :title="joueur.nom">{{ joueur.nom }}</div>
       <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerJoueur(joueur.id!)"/>
     </div>
   </div>
