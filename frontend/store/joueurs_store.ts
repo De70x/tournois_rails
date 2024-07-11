@@ -20,8 +20,8 @@ export const useJoueursStore = defineStore('joueurs', {
         },
         async createJoueur(joueur: Joueur) {
             const {$api} = useNuxtApp()
-            await $api.post('/joueurs', joueur)
-            this.joueurs.push(joueur)
+            const nouveauJoueur = await $api.post('/joueurs', joueur)
+            this.joueurs.push(nouveauJoueur!.data)
         },
         async editJoueur(joueur: Partial<Joueur>) {
             const {$api} = useNuxtApp()

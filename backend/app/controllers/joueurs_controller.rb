@@ -10,7 +10,7 @@ class JoueursController < ApplicationController
 
   # GET /joueurs/1
   def show
-    render json: @joueur
+    render json: JoueursSerializer.light(@joueur)
   end
 
   # POST /joueurs
@@ -18,7 +18,7 @@ class JoueursController < ApplicationController
     @joueur = Joueur.new(joueur_params)
 
     if @joueur.save
-      render json: @joueur, status: :created, location: @joueur
+      render json: JoueursSerializer.light(@joueur), status: :created, location: @joueur
     else
       render json: @joueur.errors, status: :unprocessable_entity
     end

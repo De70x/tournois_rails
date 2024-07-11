@@ -12,9 +12,11 @@ const formState = reactive({
   id: -1,
   nom: ""
 })
-const joueursSansPoule = computed(() => tournoisStore.tournoiActif.joueurs.filter(j => j.poule_id == null))
+const joueursSansPoule = computed(() => joueursStore.getJoueursSansPoules)
 
 const creationJoueur = () => {
+  formState.id = -1
+  formState.nom = ''
   creationJoueurEnCours.value = true
 }
 
@@ -34,7 +36,6 @@ const creationTerminee = async (event: FormSubmitEvent<Partial<Joueur>>) => {
 }
 
 const editerJoueur = (joueur: Joueur) => {
-  console.log(joueur)
   formState.id = joueur.id!
   formState.nom = joueur.nom
   creationJoueurEnCours.value = true
@@ -53,7 +54,8 @@ const supprimerJoueur = async (id: number) => {
       <UInput v-model="formState.nom"></UInput>
       <UButton type="submit">Valider</UButton>
     </UForm>
-    <div v-for="joueur in joueursSansPoule" @dblclick="editerJoueur(joueur)" class="flex items-center justify-evenly">
+    <div>{{joueursSansPoule.length}} joueurs inscrits</div>
+    <div v-for="joueur in joueursSansPoule" @dblclick="editerJoueur(joueur)" class="flex items-center justify-between">
       <div>{{ joueur.nom }}</div>
       <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerJoueur(joueur.id!)"/>
     </div>
