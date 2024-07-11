@@ -23,13 +23,17 @@ export const useJoueursStore = defineStore('joueurs', {
             const nouveauJoueur = await $api.post('/joueurs', joueur)
             this.joueurs.push(nouveauJoueur!.data)
         },
-        async editJoueur(joueur: Partial<Joueur>) {
+        async editJoueur(joueur: Joueur) {
             const {$api} = useNuxtApp()
-            await $api.patch(`/joueurs/${joueur.id}`, {nom: joueur.nom})
-            this.joueurs = this.joueurs.map(j => j.id === joueur.id ? {
-                ...j,
-                nom: joueur.nom!
-            } : j)
+            console.log({
+                nom: joueur.nom,
+                poule_id: joueur.poule_id === undefined ? null : joueur.poule_id
+            })
+            await $api.patch(`/joueurs/${joueur.id}`, {
+                nom: joueur.nom,
+                poule_id: joueur.poule_id === undefined ? null : joueur.poule_id
+            })
+            this.joueurs = this.joueurs.map(j => j.id === joueur.id ? joueur : j)
         },
         async deleteJoueur(id: number) {
             const {$api} = useNuxtApp()

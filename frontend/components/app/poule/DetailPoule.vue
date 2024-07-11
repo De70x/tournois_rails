@@ -3,6 +3,7 @@ import type {Poule} from "~/types/Poule";
 import type {PropType} from "vue";
 import type {FormSubmitEvent} from "#ui/types";
 import {usePoulesStore} from "~/store/poules_store";
+import ListeJoueursPoule from "~/components/app/poule/ListeJoueursPoule.vue";
 
 defineProps({
   poule: {type: Object as PropType<Poule>, required: true},
@@ -46,12 +47,12 @@ const supprimerPoule = async (pouleId: number) => {
       </UForm>
       <div v-else @dblclick="editerPoule(poule)" class="flex items-center relative">
         <span class="flex-grow text-center">{{ poule.nom }}</span>
-        <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerPoule(poule.id!)"
+        <UButton v-if="poule.joueurs.length === 0" color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerPoule(poule.id!)"
                  class="absolute right-0"/>
       </div>
 
     </template>
-    <UTable :rows="poule.joueurs" :ui="{td:{base: 'text-center'},th:{base: 'text-center'}}"/>
+    <ListeJoueursPoule :joueurs="poule.joueurs"/>
   </UCard>
 </template>
 

@@ -4,6 +4,8 @@ class JoueursSerializer
       id: joueur.id,
       nom: joueur.nom,
       poule_id: joueur.poule_id,
+      points: joueur.calculate_points,
+      nb_matchs: joueur.nb_matchs
     }
   end
 

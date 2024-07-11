@@ -26,10 +26,6 @@ export const usePoulesStore = defineStore('poules', {
             const {$api} = useNuxtApp()
             await $api.delete(`/poules/${id}`)
             this.poules = this.poules.filter(p => p.id !== id)
-        },
-        async addJoueurToPoule(joueur_id: number, poule_id: number) {
-            const {$api} = useNuxtApp()
-            await $api.patch(`/poules/${poule_id}`, joueur_id)
         }
     }
 });

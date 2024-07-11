@@ -39,13 +39,14 @@ class JoueursController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_joueur
-      @joueur = Joueur.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def joueur_params
-      params.require(:joueur).permit(:nom, :type_joueur, :poule_id, :tournoi_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_joueur
+    @joueur = Joueur.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def joueur_params
+    params.require(:joueur).permit(:nom, :poule_id)
+  end
 end

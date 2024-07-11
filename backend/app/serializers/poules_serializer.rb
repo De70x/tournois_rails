@@ -3,7 +3,7 @@ class PoulesSerializer
     {
       id: poule.id,
       nom: poule.nom,
-      joueurs: poule.joueurs.map { |j| JoueursSerializer.light(j) },
+      joueurs: poule.joueurs.map { |j| JoueursSerializer.light(j) }
     }
   end
 

@@ -7,10 +7,11 @@ const tournoisStore = useTournoisStore();
 const annee = new Date().getFullYear()
 
 const state = reactive({
-  nom: undefined,
+  nom: '',
 });
 
 const handleSubmit = async (event: FormSubmitEvent<Tournoi>) => {
+  console.log('submit tournoi')
   await tournoisStore.createTournoi({...event.data, annee})
   await useRouter().push("/tournoi/liste");
 };
@@ -22,9 +23,8 @@ const handleSubmit = async (event: FormSubmitEvent<Tournoi>) => {
       <UFormGroup label="Nom" name="nom">
         <UInput v-model="state.nom"/>
       </UFormGroup>
-      <UButton type="submit">
-        Créer Tournoi
-      </UButton>
+
+      <UButton type="submit">Créer Tournoi</UButton>
     </UForm>
   </UCard>
 </template>
