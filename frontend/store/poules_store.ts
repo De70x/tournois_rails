@@ -9,6 +9,9 @@ export const usePoulesStore = defineStore('poules', {
         setPoules(poules: Poule[]) {
             this.poules = poules;
         },
+        getPoule(id:number){
+          return this.poules.find((poule) => poule.id === id)
+        },
         async createPoule(poule: Poule) {
             const {$api} = useNuxtApp()
             const nouvellePoule = await $api.post('/poules', poule)

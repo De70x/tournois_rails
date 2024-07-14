@@ -11,13 +11,15 @@ const joueursStore = useJoueursStore()
 const creationJoueurEnCours = ref(false)
 const formState = reactive({
   id: -1,
-  nom: ""
+  nom: "",
+  poule_id: -1
 })
 const joueursSansPoule = computed(() => joueursStore.getJoueursSansPoules)
 
 const creationJoueur = () => {
   formState.id = -1
   formState.nom = ''
+  formState.poule_id = -1
   creationJoueurEnCours.value = true
 }
 
@@ -31,6 +33,7 @@ const creationTerminee = async (event: FormSubmitEvent<Joueur>) => {
     await joueursStore.editJoueur({
       id: event.data.id,
       nom: event.data.nom!,
+      poule_id: event.data.poule_id,
       tournoi_id: tournoisStore.tournoiActif.id!
     })
   }
@@ -40,6 +43,7 @@ const creationTerminee = async (event: FormSubmitEvent<Joueur>) => {
 const editerJoueur = (joueur: Joueur) => {
   formState.id = joueur.id!
   formState.nom = joueur.nom
+  formState.poule_id = joueur.poule_id!
   creationJoueurEnCours.value = true
 }
 

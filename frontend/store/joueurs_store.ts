@@ -1,4 +1,5 @@
 import type {Joueur} from "~/types/Joueur";
+import {usePoulesStore} from "~/store/poules_store";
 
 export const useJoueursStore = defineStore('joueurs', {
     state: () => ({
@@ -25,15 +26,35 @@ export const useJoueursStore = defineStore('joueurs', {
         },
         async editJoueur(joueur: Joueur) {
             const {$api} = useNuxtApp()
-            console.log({
-                nom: joueur.nom,
-                poule_id: joueur.poule_id === undefined ? null : joueur.poule_id
-            })
+            const poulesStore = usePoulesStore()
+            const poule = poulesStore.getPoule(joueur.poule_id!)
+            if (poule) {
+                if (!poule.joueurs.map(j => j.id).includes(joueur.id)) {
+                    poule.joueurs.push(joueur)
+                }
+            }
             await $api.patch(`/joueurs/${joueur.id}`, {
                 nom: joueur.nom,
-                poule_id: joueur.poule_id === undefined ? null : joueur.poule_id
+                poule_id: joueur.poule_id === undefined ? null : joueur.poule_id,
+                tournoi_id: joueur.tournoi_id
             })
             this.joueurs = this.joueurs.map(j => j.id === joueur.id ? joueur : j)
+        },
+        async desinscrireJoueur(joueur: Joueur) {
+            const {$api} = useNuxtApp()
+            const poulesStore = usePoulesStore()
+            await $api.patch(`/joueurs/${joueur.id}`, {
+                nom: joueur.nom,
+                poule_id: null,
+                tournoi_id: joueur.tournoi_id
+            })
+            const poule = poulesStore.getPoule(joueur.poule_id!)
+            if (poule) {
+                poule.joueurs = poule.joueurs.filter(j => j.id !== joueur.id)
+            }
+            this.joueurs = this.joueurs.map(j => {
+                return j.id === joueur.id ? {...joueur, poule_id: undefined} : j
+            })
         },
         async deleteJoueur(id: number) {
             const {$api} = useNuxtApp()

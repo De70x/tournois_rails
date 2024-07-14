@@ -34,11 +34,7 @@ const columns = [{
 }]
 
 const desinscrire = (joueur: Joueur) => {
-  const joueurDesinscrit = {
-    ...joueur,
-    poule_id: undefined,
-  }
-  joueursStore.editJoueur(joueurDesinscrit)
+  joueursStore.desinscrireJoueur(joueur)
 }
 
 
