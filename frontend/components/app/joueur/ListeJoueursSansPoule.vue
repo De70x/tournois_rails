@@ -52,6 +52,7 @@ const supprimerJoueur = async (id: number) => {
 }
 
 const tirageAuSort = () => {
+  useRouter().push('/tirageAuSort')
   let joueursRestants = [...joueursSansPoule.value]
   while (joueursRestants.length !== 0) {
     tournoisStore.tournoiActif.poules.forEach((p) => {
