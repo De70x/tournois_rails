@@ -40,7 +40,7 @@ const creationTerminee = async (event: FormSubmitEvent<Partial<Joueur>>) => {
       <UInput v-model="formState.nom"></UInput>
       <UButton type="submit">Valider</UButton>
     </UForm>
-    <div class="grid grid-cols-2 gap-4 w-full">
+    <div class="grid grid-cols-2 gap-4 gap-y-14 w-full">
       <DetailPoule v-for="poule in poules" :poule="poule"/>
     </div>
   </div>

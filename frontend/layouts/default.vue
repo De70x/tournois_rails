@@ -7,7 +7,7 @@
     <header class="absolute inset-x-0 top-20">
       <slot name="header"/>
     </header>
-    <slot class="relative"/>
+    <slot class="mt-20"/>
     <footer class="absolute inset-x-0 bottom-20">
       <slot name="footer"/>
     </footer>
