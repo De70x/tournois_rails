@@ -10,6 +10,7 @@ export default defineNuxtPlugin
     const handleError = async (error: AxiosResponse) => {
         if(error.status === 401){
             await authStore.logout()
+            await router.push('/connexion')
         }
         const description = error.data.message ? error.data.message : error.data.error ? error.data.error : error.data
         toast.add({

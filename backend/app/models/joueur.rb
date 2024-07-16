@@ -3,29 +3,24 @@ class Joueur < ApplicationRecord
 
   belongs_to :tournoi, optional: true
   belongs_to :poule, optional: true
-  has_many :matchs_1, class_name: 'MatchsTournoi', foreign_key: :joueur_1_id
-  has_many :matchs_2, class_name: 'MatchsTournoi', foreign_key: :joueur_2_id
+  has_many :matchs1, class_name: 'MatchsTournoi', foreign_key: :joueur_1_id
+  has_many :matchs2, class_name: 'MatchsTournoi', foreign_key: :joueur_2_id
 
   validates_uniqueness_of :nom, scope: :tournoi, case_sensitive: false
 
   def calculate_points
-    MatchsTournoi.where(phase: -1)
-                 .where('joueur_1_id = ? OR joueur_2_id = ?', id, id)
-                 .sum do |match|
-      if match.joueur_1_id == id
-        match.score_1
-      else
-        match.score_2
-      end
+    acc = 0
+    matchs1.each do |match|
+      acc += match.score_1
     end
+    matchs2.each do |match|
+      acc += match.score_2
+    end
+    acc
   end
 
   def nb_matchs
-    MatchsTournoi.where(phase: -1)
-                 .where('joueur_1_id = ? OR joueur_2_id = ?', id, id)
-                 .sum do
-      1
-    end
+    matchs1.length + matchs2.length
   end
 
 end

@@ -13,8 +13,10 @@ class JoueursSerializer
     {
       id: joueur.id,
       nom: joueur.nom,
-      matchs: joueur.matchs_1 + joueur.matchs_2,
+      matchs: joueur.matchs1 + joueur.matchs2,
+      poule_id: joueur.poule_id,
+      points: joueur.calculate_points,
+      nb_matchs: joueur.nb_matchs
     }
   end
-
 end

@@ -1,8 +1,8 @@
 import {usePermissionsStore} from "~/store/permissions_store";
 
-export const hasPermission =  async (permission: String) => {
+export const hasPermission = async (permission: String): Promise<boolean> => {
     let permissions = usePermissionsStore().permissions
-    if(permissions === undefined) {
+    if (permissions === undefined) {
         permissions = await usePermissionsStore().fetchPermissions()
     }
     const permissionItems = permission.split('_')

@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <div class="flex h-screen flex-col items-center justify-center text-center">
+  <div class="flex h-screen flex-col items-center justify-center text-center w-full">
     <Navigation/>
     <header class="absolute inset-x-0 top-20">
       <slot name="header"/>
