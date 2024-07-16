@@ -2,6 +2,8 @@
 import {usePoulesStore} from "~/store/poules_store";
 import type {Joueur} from "~/types/Joueur";
 import {useStadesStore} from "~/store/stades_store";
+import type {FormSubmitEvent} from "#ui/types";
+import type {Match} from "~/types/Match";
 
 const route = useRoute()
 const poulesStore = usePoulesStore()
@@ -14,25 +16,47 @@ const triParNombreDeMatchs = (j1: Joueur, j2: Joueur) => {
   return j1.nb_matchs - j2.nb_matchs
 }
 
-const j1 = ref(poule?.joueurs[0])
-const j2 = ref(undefined)
+const state = reactive({
+  joueur1_id: '',
+  joueur2_id: '',
+  stade_id: '',
+});
+
 const j1Select = poule?.joueurs
 const j2Select = poule?.joueurs
 
 const stades = stadesStore.stades
-const stade = ref(stades[0])
+
+const handleSubmit = (event: FormSubmitEvent<Match>) => {
+  console.log(event.data.joueur1_id)
+  console.log(event.data.joueur2_id)
+  console.log(event.data.stade_id)
+}
 
 </script>
 
 <template>
   <NuxtLayout name="default">
     <template #header>
-      <h1 class="text-xl">Création du match pour la poule {{poule?.nom}}</h1>
+      <h1 class="text-xl">Création du match pour la poule {{ poule?.nom }}</h1>
     </template>
     <template #default>
-      <USelect v-model="j1" :options="j1Select" option-attribute="nom"/>
-      <USelect v-model="j2" :options="j2Select" option-attribute="nom"/>
-      <USelect v-model="stade" :options="stades" option-attribute="nom"/>
+      <UCard>
+        <UForm :state="state" class="space-y-4" @submit="handleSubmit">
+          <UFormGroup label="joueur 1" name="j1">
+            <USelect v-model="state.joueur1_id" :options="j1Select" option-attribute="nom" value-attribute="id"/>
+          </UFormGroup>
+          <UFormGroup label="joueur 2" name="j2">
+            <USelect v-model="state.joueur2_id" :options="j2Select" option-attribute="nom" value-attribute="id"/>
+          </UFormGroup>
+          <UFormGroup label="stade" name="stade">
+            <USelect v-model="state.stade_id" :options="stades" option-attribute="nom" value-attribute="id"/>
+          </UFormGroup>
+          <UButton type="submit">
+            Créer match
+          </UButton>
+        </UForm>
+      </UCard>
     </template>
   </NuxtLayout>
 </template>

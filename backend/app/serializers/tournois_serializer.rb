@@ -14,8 +14,8 @@ class TournoisSerializer
       annee: tournoi.annee,
       joueurs: tournoi.joueurs.map { |j| JoueursSerializer.light(j) },
       poules: tournoi.poules.map { |p| PoulesSerializer.light(p) },
-      stades: tournoi.stades
+      stades: tournoi.stades,
+      matchs: tournoi.matchs_tournois
     }
   end
-
 end

@@ -34,8 +34,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
   end
 
   create_table "matchs_tournois", force: :cascade do |t|
-    t.bigint "joueur_1_id", null: false
-    t.bigint "joueur_2_id", null: false
+    t.bigint "joueur1_id", null: false
+    t.bigint "joueur2_id", null: false
     t.integer "score_1", default: 0, null: false
     t.integer "score_2", default: 0, null: false
     t.integer "statut", default: 0, null: false
@@ -44,8 +44,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
     t.integer "indice"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["joueur_1_id"], name: "index_matchs_tournois_on_joueur_1_id"
-    t.index ["joueur_2_id"], name: "index_matchs_tournois_on_joueur_2_id"
+    t.index ["joueur1_id"], name: "index_matchs_tournois_on_joueur1_id"
+    t.index ["joueur2_id"], name: "index_matchs_tournois_on_joueur2_id"
     t.index ["stade_id"], name: "index_matchs_tournois_on_stade_id"
   end
 
@@ -117,8 +117,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
 
   add_foreign_key "joueurs", "poules"
   add_foreign_key "joueurs", "tournois"
-  add_foreign_key "matchs_tournois", "joueurs", column: "joueur_1_id"
-  add_foreign_key "matchs_tournois", "joueurs", column: "joueur_2_id"
+  add_foreign_key "matchs_tournois", "joueurs", column: "joueur1_id"
+  add_foreign_key "matchs_tournois", "joueurs", column: "joueur2_id"
   add_foreign_key "matchs_tournois", "stades"
   add_foreign_key "poules", "tournois"
   add_foreign_key "role_permissions", "permissions"

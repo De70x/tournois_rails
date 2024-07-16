@@ -46,6 +46,6 @@ class MatchsTournoisController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def matchs_tournoi_params
-      params.require(:matchs_tournoi).permit(:joueur_1_id, :joueur_2_id, :score_1, :score_2, :statut, :stade_id, :phase, :indice)
+      params.require(:matchs_tournoi).permit(:joueur1_id, :joueur2_id, :score_1, :score_2, :statut, :stade_id, :phase, :indice)
     end
 end

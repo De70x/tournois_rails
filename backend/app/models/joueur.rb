@@ -3,8 +3,8 @@ class Joueur < ApplicationRecord
 
   belongs_to :tournoi, optional: true
   belongs_to :poule, optional: true
-  has_many :matchs1, class_name: 'MatchsTournoi', foreign_key: :joueur_1_id
-  has_many :matchs2, class_name: 'MatchsTournoi', foreign_key: :joueur_2_id
+  has_many :matchs1, class_name: 'MatchsTournoi', foreign_key: :joueur1_id
+  has_many :matchs2, class_name: 'MatchsTournoi', foreign_key: :joueur2_id
 
   validates_uniqueness_of :nom, scope: :tournoi, case_sensitive: false
 
