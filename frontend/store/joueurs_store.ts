@@ -13,6 +13,14 @@ export const useJoueursStore = defineStore('joueurs', {
         },
         getJoueurParPoule: (state) => (pouleId: number) => {
             return state.joueurs.filter(j => j.poule_id === pouleId)
+        },
+        getListeAdversaires: (state) => (joueurId: string) => {
+            const id = parseInt(joueurId)
+            const joueur = state.joueurs.find(j => j.id === id)
+            console.log(joueur)
+            let listeAdversaires = joueur!.matchs1.map(m => m.joueur2_id)
+            listeAdversaires.concat(joueur!.matchs2.map(m => m.joueur1_id))
+            return listeAdversaires
         }
     },
     actions: {

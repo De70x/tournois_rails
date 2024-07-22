@@ -4,10 +4,13 @@ import type {Joueur} from "~/types/Joueur";
 import {useStadesStore} from "~/store/stades_store";
 import type {FormSubmitEvent} from "#ui/types";
 import type {Match} from "~/types/Match";
+import {useMatchsStore} from "~/store/matchs_store";
+import {useJoueursStore} from "~/store/joueurs_store";
 
 const route = useRoute()
 const poulesStore = usePoulesStore()
 const stadesStore = useStadesStore()
+const joueursStore = useJoueursStore()
 const id = Array.isArray(route.params.poule_id) ? route.params.poule_id[0] : route.params.poule_id
 const poule_id = parseInt(id, 10)
 const poule = poulesStore.getPoule(poule_id)
@@ -22,8 +25,8 @@ const state = reactive({
   stade_id: '',
 });
 
-const j1Select = poule?.joueurs
-const j2Select = poule?.joueurs
+const j1Select = ref(poule!.joueurs)
+const j2Select = ref(poule!.joueurs)
 
 const stades = stadesStore.stades
 
@@ -31,6 +34,20 @@ const handleSubmit = (event: FormSubmitEvent<Match>) => {
   console.log(event.data.joueur1_id)
   console.log(event.data.joueur2_id)
   console.log(event.data.stade_id)
+}
+
+const editListe1 = (event: any) => {
+  let nouvelleListe = poule!.joueurs
+  nouvelleListe = nouvelleListe.filter(j => j.id != event)
+  j2Select.value = nouvelleListe
+}
+
+const editListe2 = (event: any) => {
+  console.log(joueursStore.getListeAdversaires(event))
+}
+
+const filtrerNouvelleListe = (idSelectionne: number) => {
+
 }
 
 </script>
@@ -43,12 +60,16 @@ const handleSubmit = (event: FormSubmitEvent<Match>) => {
     <template #default>
       <UCard>
         <UForm :state="state" class="space-y-4" @submit="handleSubmit">
-          <UFormGroup label="joueur 1" name="j1">
-            <USelect v-model="state.joueur1_id" :options="j1Select" option-attribute="nom" value-attribute="id"/>
-          </UFormGroup>
-          <UFormGroup label="joueur 2" name="j2">
-            <USelect v-model="state.joueur2_id" :options="j2Select" option-attribute="nom" value-attribute="id"/>
-          </UFormGroup>
+          <div class="flex gap-10">
+            <UFormGroup label="joueur 1" name="j1">
+              <USelect v-model="state.joueur1_id" :options="j1Select" option-attribute="nom" value-attribute="id"
+                       @change="editListe1"/>
+            </UFormGroup>
+            <UFormGroup label="joueur 2" name="j2">
+              <USelect v-model="state.joueur2_id" :options="j2Select" option-attribute="nom" value-attribute="id"
+                       @change="editListe2"/>
+            </UFormGroup>
+          </div>
           <UFormGroup label="stade" name="stade">
             <USelect v-model="state.stade_id" :options="stades" option-attribute="nom" value-attribute="id"/>
           </UFormGroup>
