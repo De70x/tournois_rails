@@ -60,7 +60,7 @@ const creerMatch = () => {
       </template>
       <ListeJoueursPoule :joueurs="poule.joueurs"/>
     </UCard>
-    <UButton class="m-2" @click="creerMatch">Créer un match</UButton>
+    <UButton class="m-2" @click="creerMatch">Lancer un match</UButton>
   </div>
 </template>
 

@@ -14,13 +14,28 @@ export const useJoueursStore = defineStore('joueurs', {
         getJoueurParPoule: (state) => (pouleId: number) => {
             return state.joueurs.filter(j => j.poule_id === pouleId)
         },
-        getListeAdversaires: (state) => (joueurId: string) => {
-            const id = parseInt(joueurId)
-            const joueur = state.joueurs.find(j => j.id === id)
-            console.log(joueur)
-            let listeAdversaires = joueur!.matchs1.map(m => m.joueur2_id)
-            listeAdversaires.concat(joueur!.matchs2.map(m => m.joueur1_id))
-            return listeAdversaires
+        getAdversairesValides: (state) => (joueurId: number, pouleId: number) => {
+            const joueur = state.joueurs.find(j => j.id === joueurId);
+            if (!joueur) return [];
+
+            const adversairesJoues = new Set(
+                joueur.matchs.map(m =>
+                    m.joueur1_id === joueur.id ? m.joueur2_id : m.joueur1_id
+                )
+            );
+
+            return state.joueurs.filter(j =>
+                j.id !== joueurId &&
+                j.poule_id === pouleId &&
+                !adversairesJoues.has(j.id!) &&
+                !j.matchs.some(m => m.status === 0)
+            );
+        },
+        getJoueursDisponiblesDansPoule: (state) => (pouleId: number) => {
+            return state.joueurs.filter(j =>
+                j.poule_id === pouleId &&
+                !j.matchs.some(m => m.status === 0)
+            );
         }
     },
     actions: {
