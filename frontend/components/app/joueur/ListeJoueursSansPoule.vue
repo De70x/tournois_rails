@@ -24,6 +24,7 @@ const creationJoueur = () => {
 }
 
 const creationTerminee = async (event: FormSubmitEvent<Joueur>) => {
+  console.log(tournoisStore.tournoiActif.id)
   if (event.data.id === -1) {
     await joueursStore.createJoueur({
       nom: event.data.nom!,

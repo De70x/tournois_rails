@@ -47,6 +47,6 @@ class JoueursController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def joueur_params
-    params.require(:joueur).permit(:nom, :poule_id)
+    params.require(:joueur).permit(:nom, :poule_id, :tournoi_id)
   end
 end
