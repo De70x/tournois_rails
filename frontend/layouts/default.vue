@@ -2,17 +2,18 @@
 </script>
 
 <template>
-  <div class="flex h-screen flex-col items-center justify-center text-center w-full">
-    <Navigation/>
-    <header class="absolute inset-x-0 top-20">
-      <slot name="header"/>
+  <div class="flex flex-col h-screen justify-between">
+    <header class="">
+      <Navigation/>
     </header>
-    <slot class="mt-20"/>
-    <footer class="absolute inset-x-0 bottom-20">
-      <slot name="footer"/>
+
+    <main class="container mb-auto text-center mx-auto mt-4">
+      <NuxtPage/>
+    </main>
+
+    <footer class="m-4 text-center">
+      <p>&copy; Application du tournoi par <i>Antoine Deloffre</i></p>
     </footer>
-    <UNotifications/>
-    <Footer/>
   </div>
 </template>
 

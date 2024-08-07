@@ -7,7 +7,7 @@ const router = useRouter()
 const creationTournoi = () => {
   router.push("/tournoi/creation")
 }
-const supprimerTournoi = (id: number, e:any) => {
+const supprimerTournoi = (id: number, e: any) => {
   e.stopPropagation()
   tournoiStore.deleteTournoi(id)
 }
@@ -33,17 +33,12 @@ const hasPerm = await hasPermission('edit_tournoi')
 </script>
 
 <template>
-  <NuxtLayout name="default">
-    <template #header>
-      <h1 class="text-xl">Liste des tournois</h1>
+  <h1 class="text-xl">Liste des tournois</h1>
+  <UTable :rows="tournoiStore.tournois" :columns="columns" @select="select" class="w-full">
+    <template #actions-data="{ row }" v-if="hasPerm">
+      <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
+               @click="(e) => supprimerTournoi(row.id, e)"/>
     </template>
-    <template #default>
-      <UTable :rows="tournoiStore.tournois" :columns="columns" @select="select" class="w-full">
-        <template #actions-data="{ row }" v-if="hasPerm">
-          <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="(e) => supprimerTournoi(row.id, e)"/>
-        </template>
-      </UTable>
-      <UButton @click="creationTournoi()">Créer un tournoi</UButton>
-    </template>
-  </NuxtLayout>
+  </UTable>
+  <UButton @click="creationTournoi()">Créer un tournoi</UButton>
 </template>

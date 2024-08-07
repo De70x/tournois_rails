@@ -52,33 +52,27 @@ const handleSubmit = (event: FormSubmitEvent<Match>) => {
 </script>
 
 <template>
-  <NuxtLayout name="default">
-    <template #header>
-      <h1 class="text-xl">Création du match pour la poule {{ poule?.nom }}</h1>
-    </template>
-    <template #default>
-      <UCard>
-        <UForm :state="formState" class="space-y-4" @submit="handleSubmit">
-          <div class="flex gap-10">
-            <UFormGroup label="joueur 1" name="j1">
-              <USelect v-model="formState.joueur1_id" :options="j1Select" option-attribute="nom" value-attribute="id"
-                       @change="editListe1"/>
-            </UFormGroup>
-            <UFormGroup label="joueur 2" name="j2">
-              <USelect v-model="formState.joueur2_id" :options="j2Select" option-attribute="nom" value-attribute="id"
-                       @change="editListe2"/>
-            </UFormGroup>
-          </div>
-          <UFormGroup label="stade" name="stade">
-            <USelect v-model="formState.stade_id" :options="stades" option-attribute="nom" value-attribute="id"/>
-          </UFormGroup>
-          <UButton type="submit">
-            Créer match
-          </UButton>
-        </UForm>
-      </UCard>
-    </template>
-  </NuxtLayout>
+  <h1 class="text-xl">Création du match pour la poule {{ poule?.nom }}</h1>
+  <UCard>
+    <UForm :state="formState" class="space-y-4" @submit="handleSubmit">
+      <div class="flex gap-10">
+        <UFormGroup label="joueur 1" name="j1">
+          <USelect v-model="formState.joueur1_id" :options="j1Select" option-attribute="nom" value-attribute="id"
+                   @change="editListe1"/>
+        </UFormGroup>
+        <UFormGroup label="joueur 2" name="j2">
+          <USelect v-model="formState.joueur2_id" :options="j2Select" option-attribute="nom" value-attribute="id"
+                   @change="editListe2"/>
+        </UFormGroup>
+      </div>
+      <UFormGroup label="stade" name="stade">
+        <USelect v-model="formState.stade_id" :options="stades" option-attribute="nom" value-attribute="id"/>
+      </UFormGroup>
+      <UButton type="submit">
+        Créer match
+      </UButton>
+    </UForm>
+  </UCard>
 </template>
 
 <style scoped>

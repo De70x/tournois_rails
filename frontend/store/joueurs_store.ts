@@ -42,12 +42,12 @@ export const useJoueursStore = defineStore('joueurs', {
         setJoueurs(joueurs: Joueur[]) {
             this.joueurs = joueurs;
         },
-        async createJoueur(joueur: Joueur) {
+        async createJoueur(joueur: Partial<Joueur>) {
             const {$api} = useNuxtApp()
             const nouveauJoueur = await $api.post('/joueurs', joueur)
             this.joueurs.push(nouveauJoueur!.data)
         },
-        async editJoueur(joueur: Joueur) {
+        async editJoueur(joueur: Partial<Joueur>) {
             const {$api} = useNuxtApp()
             const poulesStore = usePoulesStore()
             const poule = poulesStore.getPoule(joueur.poule_id!)
