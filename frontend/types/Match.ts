@@ -1,4 +1,4 @@
-import {type InferType, number, object} from 'yup';
+import {type InferType, number, object, string} from 'yup';
 
 export const matchSchema = object({
     id: number(),
@@ -8,7 +8,7 @@ export const matchSchema = object({
     joueur2_id: number().required('Required'),
     score1: number().required('Required').default(0),
     score2: number().required('Required').default(0),
-    status: number().required('Required').default(-1),
+    statut: string().required('Required').default('init'),
     phase: number().required('Required').default(0),
 });
 

@@ -8,6 +8,10 @@ const tournoisStore = useTournoisStore()
 if (!tournoisStore.tournoiActif.id) {
   useRouter().push("liste")
 }
+else{
+  // refresh data
+  tournoisStore.setActif(tournoisStore.tournoiActif.id)
+}
 
 </script>
 

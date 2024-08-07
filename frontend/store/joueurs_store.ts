@@ -28,13 +28,16 @@ export const useJoueursStore = defineStore('joueurs', {
                 j.id !== joueurId &&
                 j.poule_id === pouleId &&
                 !adversairesJoues.has(j.id!) &&
-                !j.matchs.some(m => m.status === 0)
+                !j.matchs.some(m => m.statut === 'en_cours')
             );
         },
         getJoueursDisponiblesDansPoule: (state) => (pouleId: number) => {
+            const poulesStore = usePoulesStore()
+            const poule = poulesStore.getPoule(pouleId)
             return state.joueurs.filter(j =>
                 j.poule_id === pouleId &&
-                !j.matchs.some(m => m.status === 0)
+                !j.matchs.some(m => m.statut === 'en_cours') &&
+                j.matchs.length < poule!.joueurs.length - 1
             );
         }
     },
