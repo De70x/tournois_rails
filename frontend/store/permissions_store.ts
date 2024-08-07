@@ -5,7 +5,7 @@ export const usePermissionsStore = defineStore('permissions', {
     actions: {
         async fetchPermissions(): Promise<String[]> {
             const {$api} = useNuxtApp()
-            const response = await $api.get('/user/permissions');
+            const response = await $api.get<any>('/user/permissions');
             if (response) {
                 this.permissions = response.data
                 return response.data

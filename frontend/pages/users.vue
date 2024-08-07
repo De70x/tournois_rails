@@ -2,7 +2,7 @@
 
 const {$api} = useNuxtApp()
 
-const users = await $api.get('member-data')
+const users = await $api.get<any>('member-data')
 
 const product = ref({
   name: 'Sample Product',

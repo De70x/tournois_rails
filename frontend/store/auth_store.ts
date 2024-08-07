@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', {
     actions: {
         async login(credentials: { email: string; password: string }) {
             const {$api} = useNuxtApp()
-            const response = await $api.post('/users/sign_in', {user: credentials})
+            const response = await $api.post<any>('/users/sign_in', {user: credentials})
             this.authToken = response?.headers['authorization'].replace('Bearer ', '')
             this.user = response?.data.user
             const authCookie = useCookie('auth-token', {sameSite: 'strict'})
@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async logout() {
             const {$api} = useNuxtApp()
-            await $api.delete('/users/sign_out')
+            await $api.delete<any>('/users/sign_out')
             this.authToken = null
             this.user = null
             usePermissionsStore().clearPermissions()
@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async signup(credentials: { email: string; password: string }) {
             const {$api} = useNuxtApp()
-            await $api.post('/users', {user: credentials})
+            await $api.post<any>('/users', {user: credentials})
         }
     }
 })

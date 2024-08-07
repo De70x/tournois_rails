@@ -6,8 +6,8 @@ export const joueurSchema = object({
     tournoi_id: number().required(),
     poule_id: number(),
     nom: string().required('Required'),
-    nb_matchs: number().required('Required').default(0),
-    matchs: array().of(matchSchema).required('Requires').default([])
+    nb_matchs: number().default(0),
+    matchs: array().of(matchSchema).default([])
 });
 
 export type Joueur = InferType<typeof joueurSchema>;

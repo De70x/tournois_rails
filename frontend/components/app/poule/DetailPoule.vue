@@ -39,6 +39,17 @@ const creerMatch = () => {
   useRouter().push(`/tournoi/match/${props.poule.id}/creation`)
 }
 
+const resteDesMatchs = computed(() => {
+  let ilResteDesMatchs = false;
+  // il suffit d'un joueur n'ayant pas fait tous ses matchs, dès qu'on en trouve un on retourne vrai
+  props.poule.joueurs.forEach((j) => {
+    if (j.matchs.length < props.poule.joueurs.length - 1) {
+      ilResteDesMatchs = true;
+    }
+  });
+  return ilResteDesMatchs;
+})
+
 </script>
 
 <template>
@@ -60,7 +71,7 @@ const creerMatch = () => {
       </template>
       <ListeJoueursPoule :joueurs="poule.joueurs"/>
     </UCard>
-    <UButton class="m-2" @click="creerMatch">Lancer un match</UButton>
+    <UButton v-if="resteDesMatchs" class="m-2" @click="creerMatch">Lancer un match</UButton>
   </div>
 </template>
 

@@ -10,12 +10,12 @@ export const useStadesStore = defineStore('stades', {
         },
         async createStade(stade: Stade) {
             const {$api} = useNuxtApp()
-            const nouveauStade = await $api.post('/stades', stade)
+            const nouveauStade = await $api.post<Stade>('/stades', stade)
             this.stades.push(nouveauStade!.data)
         },
         async editStade(stade: Partial<Stade>) {
             const {$api} = useNuxtApp()
-            await $api.patch(`/stades/${stade.id}`, {nom: stade.nom})
+            await $api.patch<Stade>(`/stades/${stade.id}`, {nom: stade.nom})
             this.stades = this.stades.map(p => p.id === stade.id ? {
                 ...p,
                 nom: stade.nom!
@@ -23,7 +23,7 @@ export const useStadesStore = defineStore('stades', {
         },
         async deleteStade(id: number) {
             const {$api} = useNuxtApp()
-            await $api.delete(`/stades/${id}`)
+            await $api.delete<Stade>(`/stades/${id}`)
             this.stades = this.stades.filter(p => p.id !== id)
         }
     }

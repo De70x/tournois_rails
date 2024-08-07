@@ -36,37 +36,37 @@ export default defineNuxtPlugin
     return {
         provide: {
             api: {
-                async get(url: string, config?: AxiosRequestConfig) {
+                async get<T>(url: string, config?: AxiosRequestConfig) {
                     try {
-                        return await axios.get(url, config);
+                        return await axios.get<T>(url, config);
                     } catch (error: any) {
                         await handleError(error.response)
                     }
                 },
-                async post(url: string, data: any, config?: AxiosRequestConfig) {
+                async post<T>(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
-                        return await axios.post(url, data, config);
+                        return await axios.post<T>(url, data, config);
                     } catch (error: any) {
                         await handleError(error.response)
                     }
                 },
-                async put(url: string, data: any, config?: AxiosRequestConfig) {
+                async put<T>(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
-                        return await axios.put(url, data, config);
+                        return await axios.put<T>(url, data, config);
                     } catch (error: any) {
                         await handleError(error.response)
                     }
                 },
-                async patch(url: string, data: any, config?: AxiosRequestConfig) {
+                async patch<T>(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
-                        return await axios.patch(url, data, config);
+                        return await axios.patch<T>(url, data, config);
                     } catch (error: any) {
                         await handleError(error.response)
                     }
                 },
-                async delete(url: string, config?: AxiosRequestConfig) {
+                async delete<T>(url: string, config?: AxiosRequestConfig) {
                     try {
-                        return await axios.delete(url, config);
+                        return await axios.delete<T>(url, config);
                     } catch (error: any) {
                         await handleError(error.response)
                     }

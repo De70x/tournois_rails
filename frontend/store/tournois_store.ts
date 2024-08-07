@@ -13,19 +13,21 @@ export const useTournoisStore = defineStore('tournois', {
     actions: {
         async fetchTournois() {
             const {$api} = useNuxtApp()
-            const response = await $api.get('/tournois');
+            const response = await $api.get<Tournoi[]>('/tournois');
             if (response) {
                 this.tournois = response.data
             }
         },
         async createTournoi(tournoi: Tournoi) {
             const {$api} = useNuxtApp()
-            await $api.post('/tournois', tournoi)
-            this.tournois.push(tournoi)
+            const nouveauTournoi = await $api.post<Tournoi>('/tournois', tournoi)
+            if (nouveauTournoi) {
+                this.tournois.push(nouveauTournoi.data)
+            }
         },
         async deleteTournoi(id: number) {
             const {$api} = useNuxtApp()
-            await $api.delete(`/tournois/${id}`)
+            await $api.delete<Tournoi>(`/tournois/${id}`)
             this.tournois = this.tournois.filter(t => t.id !== id)
         },
         async setActif(id: number) {
@@ -34,7 +36,7 @@ export const useTournoisStore = defineStore('tournois', {
             const poulesStore = usePoulesStore()
             const stadesStore = useStadesStore()
             const matchsStore = useMatchsStore()
-            const response = await $api.get(`/tournois/${id}`)
+            const response = await $api.get<Tournoi>(`/tournois/${id}`)
             if (response) {
                 this.tournoiActif = response.data
                 joueursStore.setJoueurs(response.data.joueurs)

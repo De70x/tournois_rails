@@ -44,7 +44,7 @@ export const useJoueursStore = defineStore('joueurs', {
         },
         async createJoueur(joueur: Partial<Joueur>) {
             const {$api} = useNuxtApp()
-            const nouveauJoueur = await $api.post('/joueurs', joueur)
+            const nouveauJoueur = await $api.post<Joueur>('/joueurs', joueur)
             this.joueurs.push(nouveauJoueur!.data)
         },
         async editJoueur(joueur: Partial<Joueur>) {
@@ -52,21 +52,24 @@ export const useJoueursStore = defineStore('joueurs', {
             const poulesStore = usePoulesStore()
             const poule = poulesStore.getPoule(joueur.poule_id!)
             if (poule) {
-                if (!poule.joueurs.map(j => j.id).includes(joueur.id)) {
-                    poule.joueurs.push(joueur)
+                const joueurAModifier = poule.joueurs.find(j => j.id === joueur.id)
+                if (joueurAModifier && !poule.joueurs.map(j => j.id).includes(joueur.id)) {
+                    poule.joueurs.push(joueurAModifier)
                 }
             }
-            await $api.patch(`/joueurs/${joueur.id}`, {
+            const joueurModifie = await $api.patch<Joueur>(`/joueurs/${joueur.id}`, {
                 nom: joueur.nom,
                 poule_id: joueur.poule_id === undefined ? null : joueur.poule_id,
                 tournoi_id: joueur.tournoi_id
             })
-            this.joueurs = this.joueurs.map(j => j.id === joueur.id ? joueur : j)
+            if (joueurModifie) {
+                this.joueurs = this.joueurs.map(j => j.id === joueur.id ? joueurModifie.data : j)
+            }
         },
         async desinscrireJoueur(joueur: Joueur) {
             const {$api} = useNuxtApp()
             const poulesStore = usePoulesStore()
-            await $api.patch(`/joueurs/${joueur.id}`, {
+            await $api.patch<Joueur>(`/joueurs/${joueur.id}`, {
                 nom: joueur.nom,
                 poule_id: null,
                 tournoi_id: joueur.tournoi_id
@@ -81,7 +84,7 @@ export const useJoueursStore = defineStore('joueurs', {
         },
         async deleteJoueur(id: number) {
             const {$api} = useNuxtApp()
-            await $api.delete(`/joueurs/${id}`)
+            await $api.delete<Joueur>(`/joueurs/${id}`)
             this.joueurs = this.joueurs.filter(t => t.id !== id)
         },
     }

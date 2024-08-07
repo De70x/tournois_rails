@@ -1,5 +1,4 @@
 import type {Match} from "~/types/Match";
-import {id} from "postcss-selector-parser";
 
 export const useMatchsStore = defineStore('matchs', {
     state: () => ({
@@ -11,12 +10,12 @@ export const useMatchsStore = defineStore('matchs', {
         },
         async createMatch(match: Match) {
             const {$api} = useNuxtApp()
-            const nouveauMatch = await $api.post('/matchs', match)
+            const nouveauMatch = await $api.post<Match>('/matchs', match)
             this.matchs.push(nouveauMatch!.data)
         },
         async editMatch(match: Partial<Match>) {
             const {$api} = useNuxtApp()
-            await $api.patch(`/matchs/${match.id}`, {score1: match.score1, score2: match.score2})
+            await $api.patch<Match>(`/matchs/${match.id}`, {score1: match.score1, score2: match.score2})
             this.matchs = this.matchs.map(m => m.id === match.id ? {
                 ...m,
                 score1: match.score1!,
@@ -25,7 +24,7 @@ export const useMatchsStore = defineStore('matchs', {
         },
         async deleteMatch(id: number) {
             const {$api} = useNuxtApp()
-            await $api.delete(`/matchs/${id}`)
+            await $api.delete<Match>(`/matchs/${id}`)
             this.matchs = this.matchs.filter(p => p.id !== id)
         }
     }

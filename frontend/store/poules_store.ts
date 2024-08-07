@@ -14,12 +14,12 @@ export const usePoulesStore = defineStore('poules', {
         },
         async createPoule(poule: Poule) {
             const {$api} = useNuxtApp()
-            const nouvellePoule = await $api.post('/poules', poule)
+            const nouvellePoule = await $api.post<Poule>('/poules', poule)
             this.poules.push(nouvellePoule!.data)
         },
         async editPoule(poule: Partial<Poule>) {
             const {$api} = useNuxtApp()
-            await $api.patch(`/poules/${poule.id}`, {nom: poule.nom})
+            await $api.patch<Poule>(`/poules/${poule.id}`, {nom: poule.nom})
             this.poules = this.poules.map(p => p.id === poule.id ? {
                 ...p,
                 nom: poule.nom!
@@ -27,7 +27,7 @@ export const usePoulesStore = defineStore('poules', {
         },
         async deletePoule(id: number) {
             const {$api} = useNuxtApp()
-            await $api.delete(`/poules/${id}`)
+            await $api.delete<Poule>(`/poules/${id}`)
             this.poules = this.poules.filter(p => p.id !== id)
         }
     }
