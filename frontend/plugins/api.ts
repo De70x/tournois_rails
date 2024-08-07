@@ -1,10 +1,17 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import {useAuthStore} from "~/store/auth_store";
 
 export default defineNuxtPlugin
 (() => {
     const toast = useToast()
+    const router = useRouter()
+    const authStore = useAuthStore()
 
-    const handleError = (error: AxiosResponse) => {
+    const handleError = async (error: AxiosResponse) => {
+        if(error.status === 401){
+            await authStore.logout()
+            await router.push('/connexion')
+        }
         const description = error.data.message ? error.data.message : error.data.error ? error.data.error : error.data
         toast.add({
             title: error.statusText,
@@ -15,7 +22,6 @@ export default defineNuxtPlugin
         })
     }
 
-    const router = useRouter()
     axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
 
     axios.interceptors.request.use(async (config) => {
@@ -30,32 +36,39 @@ export default defineNuxtPlugin
     return {
         provide: {
             api: {
-                async get(url: string, config?: AxiosRequestConfig) {
+                async get<T>(url: string, config?: AxiosRequestConfig) {
                     try {
-                        return await axios.get(url, config);
+                        return await axios.get<T>(url, config);
                     } catch (error: any) {
-                        handleError(error.response)
+                        await handleError(error.response)
                     }
                 },
-                async post(url: string, data: any, config?: AxiosRequestConfig) {
+                async post<T>(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
-                        return await axios.post(url, data, config);
+                        return await axios.post<T>(url, data, config);
                     } catch (error: any) {
-                        handleError(error.response)
+                        await handleError(error.response)
                     }
                 },
-                async put(url: string, data: any, config?: AxiosRequestConfig) {
+                async put<T>(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
-                        return await axios.put(url, data, config);
+                        return await axios.put<T>(url, data, config);
                     } catch (error: any) {
-                        handleError(error.response)
+                        await handleError(error.response)
                     }
                 },
-                async delete(url: string, config?: AxiosRequestConfig) {
+                async patch<T>(url: string, data: any, config?: AxiosRequestConfig) {
                     try {
-                        return await axios.delete(url, config);
+                        return await axios.patch<T>(url, data, config);
                     } catch (error: any) {
-                        handleError(error.response)
+                        await handleError(error.response)
+                    }
+                },
+                async delete<T>(url: string, config?: AxiosRequestConfig) {
+                    try {
+                        return await axios.delete<T>(url, config);
+                    } catch (error: any) {
+                        await handleError(error.response)
                     }
                 },
             }

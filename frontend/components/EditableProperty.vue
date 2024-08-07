@@ -20,12 +20,12 @@ const emits = defineEmits(['update']);
 const isEditing = ref(false);
 const editableValue = ref(props.value);
 
-const hasEditPermission = computed(() => {
-  return hasPermission(`edit_${props.objectType}_${props.property}`);
+const hasEditPermission = computed(async () => {
+  return await hasPermission(`edit_${props.objectType}_${props.property}`);
 });
 
-const enableEdit = () => {
-  if (hasEditPermission.value) {
+const enableEdit = async () => {
+  if (await hasEditPermission.value) {
     isEditing.value = true;
   }
 };

@@ -1,4 +1,9 @@
 import type {Tournoi} from "~/types/Tournoi";
+import type {Joueur} from "~/types/Joueur";
+import {useJoueursStore} from "~/store/joueurs_store";
+import {usePoulesStore} from "~/store/poules_store";
+import {useStadesStore} from "~/store/stades_store";
+import {useMatchsStore} from "~/store/matchs_store";
 
 export const useTournoisStore = defineStore('tournois', {
     state: () => ({
@@ -8,44 +13,44 @@ export const useTournoisStore = defineStore('tournois', {
     actions: {
         async fetchTournois() {
             const {$api} = useNuxtApp()
-            try {
-                const response = await $api.get('/tournois');
-                if (response) {
-                    this.tournois = response.data
-                }
-            } catch (error) {
-                console.error('Erreur à la récupération des tournois:', error);
+            const response = await $api.get<Tournoi[]>('/tournois');
+            if (response) {
+                this.tournois = response.data
             }
         },
         async createTournoi(tournoi: Tournoi) {
             const {$api} = useNuxtApp()
-            try {
-                await $api.post('/tournois', tournoi)
-                this.tournois.push(tournoi)
-            } catch (error) {
-                console.error('Erreur à la création du tournoi:', error, tournoi);
+            const nouveauTournoi = await $api.post<Tournoi>('/tournois', tournoi)
+            if (nouveauTournoi) {
+                this.tournois.push(nouveauTournoi.data)
             }
         },
         async deleteTournoi(id: number) {
             const {$api} = useNuxtApp()
-            try {
-                await $api.delete(`/tournois/${id}`)
-                this.tournois = this.tournois.filter(t => t.id !== id)
-            } catch (error) {
-                console.error('Erreur à la suppression du tournoi:', error, id);
-            }
+            await $api.delete<Tournoi>(`/tournois/${id}`)
+            this.tournois = this.tournois.filter(t => t.id !== id)
         },
         async setActif(id: number) {
             const {$api} = useNuxtApp()
-            try {
-                const response = await $api.get(`/tournois/${id}`)
-                if (response) {
-                    this.tournoiActif = response.data
-                }
-            } catch (error) {
-                console.error('Erreur à la suppression du tournoi:', error, id);
+            const joueursStore = useJoueursStore()
+            const poulesStore = usePoulesStore()
+            const stadesStore = useStadesStore()
+            const matchsStore = useMatchsStore()
+            const response = await $api.get<Tournoi>(`/tournois/${id}`)
+            if (response) {
+                this.tournoiActif = response.data
+                joueursStore.setJoueurs(response.data.joueurs)
+                this.tournoiActif.joueurs = joueursStore.joueurs
+                poulesStore.setPoules(response.data.poules)
+                this.tournoiActif.poules = poulesStore.poules
+                stadesStore.setStades(response.data.stades)
+                this.tournoiActif.stades = stadesStore.stades
+                matchsStore.setMatchs(response.data.matchs)
+                this.tournoiActif.matchs = matchsStore.matchs
             }
         },
-
+        ajouterJoueur(joueur: Joueur) {
+            this.tournoiActif.joueurs.push(joueur)
+        }
     }
 });

@@ -1,20 +1,18 @@
 export const usePermissionsStore = defineStore('permissions', {
     state: () => ({
-        permissions: [] as String[],
+        permissions: [] as String[] | undefined,
     }),
     actions: {
-        async fetchPermissions() {
+        async fetchPermissions(): Promise<String[]> {
             const {$api} = useNuxtApp()
-            try {
-                const response = await $api.get('/user/permissions');
-                if (response) {
-                    this.permissions = response.data
-                }
-            } catch (error) {
-                console.error('Failed to fetch permissions:', error);
+            const response = await $api.get<any>('/user/permissions');
+            if (response) {
+                this.permissions = response.data
+                return response.data
             }
+            return []
         },
-        clearPermissions(){
+        clearPermissions() {
             this.permissions = []
         }
     }

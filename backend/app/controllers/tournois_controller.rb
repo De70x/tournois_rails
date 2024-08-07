@@ -5,12 +5,12 @@ class TournoisController < ApplicationController
   def index
     @tournois = Tournoi.all
 
-    render json: @tournois
+    render json: @tournois.map{ |t| TournoisSerializer.light(t)}
   end
 
   # GET /tournois/1
   def show
-    render json: @tournoi
+    render json: TournoisSerializer.full(@tournoi)
   end
 
   # POST /tournois
@@ -42,6 +42,7 @@ class TournoisController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_tournoi
       @tournoi = Tournoi.find(params[:id])
+      p @tournoi.joueurs
     end
 
     # Only allow a list of trusted parameters through.

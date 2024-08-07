@@ -18,7 +18,7 @@ class PoulesController < ApplicationController
     @poule = Poule.new(poule_params)
 
     if @poule.save
-      render json: @poule, status: :created, location: @poule
+      render json: PoulesSerializer.light(@poule), status: :created, location: @poule
     else
       render json: @poule.errors, status: :unprocessable_entity
     end

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {tournoiSchema, type Tournoi} from "~/types/Tournoi";
+import {type Tournoi, tournoiSchema} from "~/types/Tournoi";
 import type {FormSubmitEvent} from "#ui/types";
 import {useTournoisStore} from "~/store/tournois_store";
 
@@ -7,7 +7,7 @@ const tournoisStore = useTournoisStore();
 const annee = new Date().getFullYear()
 
 const state = reactive({
-  nom: undefined,
+  nom: '',
 });
 
 const handleSubmit = async (event: FormSubmitEvent<Tournoi>) => {
@@ -18,8 +18,8 @@ const handleSubmit = async (event: FormSubmitEvent<Tournoi>) => {
 
 <template>
   <UCard class="max-h-auto mx-auto max-w-xl w-full">
-    <UForm :schema="tournoiSchema" :state="state" class="space-y-4" @submit="handleSubmit">
-      <UFormGroup label="Nom" name="nom">
+    <UForm :state="state" class="space-y-4" @submit="handleSubmit">
+      <UFormGroup label="nom" name="nom">
         <UInput v-model="state.nom"/>
       </UFormGroup>
       <UButton type="submit">

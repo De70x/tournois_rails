@@ -10,7 +10,7 @@ class JoueursController < ApplicationController
 
   # GET /joueurs/1
   def show
-    render json: @joueur
+    render json: JoueursSerializer.light(@joueur)
   end
 
   # POST /joueurs
@@ -18,7 +18,7 @@ class JoueursController < ApplicationController
     @joueur = Joueur.new(joueur_params)
 
     if @joueur.save
-      render json: @joueur, status: :created, location: @joueur
+      render json: JoueursSerializer.light(@joueur), status: :created, location: @joueur
     else
       render json: @joueur.errors, status: :unprocessable_entity
     end
@@ -39,13 +39,14 @@ class JoueursController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_joueur
-      @joueur = Joueur.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def joueur_params
-      params.require(:joueur).permit(:nom, :type_joueur, :poule_id, :tournoi_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_joueur
+    @joueur = Joueur.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def joueur_params
+    params.require(:joueur).permit(:nom, :poule_id, :tournoi_id)
+  end
 end
