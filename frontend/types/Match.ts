@@ -6,8 +6,8 @@ export const matchSchema = object({
     stade_id: number().required('Required'),
     joueur1_id: number().required('Required'),
     joueur2_id: number().required('Required'),
-    score1: number().required('Required').default(0),
-    score2: number().required('Required').default(0),
+    score_1: number().required('Required').default(0),
+    score_2: number().required('Required').default(0),
     statut: string().required('Required').default('init'),
     phase: number().required('Required').default(0),
 });
