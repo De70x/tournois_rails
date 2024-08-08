@@ -1,16 +1,15 @@
-import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import axios, {type AxiosRequestConfig, type AxiosResponse} from "axios";
 import {useAuthStore} from "~/store/auth_store";
 
 export default defineNuxtPlugin
 (() => {
     const toast = useToast()
-    const router = useRouter()
     const authStore = useAuthStore()
 
     const handleError = async (error: AxiosResponse) => {
         if(error.status === 401){
             await authStore.logout()
-            await router.push('/connexion')
+            await navigateTo({name: 'Connexion'})
         }
         const description = error.data.message ? error.data.message : error.data.error ? error.data.error : error.data
         toast.add({
@@ -28,7 +27,7 @@ export default defineNuxtPlugin
         if (useCookie('auth-token').value) {
             config.headers.Authorization = `Bearer ${useCookie('auth-token').value}`;
         } else {
-            await router.push('/connexion')
+            await navigateTo({name: 'Connexion'})
         }
         return config;
     })

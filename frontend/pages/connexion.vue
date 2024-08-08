@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ["user"]
+  middleware: ["user"],
+  name: "Connexion",
 })
 </script>

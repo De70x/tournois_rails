@@ -2,9 +2,13 @@
 <script setup lang="ts">
 const authCookie = useCookie('auth-token')
 
+definePageMeta({
+  name: 'Home'
+})
+
 if (authCookie.value) {
-  useRouter().push('/tournoi/liste')
+  navigateTo({name: 'Liste_Tournois'})
 } else {
-  useRouter().push('/connexion')
+  navigateTo({name: 'Connexion'})
 }
 </script>

@@ -18,13 +18,13 @@ if (props.typeFormulaire === 'connexion') {
   fallbackText = 'Pas encore de compte ?'
   linkText = 'Inscription'
   fallbackLink = '/inscription'
-  redirectUrl = '/'
+  redirectUrl = 'Home'
 }
 if (props.typeFormulaire === 'inscription') {
   btnText = 'Inscription'
   fallbackText = 'Déjà un compte ?'
   linkText = 'Connexion'
-  redirectUrl = '/connexion'
+  redirectUrl = 'Connexion'
   fallbackLink = '/connexion'
 }
 
@@ -45,7 +45,7 @@ const handleSubmit = async (event: FormSubmitEvent<User>) => {
   }
 
   if (redirectUrl) {
-    await useRouter().push(redirectUrl);
+    await navigateTo({name: redirectUrl});
   }
 };
 </script>
@@ -66,11 +66,11 @@ const handleSubmit = async (event: FormSubmitEvent<User>) => {
       </UButton>
       <div>
         {{ fallbackText }}
-          <ULink
-              :to=fallbackLink
-              active-class="text-primary"
-              inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-          >
+        <ULink
+            :to=fallbackLink
+            active-class="text-primary"
+            inactive-class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+        >
           {{ linkText }}
         </ULink>
       </div>

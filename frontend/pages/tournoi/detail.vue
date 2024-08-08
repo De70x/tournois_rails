@@ -3,10 +3,14 @@ import {useTournoisStore} from "~/store/tournois_store";
 import ListeJoueursSansPoule from "~/components/app/joueur/ListeJoueursSansPoule.vue";
 import ListePoules from "~/components/app/poule/ListePoules.vue";
 
+definePageMeta({
+  name: 'Detail_Tournoi'
+})
+
 const tournoisStore = useTournoisStore()
 
 if (!tournoisStore.tournoiActif.id) {
-  useRouter().push("liste")
+  navigateTo({name: 'Liste_Tournois'})
 }
 else{
   // refresh data

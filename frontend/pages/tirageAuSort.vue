@@ -1,7 +1,10 @@
 <script setup lang="ts">
-const router = useRouter()
+definePageMeta({
+  name: 'Tirage_Au_Sort'
+})
+
 setTimeout(() => {
-  router.push('/tournoi/detail')
+  navigateTo({name: 'Detail_Tournoi'})
 }, 5000)
 </script>
 

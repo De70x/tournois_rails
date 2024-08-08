@@ -36,7 +36,7 @@ const supprimerPoule = async (pouleId: number) => {
 }
 
 const creerMatch = () => {
-  useRouter().push(`/tournoi/match/${props.poule.id}/creation`)
+  navigateTo({name: 'Creation_Match_Poule', params: {poule_id: props.poule.id}})
 }
 
 const resteDesMatchs = computed(() => {

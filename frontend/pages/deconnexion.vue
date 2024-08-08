@@ -1,7 +1,10 @@
 <template/>
 <script setup lang="ts">
 import {useAuthStore} from "~/store/auth_store";
+definePageMeta({
+  name: 'Deconnexion'
+})
 
 useAuthStore().logout()
-useRouter().push('/connexion')
+navigateTo({name: 'Connexion'})
 </script>
