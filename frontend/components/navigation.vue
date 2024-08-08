@@ -17,6 +17,11 @@ const links = computed(() => {
       label: 'Tournoi en cours',
       icon: 'i-heroicons-beaker',
       to: '/tournoi/detail'
+    },
+    {
+      label: 'Matchs en cours',
+      icon: 'i-heroicons-play-circle',
+      to: '/tournoi/match/liste'
     }
   ];
 

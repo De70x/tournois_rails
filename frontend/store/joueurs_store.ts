@@ -25,16 +25,23 @@ export const useJoueursStore = defineStore('joueurs', {
             );
 
             return state.joueurs.filter(j =>
+                // we remove the current selected player
                 j.id !== joueurId &&
+                // we only take player in the same group
                 j.poule_id === pouleId &&
+                // we remove the previous opponents
                 !adversairesJoues.has(j.id!) &&
-                !j.matchs.some(m => m.status === 0)
+                // we remove player that have a match in progress
+                !j.matchs.some(m => m.statut === 'en_cours')
             );
         },
         getJoueursDisponiblesDansPoule: (state) => (pouleId: number) => {
+            const poulesStore = usePoulesStore()
+            const poule = poulesStore.getPoule(pouleId)
             return state.joueurs.filter(j =>
                 j.poule_id === pouleId &&
-                !j.matchs.some(m => m.status === 0)
+                !j.matchs.some(m => m.statut === 'en_cours') &&
+                j.matchs.length < poule!.joueurs.length - 1
             );
         }
     },

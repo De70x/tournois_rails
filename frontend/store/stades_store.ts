@@ -1,9 +1,17 @@
 import type {Stade} from "~/types/Stade";
+import {useMatchsStore} from "~/store/matchs_store";
+import {id} from "postcss-selector-parser";
 
 export const useStadesStore = defineStore('stades', {
     state: () => ({
         stades: [] as Stade[],
     }),
+    getters:{
+        getStadesDisponibles: (state) : Stade[] => {
+            const matchsEnCours = useMatchsStore().getMatchsEnCours
+            return state.stades.filter(s => !matchsEnCours.some(m => m.stade_id === s.id))
+        }
+    },
     actions: {
         setStades(stades: Stade[]) {
             this.stades = stades;
