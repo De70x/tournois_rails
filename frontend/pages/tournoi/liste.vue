@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import {useTournoisStore} from "~/store/tournois_store";
 
+definePageMeta({
+  name: 'Liste_Tournois'
+})
+
 const tournoiStore = useTournoisStore()
 tournoiStore.fetchTournois()
-const router = useRouter()
 const creationTournoi = () => {
-  router.push("/tournoi/creation")
+  navigateTo({name: 'Creation_Tournoi'})
 }
 const supprimerTournoi = (id: number, e: any) => {
   e.stopPropagation()
@@ -25,7 +28,7 @@ const columns = [{
 
 const select = async (row: any) => {
   await tournoiStore.setActif(row.id)
-  await useRouter().push('/tournoi/detail')
+  await navigateTo({name: 'Detail_Tournoi'})
 }
 
 const hasPerm = await hasPermission('edit_tournoi')

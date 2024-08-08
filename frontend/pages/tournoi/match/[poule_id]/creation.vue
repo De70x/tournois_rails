@@ -7,6 +7,10 @@ import type {Match} from "~/types/Match";
 import {useJoueursStore} from "~/store/joueurs_store";
 import {useMatchsStore} from "~/store/matchs_store";
 
+definePageMeta({
+  name: 'Creation_Match_Poule'
+})
+
 const route = useRoute()
 const poulesStore = usePoulesStore()
 const stadesStore = useStadesStore()
@@ -51,7 +55,7 @@ const handleSubmit = async (event: FormSubmitEvent<Match>) => {
     joueur2_id: event.data.joueur2_id,
     stade_id: event.data.stade_id
   })
-  useRouter().push('/tournoi/detail')
+  navigateTo({name: 'Detail_Tournoi'})
 }
 
 </script>

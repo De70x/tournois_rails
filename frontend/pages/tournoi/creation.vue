@@ -3,6 +3,10 @@ import {type Tournoi, tournoiSchema} from "~/types/Tournoi";
 import type {FormSubmitEvent} from "#ui/types";
 import {useTournoisStore} from "~/store/tournois_store";
 
+definePageMeta({
+  name: 'Creation_Tournoi'
+})
+
 const tournoisStore = useTournoisStore();
 const annee = new Date().getFullYear()
 
@@ -12,7 +16,7 @@ const state = reactive({
 
 const handleSubmit = async (event: FormSubmitEvent<Tournoi>) => {
   await tournoisStore.createTournoi({...event.data, annee})
-  await useRouter().push("/tournoi/liste");
+  await navigateTo({name: 'Liste_Tournois'});
 };
 </script>
 

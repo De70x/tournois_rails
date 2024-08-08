@@ -29,7 +29,6 @@ const links = computed(() => {
     dynamicLinks.unshift({
       label: email.value,
       icon: 'i-heroicons-user',
-      to: '/users'
     })
   }
 
