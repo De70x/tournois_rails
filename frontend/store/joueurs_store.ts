@@ -25,9 +25,13 @@ export const useJoueursStore = defineStore('joueurs', {
             );
 
             return state.joueurs.filter(j =>
+                // we remove the current selected player
                 j.id !== joueurId &&
+                // we only take player in the same group
                 j.poule_id === pouleId &&
+                // we remove the previous opponents
                 !adversairesJoues.has(j.id!) &&
+                // we remove player that have a match in progress
                 !j.matchs.some(m => m.statut === 'en_cours')
             );
         },
