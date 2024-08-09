@@ -3,10 +3,11 @@ import type {FormSubmitEvent} from '#ui/types'
 import {useTournoisStore} from "~/store/tournois_store";
 import {useJoueursStore} from "~/store/joueurs_store";
 import type {Joueur} from "~/types/Joueur";
+import {useModaleStore} from "~/store/modale_store";
 
 const tournoisStore = useTournoisStore()
 const joueursStore = useJoueursStore()
-
+const {openModale, configModale} = useModaleStore()
 
 const creationJoueurEnCours = ref(false)
 const formState = reactive({
@@ -47,8 +48,12 @@ const editerJoueur = (joueur: Joueur) => {
   creationJoueurEnCours.value = true
 }
 
-const supprimerJoueur = async (id: number) => {
-  await joueursStore.deleteJoueur(id)
+const supprimerJoueur = async (joueur: Joueur) => {
+  configModale({
+    id: joueur.id!,
+    message: `Êtes vous certain de vouloir supprimer le joueur ${joueur.nom} ?`
+  }, () => joueursStore.deleteJoueur(joueur.id!))
+  openModale()
 }
 
 const tirageAuSort = () => {
@@ -83,9 +88,10 @@ const tirageAuSort = () => {
     </UForm>
     <div v-for="joueur in joueursSansPoule" @dblclick="editerJoueur(joueur)" class="flex items-center justify-between">
       <div class="truncate" :title="joueur.nom">{{ joueur.nom }}</div>
-      <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerJoueur(joueur.id!)"/>
+      <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerJoueur(joueur)"/>
     </div>
-    <UButton v-if="joueursSansPoule.length > 0" @click="tirageAuSort" variant="outline" color="red">Tirage au sort</UButton>
+    <UButton v-if="joueursSansPoule.length > 0" @click="tirageAuSort" variant="outline" color="red">Tirage au sort
+    </UButton>
   </div>
 </template>
 

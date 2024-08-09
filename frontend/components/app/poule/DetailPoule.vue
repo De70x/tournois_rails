@@ -4,12 +4,14 @@ import type {PropType} from "vue";
 import type {FormSubmitEvent} from "#ui/types";
 import {usePoulesStore} from "~/store/poules_store";
 import ListeJoueursPoule from "~/components/app/poule/ListeJoueursPoule.vue";
+import {useModaleStore} from "~/store/modale_store";
 
 const props = defineProps({
   poule: {type: Object as PropType<Poule>, required: true},
 });
 
 const poulesStore = usePoulesStore()
+const {openModale, configModale} = useModaleStore()
 
 const creationPouleEnCours = ref(false)
 const formState = reactive({
@@ -31,8 +33,12 @@ const creationTerminee = async (event: FormSubmitEvent<Partial<Poule>>) => {
   creationPouleEnCours.value = false
 }
 
-const supprimerPoule = async (pouleId: number) => {
-  await poulesStore.deletePoule(pouleId)
+const supprimerPoule = async (poule: Poule) => {
+  configModale({
+    id: poule.id!,
+    message: `Êtes vous certain de vouloir supprimer la poule : ${poule.nom} ?`
+  }, () => poulesStore.deletePoule(poule.id!))
+  openModale()
 }
 
 const creerMatch = () => {
@@ -64,7 +70,7 @@ const resteDesMatchs = computed(() => {
         <div v-else @dblclick="editerPoule(poule)" class="flex items-center relative">
           <span class="flex-grow text-center">{{ poule.nom }}</span>
           <UButton v-if="poule.joueurs.length === 0" color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
-                   @click="supprimerPoule(poule.id!)"
+                   @click="supprimerPoule(poule)"
                    class="absolute right-0"/>
         </div>
 

@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import {useTournoisStore} from "~/store/tournois_store";
+import {useModaleStore} from "~/store/modale_store";
+import type {Tournoi} from "~/types/Tournoi";
 
 definePageMeta({
   name: 'Liste_Tournois'
 })
 
-const tournoiStore = useTournoisStore()
-tournoiStore.fetchTournois()
-const creationTournoi = () => {
-  navigateTo({name: 'Creation_Tournoi'})
-}
-const supprimerTournoi = (id: number, e: any) => {
-  e.stopPropagation()
-  tournoiStore.deleteTournoi(id)
-}
+const tournoisStore = useTournoisStore()
+const {openModale, configModale} = useModaleStore()
+
+tournoisStore.fetchTournois()
 
 const columns = [{
   key: 'nom',
@@ -26,8 +23,20 @@ const columns = [{
   key: 'actions'
 }]
 
+const creationTournoi = () => {
+  navigateTo({name: 'Creation_Tournoi'})
+}
+const supprimerTournoi = (tournoi: Tournoi, e: any) => {
+  e.stopPropagation()
+  configModale({
+    id: tournoi.id!,
+    message: `Êtes vous certain de vouloir supprimer le tournoi ${tournoi.nom} de ${tournoi.annee} ?`
+  }, () => tournoisStore.deleteTournoi(tournoi.id!))
+  openModale()
+}
+
 const select = async (row: any) => {
-  await tournoiStore.setActif(row.id)
+  await tournoisStore.setActif(row.id)
   await navigateTo({name: 'Detail_Tournoi'})
 }
 
@@ -38,7 +47,7 @@ const hasPerm = await hasPermission('edit_tournoi')
 <template>
   <h1 class="text-xl">Liste des tournois</h1>
   <UTable
-      :rows="tournoiStore.tournois"
+      :rows="tournoisStore.tournois"
       :columns="columns"
       @select="select"
       class="w-full"
@@ -46,8 +55,10 @@ const hasPerm = await hasPermission('edit_tournoi')
   >
     <template #actions-data="{ row }" v-if="hasPerm">
       <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
-               @click="(e) => supprimerTournoi(row.id, e)"/>
+               @click="(e) => supprimerTournoi(row, e)"/>
     </template>
   </UTable>
   <UButton @click="creationTournoi()">Créer un tournoi</UButton>
+  <!--  <ModaleSuppression :callback="confirmerSuppression"-->
+  <!--                     :objet-a-supprimer="tournoiASupprimer"/>-->
 </template>

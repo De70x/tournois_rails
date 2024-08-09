@@ -9,6 +9,7 @@
 
     <main class="container mb-auto text-center mx-auto mt-4">
       <NuxtPage/>
+      <ModaleSuppression/>
     </main>
 
     <footer class="m-4 text-center">
