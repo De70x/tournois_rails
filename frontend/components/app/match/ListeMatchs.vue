@@ -1,26 +1,29 @@
 <script setup lang="ts">
 import type {Match} from "~/types/Match";
-import {useJoueursStore} from "~/store/joueurs_store";
 import {useMatchsStore} from "~/store/matchs_store";
+import {useModaleStore} from "~/store/modale_store";
+import {useJoueur} from "~/composables/useJoueur";
 
 const matchsStore = useMatchsStore()
-const joueursStore = useJoueursStore()
+const {openModale, configModale} = useModaleStore()
+const {getNomJoueurById} = useJoueur()
 
 const matchEditable = ref(-1)
 const score1 = ref(0)
 const score2 = ref(0)
-
-const getNomJoueur = (id: number) => {
-  return joueursStore.joueurs.find(j => j.id === id)!.nom
-}
 
 const editerMatch = (match: Match) => {
   matchEditable.value = match.id!
   score1.value = match.score_1
   score2.value = match.score_2
 }
-const supprimerMatch = (matchId: number) => {
-  matchsStore.deleteMatch(matchId)
+
+const supprimerMatch = (match: Match) => {
+  configModale({
+    id: match.id!,
+    message: `Êtes vous certain de vouloir supprimer le match : ${getNomJoueurById(match.joueur1_id)} - ${getNomJoueurById(match.joueur2_id)} ?`
+  }, () => matchsStore.deleteMatch(match.id!))
+  openModale()
 }
 
 const validerMatch = (matchId: number) => {
@@ -42,9 +45,9 @@ const validerMatch = (matchId: number) => {
         <div class="flex items-center justify-between">
           <UButton color="primary" variant="ghost" icon="i-heroicons-pencil-20-solid"
                    @click="() => editerMatch(match)"/>
-          <div><span class="font-bold">{{ getNomJoueur(match.joueur1_id) }}</span> - <span class="font-bold">{{ getNomJoueur(match.joueur2_id) }}</span></div>
+          <div><span class="font-bold">{{ getNomJoueurById(match.joueur1_id) }}</span> - <span class="font-bold">{{ getNomJoueurById(match.joueur2_id) }}</span></div>
           <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
-                   @click="() => supprimerMatch(match.id!)"/>
+                   @click="() => supprimerMatch(match)"/>
         </div>
       </template>
       <template #default>
