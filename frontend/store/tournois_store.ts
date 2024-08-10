@@ -39,6 +39,7 @@ export const useTournoisStore = defineStore('tournois', {
             const response = await $api.get<Tournoi>(`/tournois/${id}`)
             if (response) {
                 this.tournoiActif = response.data
+                localStorage.setItem('tournoiActifId', String(id))
                 joueursStore.setJoueurs(response.data.joueurs)
                 this.tournoiActif.joueurs = joueursStore.joueurs
                 poulesStore.setPoules(response.data.poules)
@@ -49,8 +50,15 @@ export const useTournoisStore = defineStore('tournois', {
                 this.tournoiActif.matchs = matchsStore.matchs
             }
         },
-        ajouterJoueur(joueur: Joueur) {
-            this.tournoiActif.joueurs.push(joueur)
+        async initTournoiActif(){
+            const tournoiActifId = localStorage.getItem('tournoiActifId')
+            if(tournoiActifId && !this.tournoiActif.id){
+                await this.setActif(parseInt(tournoiActifId))
+            }
+            // If even after the first init there is still no tournament, we move back to the list
+            if(!this.tournoiActif.id){
+                navigateTo({name: 'Liste_Tournois'})
+            }
         }
     }
 });

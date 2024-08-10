@@ -9,13 +9,9 @@ definePageMeta({
 
 const tournoisStore = useTournoisStore()
 
-if (!tournoisStore.tournoiActif.id) {
-  navigateTo({name: 'Liste_Tournois'})
-}
-else{
-  // refresh data
-  tournoisStore.setActif(tournoisStore.tournoiActif.id)
-}
+onMounted(async () => {
+  await tournoisStore.initTournoiActif()
+})
 
 </script>
 
