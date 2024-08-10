@@ -36,6 +36,7 @@ const creationTerminee = async (event: FormSubmitEvent<Partial<Joueur>>) => {
 <template>
   <div>
     <UButton @click="creationPoule" variant="outline" class="m-5">Créer une poule</UButton>
+    <UButton @click="navigateTo({name: 'Prepa_Phase_Finale'})">Générer les tableaux finaux</UButton>
     <UForm v-if="creationPouleEnCours" :state="formState" @submit="creationTerminee">
       <UInput v-model="formState.nom"></UInput>
       <UButton type="submit">Valider</UButton>
