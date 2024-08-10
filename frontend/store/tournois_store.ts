@@ -1,5 +1,4 @@
 import type {Tournoi} from "~/types/Tournoi";
-import type {Joueur} from "~/types/Joueur";
 import {useJoueursStore} from "~/store/joueurs_store";
 import {usePoulesStore} from "~/store/poules_store";
 import {useStadesStore} from "~/store/stades_store";
