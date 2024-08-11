@@ -3,6 +3,7 @@ import {useJoueursStore} from "~/store/joueurs_store";
 import {usePoulesStore} from "~/store/poules_store";
 import {useStadesStore} from "~/store/stades_store";
 import {useMatchsStore} from "~/store/matchs_store";
+import {useTableauxStore} from "~/store/phases_finales_store";
 
 export const useTournoisStore = defineStore('tournois', {
     state: () => ({
@@ -35,6 +36,7 @@ export const useTournoisStore = defineStore('tournois', {
             const poulesStore = usePoulesStore()
             const stadesStore = useStadesStore()
             const matchsStore = useMatchsStore()
+            const tableauxStore = useTableauxStore()
             const response = await $api.get<Tournoi>(`/tournois/${id}`)
             if (response) {
                 this.tournoiActif = response.data
@@ -47,6 +49,8 @@ export const useTournoisStore = defineStore('tournois', {
                 this.tournoiActif.stades = stadesStore.stades
                 matchsStore.setMatchs(response.data.matchs)
                 this.tournoiActif.matchs = matchsStore.matchs
+                tableauxStore.setTableaux(response.data.tableaux)
+                this.tournoiActif.tableaux = tableauxStore.tableaux
             }
         },
         async initTournoiActif(){

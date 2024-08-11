@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {PropType} from "vue";
 import type {Joueur} from "~/types/Joueur";
-import {useJoueursStore} from "~/store/joueurs_store";
+import CheckboxDynamique from "~/components/app/joueur/CheckboxDynamique.vue";
 
 defineProps({
   joueurs: {type: Object as PropType<Joueur[]>, required: true},
@@ -48,7 +48,7 @@ const columns = [
     </template>
 
     <template #selection-data="{ row }">
-      <UCheckbox @change="(e) => console.log(e, row)"/>
+      <CheckboxDynamique :joueur="row"/>
     </template>
 
   </UTable>

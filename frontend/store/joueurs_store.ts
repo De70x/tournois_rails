@@ -1,5 +1,6 @@
 import type {Joueur} from "~/types/Joueur";
 import {usePoulesStore} from "~/store/poules_store";
+import type {Tableau} from "~/types/Tableau";
 
 export const useJoueursStore = defineStore('joueurs', {
     state: () => ({
@@ -68,6 +69,16 @@ export const useJoueursStore = defineStore('joueurs', {
                 nom: joueur.nom,
                 poule_id: joueur.poule_id === undefined ? null : joueur.poule_id,
                 tournoi_id: joueur.tournoi_id
+            })
+            if (joueurModifie) {
+                this.joueurs = this.joueurs.map(j => j.id === joueur.id ? joueurModifie.data : j)
+            }
+        },
+        async inscrirePhaseFinale(joueur:Joueur, tableau_id:number){
+            const {$api} = useNuxtApp()
+            const joueurModifie = await $api.patch<Joueur>(`/joueurs/${joueur.id}`, {
+                ...joueur,
+                tableau_final_id: tableau_id
             })
             if (joueurModifie) {
                 this.joueurs = this.joueurs.map(j => j.id === joueur.id ? joueurModifie.data : j)

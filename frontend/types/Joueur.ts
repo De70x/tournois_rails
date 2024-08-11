@@ -8,7 +8,8 @@ export const joueurSchema = object({
     nom: string().required('Required'),
     nb_matchs: number().default(0),
     matchs: array().of(matchSchema).default([]),
-    points: number().default(0)
+    points: number().default(0),
+    tableau_final_id: number(),
 });
 
 export type Joueur = InferType<typeof joueurSchema>;
