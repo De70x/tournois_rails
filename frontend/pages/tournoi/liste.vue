@@ -2,6 +2,7 @@
 import {useTournoisStore} from "~/store/tournois_store";
 import {useModaleStore} from "~/store/modale_store";
 import type {Tournoi} from "~/types/Tournoi";
+import {usePermissions} from "~/composables/usePermissions";
 
 definePageMeta({
   name: 'Liste_Tournois'
@@ -9,6 +10,7 @@ definePageMeta({
 
 const tournoisStore = useTournoisStore()
 const {openModale, configModale} = useModaleStore()
+const {hasPermission} = usePermissions()
 
 tournoisStore.fetchTournois()
 
@@ -59,6 +61,4 @@ const hasPerm = await hasPermission('edit_tournoi')
     </template>
   </UTable>
   <UButton @click="creationTournoi()">Créer un tournoi</UButton>
-  <!--  <ModaleSuppression :callback="confirmerSuppression"-->
-  <!--                     :objet-a-supprimer="tournoiASupprimer"/>-->
 </template>

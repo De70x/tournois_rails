@@ -1,4 +1,3 @@
-<!-- components/EditableProperty.vue -->
 <template>
   <div>
     <span v-if="!isEditing" @dblclick="enableEdit">{{ value }}</span>
@@ -7,7 +6,9 @@
 </template>
 
 <script setup lang="ts">
-import { hasPermission } from '@/utils/permissions';
+import {usePermissions} from "~/composables/usePermissions";
+
+const {hasPermission} = usePermissions()
 
 const props = defineProps<{
   objectType: string;
