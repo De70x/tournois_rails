@@ -2,10 +2,17 @@
 import type {Poule} from "~/types/Poule";
 import type {PropType} from "vue";
 import PrepaListeJoueursPoule from "~/components/app/poule/PrepaListeJoueursPoule.vue";
+import {useJoueursStore} from "~/store/joueurs_store";
 
-defineProps({
+const props = defineProps({
   poule: {type: Object as PropType<Poule>, required: true},
 })
+
+const {joueurs} = useJoueursStore()
+
+const joueursSansTableau = joueurs.filter(j => j.poule_id === props.poule.id && j.tableau_final_id === undefined)
+
+console.table(props.poule.joueurs.map(j => j.tableau_final_id))
 
 </script>
 
@@ -16,7 +23,7 @@ defineProps({
         <span class="flex-grow text-center">{{ poule.nom }}</span>
       </div>
     </template>
-    <PrepaListeJoueursPoule :joueurs="poule.joueurs"/>
+    <PrepaListeJoueursPoule :joueurs="joueursSansTableau"/>
   </UCard>
 </template>
 
