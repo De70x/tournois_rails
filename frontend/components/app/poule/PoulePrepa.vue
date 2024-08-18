@@ -10,7 +10,9 @@ const props = defineProps({
 
 const {joueurs} = useJoueursStore()
 
-const joueursSansTableau = joueurs.filter(j => j.poule_id === props.poule.id && j.tableau_final_id === undefined)
+const joueursSansTableau = joueurs.filter(j => {
+  console.log(j.tableau_final_id)
+  return j.poule_id === props.poule.id && j.tableau_final_id === null})
 
 console.table(props.poule.joueurs.map(j => j.tableau_final_id))
 
