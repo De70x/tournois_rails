@@ -4,11 +4,10 @@ const {triParPoints} = useCalcul()
 export const usePoule = () => {
     const getQualifiesPoule = (poule: Poule) => {
         let listeQualifies: number[] = [];
-        const taillePoule = poule.joueurs.length;
-        const palier = Math.round(taillePoule / 2);
-
-        // on trie les joueurs par points
         let tab = [...poule.joueurs];
+
+        tab = tab.filter(j => !j.tableau_final_id)
+        const palier = Math.round(tab.length / 2);
         tab.sort(triParPoints);
 
         for (let i = 0; i < palier; i++) {
