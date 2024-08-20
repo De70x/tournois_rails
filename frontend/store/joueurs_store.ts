@@ -44,6 +44,12 @@ export const useJoueursStore = defineStore('joueurs', {
                 !j.matchs.some(m => m.statut === 'en_cours') &&
                 j.matchs.length < poule!.joueurs.length - 1
             );
+        },
+        getJoueursSansTableau: (state) => (pouleId: number) => {
+            return state.joueurs.filter(j =>
+                j.poule_id === pouleId &&
+                j.tableau_final_id === null
+            );
         }
     },
     actions: {
@@ -74,10 +80,9 @@ export const useJoueursStore = defineStore('joueurs', {
                 this.joueurs = this.joueurs.map(j => j.id === joueur.id ? joueurModifie.data : j)
             }
         },
-        async inscrirePhaseFinale(joueur:Joueur, tableau_id:number){
+        async inscrirePhaseFinale(joueur: Joueur, tableau_id: number) {
             const {$api} = useNuxtApp()
             const joueurModifie = await $api.patch<Joueur>(`/joueurs/${joueur.id}`, {
-                ...joueur,
                 tableau_final_id: tableau_id
             })
             if (joueurModifie) {

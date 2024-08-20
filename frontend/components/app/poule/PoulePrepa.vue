@@ -8,9 +8,9 @@ const props = defineProps({
   poule: {type: Object as PropType<Poule>, required: true},
 })
 
-const {joueurs} = useJoueursStore()
+const {getJoueursSansTableau} = useJoueursStore()
 
-const joueursSansTableau = joueurs.filter(j => j.poule_id === props.poule.id && j.tableau_final_id === null)
+const listeJoueursSansTableau = getJoueursSansTableau(props.poule.id!)
 
 </script>
 
@@ -21,7 +21,7 @@ const joueursSansTableau = joueurs.filter(j => j.poule_id === props.poule.id && 
         <span class="flex-grow text-center">{{ poule.nom }}</span>
       </div>
     </template>
-    <PrepaListeJoueursPoule :joueurs="joueursSansTableau"/>
+    <PrepaListeJoueursPoule :joueurs="listeJoueursSansTableau"/>
   </UCard>
 </template>
 

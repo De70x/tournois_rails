@@ -12,16 +12,19 @@ const {poules} = usePoulesStore()
 const {tableaux, joueursSelectionnes} = useTableauxStore()
 const {inscrirePhaseFinale} = useJoueursStore()
 const idPrincipale = tableaux.find(t => t.nom === 'Principale')!.id
-const tableauSelectionne = ref(idPrincipale)
+const idTableauSelectionne = ref(idPrincipale)
+
+const listeJoueursSelectionnes = computed(() => joueursSelectionnes)
 
 
 const selectionTableau = (idSelectionne: number) => {
-  tableauSelectionne.value = idSelectionne
+  idTableauSelectionne.value = idSelectionne
 }
 
 const genererTableau = async () => {
-  for (const j of joueursSelectionnes) {
-    await inscrirePhaseFinale(j, tableauSelectionne.value!)
+  console.table(listeJoueursSelectionnes.value)
+  for (const j of listeJoueursSelectionnes.value) {
+    await inscrirePhaseFinale(j, idTableauSelectionne.value!)
   }
   await navigateTo({name: 'Detail_Tournoi'})
 }
@@ -30,14 +33,13 @@ const genererTableau = async () => {
 <template>
   <div>
     <h3>Génération tableaux finaux</h3>
-    <USelect v-model="tableauSelectionne" :options="tableaux" option-attribute="nom" value-attribute="id"
+    <USelect v-model="idTableauSelectionne" :options="tableaux" option-attribute="nom" value-attribute="id"
              @change="selectionTableau"/>
     <i>Les joueurs cochés iront dans le tableau sélectionné</i>
     <div class="grid grid-cols-3 gap-4 gap-y-14 w-full mt-5">
       <PoulePrepa v-for="poule in poules" :poule="poule"/>
     </div>
-    <UButton :disabled="tableauSelectionne === -1" v-model="tableauSelectionne"
-             @click="genererTableau">
+    <UButton :disabled="idTableauSelectionne === -1" @click="genererTableau">
       Envoyer dans le tableau sélectionné
     </UButton>
   </div>

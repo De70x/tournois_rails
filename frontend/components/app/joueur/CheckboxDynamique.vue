@@ -15,14 +15,7 @@ const poule = getPoule(props.joueur.poule_id!)
 const {ajouterJoueur, retirerJoueur} = useTableauxStore()
 
 const isChecked = () => {
-  const estQualifie = getQualifiesPoule(poule!).includes(props.joueur.id!)
-  if (estQualifie) {
-    ajouterJoueur(props.joueur)
-  }
-  else{
-    retirerJoueur(props.joueur)
-  }
-  return estQualifie
+  return getQualifiesPoule(poule!).includes(props.joueur.id!)
 }
 
 const selected = ref(isChecked())
@@ -34,6 +27,16 @@ const changementCheckbox = (value: boolean) => {
     retirerJoueur(props.joueur)
   }
 }
+
+onMounted(() => {
+  const estQualifie = getQualifiesPoule(poule!).includes(props.joueur.id!)
+  if (estQualifie) {
+    ajouterJoueur(props.joueur)
+  }
+  else{
+    retirerJoueur(props.joueur)
+  }
+})
 
 </script>
 
