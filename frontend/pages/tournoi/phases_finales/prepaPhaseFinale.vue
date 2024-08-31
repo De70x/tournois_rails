@@ -11,7 +11,7 @@ definePageMeta({
 const {poules} = usePoulesStore()
 const {tableaux, joueursSelectionnes} = useTableauxStore()
 const {inscrirePhaseFinale} = useJoueursStore()
-const idPrincipale = tableaux.find(t => t.nom === 'Principale')!.id
+const idPrincipale = tableaux.value.find(t => t.nom === 'Principale')!.id
 const idTableauSelectionne = ref(idPrincipale)
 
 const listeJoueursSelectionnes = computed(() => joueursSelectionnes)
@@ -22,8 +22,8 @@ const selectionTableau = (idSelectionne: number) => {
 }
 
 const genererTableau = async () => {
-  console.table(listeJoueursSelectionnes.value)
-  for (const j of listeJoueursSelectionnes.value) {
+  console.table(listeJoueursSelectionnes.value.value)
+  for (const j of listeJoueursSelectionnes.value.value) {
     await inscrirePhaseFinale(j, idTableauSelectionne.value!)
   }
   await navigateTo({name: 'Detail_Tournoi'})
