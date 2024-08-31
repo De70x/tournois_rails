@@ -3,6 +3,7 @@ import {useTournoisStore} from "~/store/tournois_store";
 import {useModaleStore} from "~/store/modale_store";
 import type {Tournoi} from "~/types/Tournoi";
 import {usePermissions} from "~/composables/usePermissions";
+import {asyncComputed, computedAsync} from "@vueuse/core";
 
 definePageMeta({
   name: 'Liste_Tournois'
@@ -42,7 +43,7 @@ const select = async (row: any) => {
   await navigateTo({name: 'Detail_Tournoi'})
 }
 
-const hasPerm = await hasPermission('edit_tournoi')
+const hasPerm = computedAsync(async () => await hasPermission('edit_tournoi'))
 
 </script>
 
@@ -55,6 +56,7 @@ const hasPerm = await hasPermission('edit_tournoi')
       class="w-full"
       :ui="{td:{base: 'text-center'},th:{base: 'text-center'}}"
   >
+
     <template #actions-data="{ row }" v-if="hasPerm">
       <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
                @click="(e) => supprimerTournoi(row, e)"/>
