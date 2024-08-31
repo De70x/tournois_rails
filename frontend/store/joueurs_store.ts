@@ -1,6 +1,5 @@
 import type {Joueur} from "~/types/Joueur";
 import {usePoulesStore} from "~/store/poules_store";
-import type {Tableau} from "~/types/Tableau";
 
 export const useJoueursStore = defineStore('joueurs', {
     state: () => ({
