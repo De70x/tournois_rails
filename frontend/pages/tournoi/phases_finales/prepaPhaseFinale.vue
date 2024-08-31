@@ -22,7 +22,6 @@ const selectionTableau = (idSelectionne: number) => {
 }
 
 const genererTableau = async () => {
-  console.table(listeJoueursSelectionnes.value.value)
   for (const j of listeJoueursSelectionnes.value.value) {
     await inscrirePhaseFinale(j, idTableauSelectionne.value!)
   }
