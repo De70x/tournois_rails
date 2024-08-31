@@ -43,7 +43,7 @@ const select = async (row: any) => {
   await navigateTo({name: 'Detail_Tournoi'})
 }
 
-const hasPerm = computedAsync(async () => await hasPermission('edit_tournoi'))
+const hasPerm = computedAsync(async () => await hasPermission('edit_tournoi'), false)
 
 </script>
 
