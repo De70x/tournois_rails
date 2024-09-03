@@ -12,17 +12,20 @@ const links = computed(() => {
       label: 'Accueil',
       icon: 'i-heroicons-home',
       to: '/tournoi/liste'
-    },
-    {
+    },{
       label: 'Tournoi en cours',
       icon: 'i-heroicons-beaker',
       to: '/tournoi/detail'
-    },
-    {
+    },{
       label: 'Matchs en cours',
       icon: 'i-heroicons-play-circle',
       to: '/tournoi/match/liste'
+    },{
+      label: 'Gestion',
+      icon: 'i-heroicons-cog-6-tooth',
+      to: '/gestion'
     }
+
   ];
 
   if (email.value) {
