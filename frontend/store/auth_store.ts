@@ -28,6 +28,17 @@ export const useAuthStore = defineStore('auth', {
         async signup(credentials: { email: string; password: string }) {
             const {$api} = useNuxtApp()
             await $api.post<any>('/users', {user: credentials})
-        }
+        },
+        async checkAndRefreshToken() {
+            if (this.authToken && isTokenExpired(this.authToken)) {
+                try {
+                    this.authToken = await refreshToken();
+                } catch (error) {
+                    // If refresh fails, log out the user
+                    await this.logout();
+                    throw error;
+                }
+            }
+        },
     }
 })

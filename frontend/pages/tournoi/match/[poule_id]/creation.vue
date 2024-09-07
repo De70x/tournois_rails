@@ -29,7 +29,7 @@ const formState = reactive({
 const j1Select = ref(joueursStore.getJoueursDisponiblesDansPoule(poule_id))
 const j2Select = ref(joueursStore.getJoueursDisponiblesDansPoule(poule_id))
 
-const stades = stadesStore.getStadesDisponibles
+const stades = stadesStore.getStadesDisponibles()
 
 const editListe1 = (event: string) => {
   j2Select.value = getListeFiltree(parseInt(event))

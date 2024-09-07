@@ -1,11 +1,41 @@
 <script setup lang="ts">
+import { useStadesStore } from "~/store/stades_store";
+import { useTournoisStore } from "~/store/tournois_store";
+import type { Stade } from "~/types/Stade";
 
+const stadesStore = useStadesStore();
+const tournoisStore = useTournoisStore();
+
+const fields = [
+  { key: 'id', label: 'ID', type: 'number' },
+  { key: 'nom', label: 'Nom', type: 'text' },
+  { key: 'disponible', label: 'Disponible', type: 'boolean' }
+];
+
+const createStade = async (stade: Partial<Stade>) => {
+  await stadesStore.createStade({
+    ...stade,
+    tournoi_id: tournoisStore.tournoiActif.id!
+  } as Stade);
+};
+
+const editStade = async (stade: Stade) => {
+  await stadesStore.editStade(stade);
+};
+
+const deleteStade = async (id: number) => {
+  await stadesStore.deleteStade(id);
+};
 </script>
 
 <template>
-  Gestion des stades
+  <GenericCRUD
+      :items="stadesStore.stades.value"
+      store-name="stades"
+      item-name="stade"
+      :fields="fields"
+      :create-item="createStade"
+      :edit-item="editStade"
+      :delete-item="deleteStade"
+  />
 </template>
-
-<style scoped>
-
-</style>

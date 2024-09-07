@@ -1,40 +1,91 @@
 import axios, {type AxiosRequestConfig, type AxiosResponse} from "axios";
 import {useAuthStore} from "~/store/auth_store";
+import {isTokenExpired} from "~/utils/auth";
+
+type ApiResponse<T> = AxiosResponse<T> | undefined;
+
+interface Api {
+    get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>>;
+    post<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>>;
+    put<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>>;
+    patch<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>>;
+    delete<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>>;
+}
 
 export default defineNuxtPlugin
 (() => {
     const toast = useToast()
     const authStore = useAuthStore()
 
-    const handleError = async (error: any) => {
-        if (error.response) {
-            if (error.response.status === 401) {
-                await authStore.logout()
-                await navigateTo({name: 'Connexion'})
+    const handleError = async (error: ApiError) => {
+        if (axios.isAxiosError(error)) {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    await authStore.logout()
+                    await navigateTo({name: 'Connexion'})
+                    return
+                }
+                const description = error.response.data.message || error.response.data.error || error.response.data
+                toast.add({
+                    title: error.response.statusText,
+                    description: `${error.response.status}: ${description}`,
+                    timeout: 5000,
+                    icon: 'i-heroicons-exclamation-circle',
+                    color: 'red'
+                })
+            } else if (error.request) {
+                toast.add({
+                    title: 'Network Error',
+                    description: 'Unable to reach the server. Please check your internet connection.',
+                    timeout: 5000,
+                    icon: 'i-heroicons-exclamation-circle',
+                    color: 'red'
+                })
             }
-            const description = error.response.data.message ? error.response.data.message : error.response.data.error ? error.response.data.error : error.response.data
+        } else {
+            console.error('Unexpected error:', error)
             toast.add({
-                title: error.response.statusText,
-                description: `${error.response.status} : ${description}`,
+                title: 'Unexpected Error',
+                description: 'An unexpected error occurred. Please try again later.',
                 timeout: 5000,
                 icon: 'i-heroicons-exclamation-circle',
                 color: 'red'
             })
-        } else {
-            console.error(error)
         }
     }
 
     axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
 
     axios.interceptors.request.use(async (config) => {
-        if (useCookie('auth-token').value) {
+        const token = useCookie('auth-token').value;
+        if (token) {
+            if (isTokenExpired(token)) {
+                await authStore.checkAndRefreshToken() // Implement this method in your auth store
+            }
             config.headers.Authorization = `Bearer ${useCookie('auth-token').value}`;
         } else {
             await navigateTo({name: 'Connexion'})
         }
         return config;
     })
+
+    axios.interceptors.response.use(
+        (response) => response,
+        async (error) => {
+            if (error.response?.status === 401 && error.config && !error.config.__isRetryRequest) {
+                error.config.__isRetryRequest = true;
+                try {
+                    await authStore.checkAndRefreshToken();
+                    return axios(error.config);
+                } catch (e) {
+                    await authStore.logout();
+                    await navigateTo({name: 'Connexion'});
+                    return Promise.reject(e);
+                }
+            }
+            return Promise.reject(error);
+        }
+    );
 
     return {
         provide: {
@@ -74,7 +125,7 @@ export default defineNuxtPlugin
                         await handleError(error)
                     }
                 },
-            }
+            } as Api
         }
     }
 })
