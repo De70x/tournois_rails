@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :tags
   resources :tableau_finals
   resources :matchs_tournois
   resources :stades

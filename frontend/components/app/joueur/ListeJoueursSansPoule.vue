@@ -15,7 +15,7 @@ const formState = reactive({
   nom: "",
   poule_id: -1
 })
-const joueursSansPoule = computed(() => joueursStore.getJoueursSansPoules)
+const joueursSansPoule = computed(() => joueursStore.getJoueursSansPoules())
 
 const creationJoueur = () => {
   formState.id = -1
@@ -80,7 +80,7 @@ const tirageAuSort = () => {
 
 <template>
   <div>
-    <div class="text-secondary italic">{{ joueursStore.joueurs.length }} joueurs inscrits</div>
+    <div class="text-secondary italic">{{ joueursStore.joueurs.value.length }} joueurs inscrits</div>
     <UButton @click="creationJoueur" variant="outline">Créer un joueur</UButton>
     <UForm v-if="creationJoueurEnCours" :state="formState" @submit="creationTerminee">
       <UInput v-model="formState.nom"></UInput>

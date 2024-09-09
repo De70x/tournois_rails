@@ -42,15 +42,15 @@ export const useTournoisStore = defineStore('tournois', {
                 this.tournoiActif = response.data
                 localStorage.setItem('tournoiActifId', String(id))
                 joueursStore.setJoueurs(response.data.joueurs)
-                this.tournoiActif.joueurs = joueursStore.joueurs
+                this.tournoiActif.joueurs = joueursStore.joueurs.value
                 poulesStore.setPoules(response.data.poules)
                 this.tournoiActif.poules = poulesStore.poules
                 stadesStore.setStades(response.data.stades)
-                this.tournoiActif.stades = stadesStore.stades
+                this.tournoiActif.stades = stadesStore.stades.value
                 matchsStore.setMatchs(response.data.matchs)
                 this.tournoiActif.matchs = matchsStore.matchs
                 tableauxStore.setTableaux(response.data.tableaux)
-                this.tournoiActif.tableaux = tableauxStore.tableaux
+                this.tournoiActif.tableaux = tableauxStore.tableaux.value
             }
         },
         async initTournoiActif(){
