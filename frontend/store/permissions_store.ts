@@ -1,10 +1,15 @@
 export const usePermissionsStore = () => {
-    const permissions = useState<String[]>('permissions', () => [])
-    const fetchPermissions = async (): Promise<void> => {
+    const permissions = useState<string[]>('permissions', () => [])
+
+    const fetchPermissions = async () => {
         const {$api} = useNuxtApp()
-        const response = await $api.get<any>('/user/permissions');
-        if (response) {
-            permissions.value = response.data
+        try {
+            const response = await $api.get<string[]>('/user/permissions')
+            if (response) {
+                permissions.value = response.data
+            }
+        } catch (error) {
+            console.error('Failed to fetch permissions:', error)
         }
     }
 

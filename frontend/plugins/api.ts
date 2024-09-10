@@ -1,6 +1,7 @@
 import axios, {type AxiosRequestConfig, type AxiosResponse} from "axios";
 import {useAuthStore} from "~/store/auth_store";
 import {isTokenExpired} from "~/utils/auth";
+import type {ApiError} from "~/types/ApiError";
 
 type ApiResponse<T> = AxiosResponse<T> | undefined;
 

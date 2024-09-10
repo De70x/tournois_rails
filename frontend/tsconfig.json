@@ -3,6 +3,8 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "types": ["@nuxt/types", "@nuxtjs/tailwindcss"]
   }
 }

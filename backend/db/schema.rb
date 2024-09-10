@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_11_035711) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_09_044152) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,8 +22,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_11_035711) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "tableau_final_id"
+    t.bigint "tag_id"
     t.index ["poule_id"], name: "index_joueurs_on_poule_id"
     t.index ["tableau_final_id"], name: "index_joueurs_on_tableau_final_id"
+    t.index ["tag_id"], name: "index_joueurs_on_tag_id"
     t.index ["tournoi_id"], name: "index_joueurs_on_tournoi_id"
   end
 
@@ -96,6 +98,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_11_035711) do
     t.index ["tournoi_id"], name: "index_tableau_finals_on_tournoi_id"
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.string "icon"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "tournois", force: :cascade do |t|
     t.string "nom"
     t.integer "annee"
@@ -127,6 +136,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_11_035711) do
 
   add_foreign_key "joueurs", "poules"
   add_foreign_key "joueurs", "tableau_finals"
+  add_foreign_key "joueurs", "tags"
   add_foreign_key "joueurs", "tournois"
   add_foreign_key "matchs_tournois", "joueurs", column: "joueur1_id"
   add_foreign_key "matchs_tournois", "joueurs", column: "joueur2_id"
