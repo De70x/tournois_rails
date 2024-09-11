@@ -10,7 +10,7 @@ const props = defineProps({
   poule: {type: Object as PropType<Poule>, required: true},
 });
 
-const poulesStore = usePoulesStore()
+const {editPoule, deletePoule} = usePoulesStore()
 const {openModale, configModale} = useModaleStore()
 
 const creationPouleEnCours = ref(false)
@@ -26,7 +26,7 @@ const editerPoule = (poule: Poule) => {
 }
 
 const creationTerminee = async (event: FormSubmitEvent<Partial<Poule>>) => {
-  await poulesStore.editPoule({
+  await editPoule({
     id: event.data.id,
     nom: event.data.nom!
   })
@@ -37,7 +37,7 @@ const supprimerPoule = async (poule: Poule) => {
   configModale({
     id: poule.id!,
     message: `Êtes vous certain de vouloir supprimer la poule : ${poule.nom} ?`
-  }, () => poulesStore.deletePoule(poule.id!))
+  }, () => deletePoule(poule.id!))
   openModale()
 }
 

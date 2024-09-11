@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { useTableauxStore } from "~/store/phases_finales_store";
-import { useTournoisStore } from "~/store/tournois_store";
+import {useTableauxStore} from "~/store/phases_finales_store";
+import {useTournoisStore} from "~/store/tournois_store";
 import type {Tableau} from "~/types/Tableau";
 
 const tableauxStore = useTableauxStore();
-const tournoisStore = useTournoisStore();
+const {tournoiActif} = useTournoisStore();
 
 const fields = [
-  { key: 'id', label: 'ID', type: 'number' },
-  { key: 'nom', label: 'Nom', type: 'text' },
+  {key: 'id', label: 'ID', type: 'number'},
+  {key: 'nom', label: 'Nom', type: 'text'},
 ];
 
 const createTableau = async (tableau: Partial<Tableau>) => {
   await tableauxStore.createTableau({
     ...tableau,
-    tournoi_id: tournoisStore.tournoiActif.id!
+    tournoi_id: tournoiActif.value?.id!
   } as Tableau);
 };
 

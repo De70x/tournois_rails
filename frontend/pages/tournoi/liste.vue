@@ -3,17 +3,17 @@ import {useTournoisStore} from "~/store/tournois_store";
 import {useModaleStore} from "~/store/modale_store";
 import type {Tournoi} from "~/types/Tournoi";
 import {usePermissions} from "~/composables/usePermissions";
-import {asyncComputed, computedAsync} from "@vueuse/core";
+import {computedAsync} from "@vueuse/core";
 
 definePageMeta({
   name: 'Liste_Tournois'
 })
 
-const tournoisStore = useTournoisStore()
+const {fetchTournois, deleteTournoi, setActif, tournois } = useTournoisStore()
 const {openModale, configModale} = useModaleStore()
 const {hasPermission} = usePermissions()
 
-tournoisStore.fetchTournois()
+fetchTournois()
 
 const columns = [{
   key: 'nom',
@@ -34,12 +34,12 @@ const supprimerTournoi = (tournoi: Tournoi, e: any) => {
   configModale({
     id: tournoi.id!,
     message: `Êtes vous certain de vouloir supprimer le tournoi ${tournoi.nom} de ${tournoi.annee} ?`
-  }, () => tournoisStore.deleteTournoi(tournoi.id!))
+  }, () => deleteTournoi(tournoi.id!))
   openModale()
 }
 
 const select = async (row: any) => {
-  await tournoisStore.setActif(row.id)
+  await setActif(row.id)
   await navigateTo({name: 'Detail_Tournoi'})
 }
 
@@ -50,7 +50,7 @@ const hasPerm = computedAsync(async () => await hasPermission('edit_tournoi'), f
 <template>
   <h1 class="text-xl">Liste des tournois</h1>
   <UTable
-      :rows="tournoisStore.tournois"
+      :rows="tournois"
       :columns="columns"
       @select="select"
       class="w-full"

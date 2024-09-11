@@ -2,14 +2,15 @@ import type {Stade} from "~/types/Stade";
 import {useMatchsStore} from "~/store/matchs_store";
 
 export const useStadesStore = () => {
+    const {getMatchsEnCours} = useMatchsStore();
     const stades = useState<Stade[]>('stades', () => [])
-    const getStadesDisponibles = (): Stade[] => {
-        const matchsEnCours = useMatchsStore().getMatchsEnCours
-        return stades.value.filter(s => !matchsEnCours.some(m => m.stade_id === s.id))
-    }
+
+    const getStadesDisponibles = computed(() => {
+        return stades.value.filter(s => !getMatchsEnCours.value.some(m => m.stade_id === s.id))
+    })
 
     const isDisponible = (id:number) => {
-        return getStadesDisponibles().map(s => s.id).includes(id)
+        return getStadesDisponibles.value.map(s => s.id).includes(id)
     }
 
     const setStades = (nouveauxStades: Stade[]) => {
