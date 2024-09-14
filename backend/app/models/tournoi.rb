@@ -1,10 +1,11 @@
 class Tournoi < ApplicationRecord
-  has_many :poules
-  has_many :stades
-  has_many :joueurs
+  has_many :poules, dependent: :destroy
+  has_many :stades, dependent: :destroy
+  has_many :joueurs, dependent: :destroy
   has_many :tableau_finals, dependent: :destroy
-  has_many :matchs_tournois1, -> { distinct }, through: :joueurs, source: :matchs1
-  has_many :matchs_tournois2, -> { distinct }, through: :joueurs, source: :matchs2
+  has_many :tags, dependent: :destroy
+  has_many :matchs_tournois1, -> { distinct }, through: :joueurs, source: :matchs1, dependent: :destroy
+  has_many :matchs_tournois2, -> { distinct }, through: :joueurs, source: :matchs2, dependent: :destroy
 
   validates_uniqueness_of :nom, scope: :annee
 

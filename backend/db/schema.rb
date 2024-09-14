@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_09_044152) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_14_052424) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -99,10 +99,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_09_044152) do
   end
 
   create_table "tags", force: :cascade do |t|
-    t.string "name"
+    t.string "nom"
     t.string "icon"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "tournoi_id", null: false
+    t.index ["tournoi_id"], name: "index_tags_on_tournoi_id"
   end
 
   create_table "tournois", force: :cascade do |t|
@@ -146,6 +148,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_09_044152) do
   add_foreign_key "role_permissions", "roles"
   add_foreign_key "stades", "tournois"
   add_foreign_key "tableau_finals", "tournois"
+  add_foreign_key "tags", "tournois"
   add_foreign_key "user_roles", "roles"
   add_foreign_key "user_roles", "users"
 end

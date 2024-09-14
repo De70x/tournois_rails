@@ -16,7 +16,8 @@ class TournoisSerializer
       poules: tournoi.poules.map { |p| PoulesSerializer.light(p) },
       stades: tournoi.stades,
       matchs: tournoi.matchs_tournois,
-      tableaux: tournoi.tableau_finals
+      tableaux: tournoi.tableau_finals,
+      tags: tournoi.tags,
     }
   end
 end

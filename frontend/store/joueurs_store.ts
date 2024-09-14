@@ -81,9 +81,7 @@ export const useJoueursStore = () => {
             poule_id: joueur.poule_id === undefined ? null : joueur.poule_id,
             tournoi_id: joueur.tournoi_id
         })
-        if (joueurModifie) {
-            joueurs.value = joueurs.value.map(j => j.id === joueur.id ? joueurModifie.data : j)
-        }
+        updateJoueurInStore(joueurModifie?.data)
     }
 
     const inscrirePhaseFinale = async (joueur: Joueur, tableau_id: number) => {
@@ -91,9 +89,7 @@ export const useJoueursStore = () => {
         const joueurModifie = await $api.patch<Joueur>(`/joueurs/${joueur.id}`, {
             tableau_final_id: tableau_id
         })
-        if (joueurModifie) {
-            joueurs.value = joueurs.value.map(j => j.id === joueur.id ? joueurModifie.data : j)
-        }
+        updateJoueurInStore(joueurModifie?.data)
     }
 
     const desinscrireJoueur = async (joueur: Joueur) => {
@@ -108,15 +104,27 @@ export const useJoueursStore = () => {
         if (poule) {
             poule.joueurs = poule.joueurs.filter(j => j.id !== joueur.id)
         }
-        joueurs.value = joueurs.value.map(j => {
-            return j.id === joueur.id ? {...joueur, poule_id: undefined} : j
-        })
+        updateJoueurInStore({...joueur, poule_id: undefined})
     }
 
     const deleteJoueur = async (id: number) => {
         const {$api} = useNuxtApp()
         await $api.delete<Joueur>(`/joueurs/${id}`)
         joueurs.value = joueurs.value.filter(t => t.id !== id)
+    }
+
+    const ajouterTag = async (joueur: Partial<Joueur>, tag_id: number) => {
+        const {$api} = useNuxtApp()
+        const joueurModifie = await $api.patch<Joueur>(`/joueurs/${joueur.id}`, {tag_id})
+        updateJoueurInStore(joueurModifie?.data)
+    }
+
+    const updateJoueurInStore = (joueurModifie: Joueur | undefined) => {
+        if (joueurModifie) {
+            joueurs.value = joueurs.value.map(j => {
+                return j.id === joueurModifie.id ? joueurModifie : j
+            })
+        }
     }
 
     return {

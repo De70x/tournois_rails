@@ -4,6 +4,7 @@ import {usePoulesStore} from "~/store/poules_store";
 import {useStadesStore} from "~/store/stades_store";
 import {useMatchsStore} from "~/store/matchs_store";
 import {useTableauxStore} from "~/store/phases_finales_store";
+import {useTagsStore} from "~/store/tags_store";
 
 export const useTournoisStore = () => {
     const tournois = useState<Tournoi[]>('tournois', () => [])
@@ -38,6 +39,7 @@ export const useTournoisStore = () => {
         const {stades, setStades} = useStadesStore()
         const {matchs, setMatchs} = useMatchsStore()
         const {tableaux, setTableaux} = useTableauxStore()
+        const {tags, setTags} = useTagsStore()
         const response = await $api.get<Tournoi>(`/tournois/${id}`)
         if (response) {
             tournoiActif.value = response.data
@@ -52,6 +54,8 @@ export const useTournoisStore = () => {
             tournoiActif.value.matchs = matchs.value
             setTableaux(response.data.tableaux)
             tournoiActif.value.tableaux = tableaux.value
+            setTags(response.data.tags)
+            tournoiActif.value.tags = tags.value
         }
     }
 
