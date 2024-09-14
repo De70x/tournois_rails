@@ -8,6 +8,7 @@ export const useTagsStore = () => {
     }
 
     const createTag = async (tag: Partial<Tag>) => {
+        console.log(tag)
         const {$api} = useNuxtApp()
         const nouveauTag = await $api.post<Tag>('/tags', tag)
         tags.value.push(nouveauTag!.data)
