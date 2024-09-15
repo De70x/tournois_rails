@@ -64,10 +64,6 @@ export const useTournoisStore = () => {
         if (tournoiActifId) {
             await setActif(parseInt(tournoiActifId))
         }
-        // If even after the first init there is still no tournament, we move back to the list
-        if (!tournoiActif.value) {
-            navigateTo({name: 'Liste_Tournois'})
-        }
     }
 
     return {
