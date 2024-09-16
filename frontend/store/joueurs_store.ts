@@ -142,6 +142,7 @@ export const useJoueursStore = () => {
         getAdversairesValides,
         getJoueursDisponiblesDansPoule,
         createJoueur,
-        getJoueursSansTableau
+        getJoueursSansTableau,
+        ajouterTag
     }
 }

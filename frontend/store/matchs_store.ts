@@ -1,9 +1,10 @@
 import type {Match} from "~/types/Match";
+import type {ComputedRef} from "vue";
 
 export const useMatchsStore = () => {
     const matchs = useState<Match[]>('matchs', () => [])
 
-    const getMatchsEnCours = computed(() => matchs.value.filter(m => m.statut === 'en_cours'))
+    const getMatchsEnCours: ComputedRef<Match[]> = computed(() => matchs.value.filter(m => m.statut === 'en_cours'))
 
     const setMatchs = (nouveauxMatchs: Match[]) => {
         matchs.value = nouveauxMatchs;

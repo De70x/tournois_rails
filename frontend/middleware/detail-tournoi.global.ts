@@ -1,9 +1,11 @@
 import {useTournoisStore} from "~/store/tournois_store";
 
-export default defineNuxtRouteMiddleware((to, _from) => {
+export default defineNuxtRouteMiddleware((to, from) => {
   const {tournoiActif, initTournoiActif} = useTournoisStore()
 
-  if (!tournoiActif.value) {
+  const disabledPaths = ['/connexion', '/deconnexion', '/inscription', 'tirageAuSort']
+
+  if (!disabledPaths.includes(from.path) && !tournoiActif.value) {
     initTournoiActif().then(() => {
       if (tournoiActif.value) {
         navigateTo(to.path)

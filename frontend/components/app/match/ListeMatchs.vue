@@ -4,7 +4,14 @@ import {useMatchsStore} from "~/store/matchs_store";
 import {useModaleStore} from "~/store/modale_store";
 import {useJoueursStore} from "~/store/joueurs_store";
 
-const matchsStore = useMatchsStore()
+interface Props {
+  matchs: Match[]
+}
+
+defineProps<Props>()
+
+
+const {deleteMatch, editMatch} = useMatchsStore()
 const {openModale, configModale} = useModaleStore()
 const {getJoueurById} = useJoueursStore()
 
@@ -22,12 +29,12 @@ const supprimerMatch = (match: Match) => {
   configModale({
     id: match.id!,
     message: `Êtes vous certain de vouloir supprimer le match : ${getJoueurById.value(match.joueur1_id)?.nom} - ${getJoueurById.value(match.joueur2_id)?.nom} ?`
-  }, () => matchsStore.deleteMatch(match.id!))
+  }, () => deleteMatch(match.id!))
   openModale()
 }
 
 const validerMatch = (matchId: number) => {
-  matchsStore.editMatch({
+  editMatch({
     id: matchId,
     score_1: score1.value,
     score_2: score2.value,
@@ -40,7 +47,7 @@ const validerMatch = (matchId: number) => {
 
 <template>
   <div class="grid grid-cols-3 gap-2">
-    <UCard v-for="match in matchsStore.getMatchsEnCours.value">
+    <UCard v-for="match in matchs">
       <template #header>
         <div class="flex items-center justify-between">
           <UButton color="primary" variant="ghost" icon="i-heroicons-pencil-20-solid"
@@ -61,7 +68,7 @@ const validerMatch = (matchId: number) => {
       </template>
     </UCard>
   </div>
-  <div v-if="matchsStore.getMatchsEnCours.value.length === 0" class="w-1/2 m-auto">
+  <div v-if="matchs.length === 0" class="w-1/2 m-auto">
     <UCard>
       <template #header>
         Aucun match en cours

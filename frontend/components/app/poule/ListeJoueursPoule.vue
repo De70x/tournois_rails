@@ -37,6 +37,10 @@ const desinscrire = (joueur: Joueur) => {
   joueursStore.desinscrireJoueur(joueur)
 }
 
+const test = (row: any) => {
+  navigateTo({name: 'Detail_Joueur', params: {joueur_id: row.id}})
+}
+
 
 </script>
 
@@ -49,6 +53,7 @@ const desinscrire = (joueur: Joueur) => {
       sort-asc-icon="i-heroicons-arrow-up-20-solid"
       sort-desc-icon="i-heroicons-arrow-down-20-solid"
       :sort-button="{ icon: 'i-heroicons-arrows-up-down-20-solid', color: 'primary', variant: 'ghost', size: '2xs', square: false }"
+      @select="test"
   >
     <template #nom-data="{ row }">
       <div class="truncate w-[200px]" :title="row.nom">
