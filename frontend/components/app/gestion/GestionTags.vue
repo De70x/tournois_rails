@@ -10,13 +10,13 @@ const {tournoiActif} = useTournoisStore();
 const fields = [
   {key: 'id', label: 'ID', type: 'number'},
   {key: 'nom', label: 'Nom', type: 'text'},
+  {key: 'icon', label: 'Icone', type: 'icon'},
 ];
 
 const createTag = async (tag: Partial<Tag>) => {
   await tagsStore.createTag({
     ...tag,
-    tournoi_id: tournoiActif.value?.id!
-  } as Tableau);
+  } as Tag);
 };
 
 const editTag = async (stade: Tableau) => {
@@ -26,6 +26,10 @@ const editTag = async (stade: Tableau) => {
 const deleteTag = async (id: number) => {
   await tagsStore.deleteTag(id);
 };
+
+
+console.log(tagsStore.tags)
+
 </script>
 
 <template>

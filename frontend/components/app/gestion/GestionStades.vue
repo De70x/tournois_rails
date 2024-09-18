@@ -15,7 +15,7 @@ const fields = [
 const createStade = async (stade: Partial<Stade>) => {
   await stadesStore.createStade({
     ...stade,
-    tournoi_id: tournoisStore.tournoiActif.id!
+    disponible: true
   } as Stade);
 };
 

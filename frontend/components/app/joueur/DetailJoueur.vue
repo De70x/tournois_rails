@@ -3,21 +3,48 @@ import {useJoueursStore} from "~/store/joueurs_store";
 import ListeMatchs from "~/components/app/match/ListeMatchs.vue";
 import {useTagsStore} from "~/store/tags_store";
 
-const {getJoueurById} = useJoueursStore()
+const {getJoueurById, ajouterTag} = useJoueursStore()
 const route = useRoute()
 const id = Array.isArray(route.params.joueur_id) ? route.params.joueur_id[0] : route.params.joueur_id
 const joueur = getJoueurById.value(Number(id));
 
 const {tags} = useTagsStore()
 
+const selected = ref<number>(joueur?.tag_id ?? -1)
+
+const options = tags.value.map(tag => ({
+  value: tag.id,
+  label: tag.nom,
+  icon: tag.icon
+}))
+
+options.push({icon: 'heroicons-minus-circle', label: 'Aucun', value: -1})
+
+const handleSelectionChange = (newValue: any) => {
+  if (joueur)
+    ajouterTag(joueur, newValue === -1 ? null : newValue)
+}
 
 </script>
 
 <template>
-  <div v-for="tag in tags">
-    <UCheckbox :label="tag.nom" :value="tag.id"/>
-  </div>
+  <div class="flex flex-col gap-2">
+    <p>Détail de <strong>{{ joueur?.nom}}</strong></p>
+  <URadioGroup
+      legend="Tag"
+      v-model="selected"
+      :options="options"
+      @update:model-value="handleSelectionChange"
+  >
+    <template #label="{ option }">
+      <div class="flex items-center">
+        <UIcon :name="option.icon" class="mr-2"/>
+        {{ option.label }}
+      </div>
+    </template>
+  </URadioGroup>
   <ListeMatchs :matchs="joueur!.matchs"/>
+  </div>
 </template>
 
 <style scoped>

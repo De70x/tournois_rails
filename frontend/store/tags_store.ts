@@ -8,7 +8,6 @@ export const useTagsStore = () => {
     }
 
     const createTag = async (tag: Partial<Tag>) => {
-        console.log(tag)
         const {$api} = useNuxtApp()
         const nouveauTag = await $api.post<Tag>('/tags', tag)
         tags.value.push(nouveauTag!.data)
@@ -29,7 +28,7 @@ export const useTagsStore = () => {
 
     const deleteTag = async (id: number) => {
         const {$api} = useNuxtApp()
-        await $api.delete<Tag>(`/matchs_tournois/${id}`)
+        await $api.delete<Tag>(`/tags/${id}`)
         tags.value = tags.value.filter(t => t.id !== id)
     }
 

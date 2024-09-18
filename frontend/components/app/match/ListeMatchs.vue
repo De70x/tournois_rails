@@ -46,6 +46,7 @@ const validerMatch = (matchId: number) => {
 </script>
 
 <template>
+  Matchs joués
   <div class="grid grid-cols-3 gap-2">
     <UCard v-for="match in matchs">
       <template #header>
