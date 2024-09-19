@@ -2,6 +2,7 @@
 import type {PropType} from "vue";
 import type {Joueur} from "~/types/Joueur";
 import CheckboxDynamique from "~/components/app/joueur/CheckboxDynamique.vue";
+import {useTagsStore} from "~/store/tags_store";
 
 defineProps({
   joueurs: {type: Object as PropType<Joueur[]>, required: true},
@@ -11,6 +12,8 @@ type SortType = {
   column: string;
   direction: 'asc' | 'desc';
 }
+
+const {tags} = useTagsStore()
 
 const sort = ref<SortType>({column: 'points', direction: 'desc'})
 
@@ -29,6 +32,13 @@ const columns = [
     label: 'Nombre matchs',
   }]
 
+const getIcon = (id: number) => {
+  const tag = tags.value.find(tag => tag.id === id)
+  if (tag && tag.icon)
+    return tag.icon
+  return ''
+}
+
 </script>
 
 <template>
@@ -42,8 +52,11 @@ const columns = [
       :sort-button="{ icon: 'i-heroicons-arrows-up-down-20-solid', color: 'primary', variant: 'ghost', size: '2xs', square: false }"
   >
     <template #nom-data="{ row }">
-      <div class="truncate w-[200px]" :title="row.nom">
-        {{ row.nom }}
+      <div class="flex items-center">
+        <UIcon v-if="row.tag_id" :name="getIcon(row.tag_id)"/>
+        <div class="truncate w-[200px]" :title="row.nom">
+          {{ row.nom }}
+        </div>
       </div>
     </template>
 
