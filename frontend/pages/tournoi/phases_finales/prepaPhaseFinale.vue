@@ -38,7 +38,7 @@ const genererTableau = async () => {
              @change="selectionTableau"/>
     <i>Les joueurs cochés iront dans le tableau sélectionné</i>
 
-    <div class="flex justify-evenly">
+    <div class="flex justify-evenly mt-2">
       <UButton v-for="tag in tags" :title="`sélectionner tous les joueurs portant le tag ${tag.nom}`" variant="outline" :icon="tag.icon">
         {{tag.nom}}
       </UButton>
