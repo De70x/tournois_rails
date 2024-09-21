@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { useStadesStore } from "~/store/stades_store";
-import { useTournoisStore } from "~/store/tournois_store";
-import type { Stade } from "~/types/Stade";
+import {useStadesStore} from "~/store/stades_store";
+import type {Stade} from "~/types/Stade";
 
 const stadesStore = useStadesStore();
-const tournoisStore = useTournoisStore();
 
 const fields = [
   { key: 'id', label: 'ID', type: 'number' },

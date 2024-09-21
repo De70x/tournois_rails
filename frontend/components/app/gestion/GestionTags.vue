@@ -14,9 +14,7 @@ const fields = [
 ];
 
 const createTag = async (tag: Partial<Tag>) => {
-  await tagsStore.createTag({
-    ...tag,
-  } as Tag);
+  await tagsStore.createTag(tag as Tag);
 };
 
 const editTag = async (stade: Tableau) => {
