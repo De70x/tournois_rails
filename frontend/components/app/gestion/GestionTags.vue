@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import {useTournoisStore} from "~/store/tournois_store";
 import type {Tableau} from "~/types/Tableau";
 import {useTagsStore} from "~/store/tags_store";
 import type {Tag} from "~/types/Tag";
 
 const tagsStore = useTagsStore();
-const {tournoiActif} = useTournoisStore();
 
 const fields = [
   {key: 'id', label: 'ID', type: 'number'},
