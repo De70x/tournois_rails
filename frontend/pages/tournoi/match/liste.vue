@@ -7,7 +7,6 @@ definePageMeta({
 })
 
 const {getMatchsEnCours} = useMatchsStore()
-
 </script>
 
 <template>

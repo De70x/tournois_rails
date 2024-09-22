@@ -23,9 +23,6 @@ const deleteTag = async (id: number) => {
   await tagsStore.deleteTag(id);
 };
 
-
-console.log(tagsStore.tags)
-
 </script>
 
 <template>

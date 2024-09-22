@@ -5,8 +5,6 @@ definePageMeta({
   name: 'Detail_Joueur'
 })
 
-console.log(JSON.stringify(useRoute().params));
-
 </script>
 
 <template>

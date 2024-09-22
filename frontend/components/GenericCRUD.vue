@@ -7,6 +7,10 @@ import {useTournoisStore} from "~/store/tournois_store";
 const {openModale, configModale} = useModaleStore();
 const {tournoiActif} = useTournoisStore()
 
+if(!tournoiActif.value){
+  navigateTo({name: 'Liste_Tournois'})
+}
+
 interface Props {
   items: any[];
   storeName: string;

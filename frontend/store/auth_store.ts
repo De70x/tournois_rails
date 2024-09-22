@@ -1,5 +1,6 @@
 import type {User} from "~/types/User";
 import {usePermissionsStore} from "~/store/permissions_store";
+import {useTournoisStore} from "~/store/tournois_store";
 
 export const useAuthStore = () => {
     const authToken = useState<string | null>('authToken', () => null)
@@ -21,7 +22,9 @@ export const useAuthStore = () => {
         authToken.value = null
         user.value = null
         usePermissionsStore().clearPermissions()
+        useTournoisStore().tournoiActif.value = null
         useCookie('auth-token', {sameSite: 'strict'}).value = null
+        navigateTo({name: 'Connexion'})
     }
 
     const signup = async (credentials: { email: string; password: string }) => {
@@ -36,7 +39,8 @@ export const useAuthStore = () => {
             } catch (error) {
                 // If refresh fails, log out the user
                 await logout();
-                throw error;
+                console.error(error);
+                navigateTo({name: 'Connexion'})
             }
         }
     }

@@ -43,7 +43,7 @@ const links = computed(() => {
     });
   } else {
     dynamicLinks.unshift({
-      label: 'Log-in',
+      label: 'Connexion',
       icon: 'i-heroicons-home',
       to: '/connexion'
     });
