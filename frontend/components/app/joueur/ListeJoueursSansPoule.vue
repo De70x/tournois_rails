@@ -5,7 +5,7 @@ import {useJoueursStore} from "~/store/joueurs_store";
 import type {Joueur} from "~/types/Joueur";
 import {useModaleStore} from "~/store/modale_store";
 
-const tournoisStore = useTournoisStore()
+const {tournoiActif} = useTournoisStore()
 const joueursStore = useJoueursStore()
 const {openModale, configModale} = useModaleStore()
 
@@ -25,18 +25,20 @@ const creationJoueur = () => {
 }
 
 const creationTerminee = async (event: FormSubmitEvent<Joueur>) => {
-  if (event.data.id === -1) {
-    await joueursStore.createJoueur({
-      nom: event.data.nom!,
-      tournoi_id: tournoisStore.tournoiActif.id!
-    })
-  } else {
-    await joueursStore.editJoueur({
-      id: event.data.id,
-      nom: event.data.nom!,
-      poule_id: event.data.poule_id,
-      tournoi_id: tournoisStore.tournoiActif.id!
-    })
+  if (tournoiActif.value) {
+    if (event.data.id === -1) {
+      await joueursStore.createJoueur({
+        nom: event.data.nom!,
+        tournoi_id: tournoiActif.value.id!
+      } as Joueur)
+    } else {
+      await joueursStore.editJoueur({
+        id: event.data.id,
+        nom: event.data.nom!,
+        poule_id: event.data.poule_id,
+        tournoi_id: tournoiActif.value.id!
+      })
+    }
   }
   creationJoueurEnCours.value = false
 }
@@ -60,7 +62,7 @@ const tirageAuSort = () => {
   navigateTo({name: 'Tirage_Au_Sort'})
   let joueursRestants = [...joueursSansPoule.value]
   while (joueursRestants.length !== 0) {
-    tournoisStore.tournoiActif.poules.forEach((p) => {
+    tournoiActif?.value?.poules.forEach((p) => {
       // On prend un joueur au hasard
       let randomPlayer = joueursRestants[Math.floor(Math.random() * joueursRestants.length)]
       // On le retire du tableau
