@@ -15,9 +15,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
       } else {
         navigateTo({name: 'Liste_Tournois'})
       }
-    }).catch((e) => {
-      console.error(e)
-      navigateTo({name: 'Connexion'})
     })
   }
 

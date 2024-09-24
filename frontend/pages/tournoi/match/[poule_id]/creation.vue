@@ -42,6 +42,7 @@ const editListe2 = (event: string) => {
 const getListeFiltree = (idSelectionne: number) => {
   let nouvelleListe = joueursStore.getAdversairesValides(idSelectionne, poule_id)
   nouvelleListe = nouvelleListe.filter(j => j.id !== idSelectionne)
+  nouvelleListe = nouvelleListe.sort(triParNombreDeMatchs)
   return nouvelleListe
 }
 

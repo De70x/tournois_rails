@@ -41,6 +41,7 @@ export const useAuthStore = () => {
                 await logout();
                 console.error(error);
                 navigateTo({name: 'Connexion'})
+                throw error
             }
         }
     }

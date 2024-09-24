@@ -30,7 +30,7 @@ export default defineNuxtPlugin
           await navigateTo({name: 'Connexion'})
           return
         }
-        const description = error.response.data.message || error.response.data.error || error.response.data
+        const description = formatResponse(error)
         toast.add({
           title: error.response.statusText,
           description: `${error.response.status}: ${description}`,
@@ -56,6 +56,19 @@ export default defineNuxtPlugin
         icon: 'i-heroicons-exclamation-circle',
         color: 'red'
       })
+    }
+  }
+
+  const formatResponse = (apiError: ApiError) => {
+    if (apiError?.response?.data.message)
+      return apiError.response.data.message
+    else if (apiError?.response?.data.error)
+      return apiError?.response?.data.error
+    else if (apiError?.response?.data) {
+      return JSON.stringify(apiError?.response?.data)
+    }
+    else{
+      return 'Unknown error'
     }
   }
 
