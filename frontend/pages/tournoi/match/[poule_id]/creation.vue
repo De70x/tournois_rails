@@ -59,6 +59,10 @@ const handleSubmit = async (event: FormSubmitEvent<Match>) => {
   })
   navigateTo({name: 'Detail_Tournoi'})
 }
+formState.joueur1_id = `${j1Select.value[0].id}`
+editListe1(`${j1Select.value[0].id}`)
+formState.joueur2_id = `${j2Select.value[0].id}`
+formState.stade_id = `${stades.value[0].id}`
 
 </script>
 

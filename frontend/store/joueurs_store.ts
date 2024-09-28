@@ -47,7 +47,7 @@ export const useJoueursStore = (api: Api) => {
       j.poule_id === pouleId &&
       !j.matchs.some(m => m.statut === 'en_cours') &&
       j.matchs.length < poule!.joueurs.length - 1
-    );
+    ).sort(triParNombreDeMatchs);
   }
 
   const getJoueursSansTableau = (pouleId: number) => {
@@ -122,6 +122,10 @@ export const useJoueursStore = (api: Api) => {
         return j.id === joueurModifie.id ? joueurModifie : j
       })
     }
+  }
+
+  const triParNombreDeMatchs = (j1: Joueur, j2: Joueur) => {
+    return j1.nb_matchs - j2.nb_matchs
   }
 
   return {
