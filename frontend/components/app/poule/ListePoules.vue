@@ -5,8 +5,9 @@ import type {Joueur} from "~/types/Joueur";
 import {useTournoisStore} from "~/store/tournois_store";
 import DetailPoule from "~/components/app/poule/DetailPoule.vue";
 
-const poulesStore = usePoulesStore()
-const tournoisStore = useTournoisStore()
+const {$api} = useNuxtApp()
+const poulesStore = usePoulesStore($api)
+const tournoisStore = useTournoisStore($api)
 const poules = computed(() => poulesStore.poules)
 
 const creationPouleEnCours = ref(false)
@@ -25,7 +26,7 @@ const creationPoule = () => {
 const creationTerminee = async (event: FormSubmitEvent<Partial<Joueur>>) => {
   await poulesStore.createPoule({
     nom: event.data.nom!,
-    tournoi_id: tournoisStore.tournoiActif.id!,
+    tournoi_id: tournoisStore.tournoiActif.value?.id!,
     joueurs: []
   })
   creationPouleEnCours.value = false

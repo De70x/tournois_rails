@@ -11,11 +11,12 @@ definePageMeta({
   name: 'Creation_Match_Poule'
 })
 
+const {$api} = useNuxtApp()
 const route = useRoute()
-const poulesStore = usePoulesStore()
-const stadesStore = useStadesStore()
-const joueursStore = useJoueursStore()
-const matchsStore = useMatchsStore()
+const poulesStore = usePoulesStore($api)
+const stadesStore = useStadesStore($api)
+const joueursStore = useJoueursStore($api)
+const matchsStore = useMatchsStore($api)
 const id = Array.isArray(route.params.poule_id) ? route.params.poule_id[0] : route.params.poule_id
 const poule_id = parseInt(id, 10)
 const poule = poulesStore.getPoule(poule_id)
@@ -62,30 +63,35 @@ const handleSubmit = async (event: FormSubmitEvent<Match>) => {
 </script>
 
 <template>
-  <h1 class="text-xl">Création du match pour la poule {{ poule?.nom }}</h1>
-  <UCard>
-    <UForm :state="formState" class="space-y-4" @submit="handleSubmit">
-      <div class="flex gap-10">
-        <UFormGroup label="joueur 1" name="j1">
-          <USelect v-if="j1Select.length > 0" v-model="formState.joueur1_id" :options="j1Select" option-attribute="nom" value-attribute="id"
-                   @change="editListe1"/>
-          <div v-else>Pas de joueur disponible</div>
+  <TournoiGuard>
+    <h1 class="text-xl">Création du match pour la poule {{ poule?.nom }}</h1>
+    <UCard>
+      <UForm :state="formState" class="space-y-4" @submit="handleSubmit">
+        <div class="flex gap-10">
+          <UFormGroup label="joueur 1" name="j1">
+            <USelect v-if="j1Select.length > 0" v-model="formState.joueur1_id" :options="j1Select"
+                     option-attribute="nom" value-attribute="id"
+                     @change="editListe1"/>
+            <div v-else>Pas de joueur disponible</div>
+          </UFormGroup>
+          <UFormGroup label="joueur 2" name="j2">
+            <USelect v-if="j2Select.length > 0" v-model="formState.joueur2_id" :options="j2Select"
+                     option-attribute="nom" value-attribute="id"
+                     @change="editListe2"/>
+            <div v-else>Pas de joueur disponible</div>
+          </UFormGroup>
+        </div>
+        <UFormGroup label="stade" name="stade">
+          <USelect v-if="stades.length > 0" v-model="formState.stade_id" :options="stades" option-attribute="nom"
+                   value-attribute="id"/>
+          <div v-else>Pas de stades disponibles</div>
         </UFormGroup>
-        <UFormGroup label="joueur 2" name="j2">
-          <USelect v-if="j2Select.length > 0" v-model="formState.joueur2_id" :options="j2Select" option-attribute="nom" value-attribute="id"
-                   @change="editListe2"/>
-          <div v-else>Pas de joueur disponible</div>
-        </UFormGroup>
-      </div>
-      <UFormGroup label="stade" name="stade">
-        <USelect v-if="stades.length > 0" v-model="formState.stade_id" :options="stades" option-attribute="nom" value-attribute="id"/>
-        <div v-else>Pas de stades disponibles</div>
-      </UFormGroup>
-      <UButton type="submit">
-        Créer match
-      </UButton>
-    </UForm>
-  </UCard>
+        <UButton type="submit">
+          Créer match
+        </UButton>
+      </UForm>
+    </UCard>
+  </TournoiGuard>
 </template>
 
 <style scoped>

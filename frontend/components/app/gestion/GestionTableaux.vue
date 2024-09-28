@@ -2,7 +2,8 @@
 import {useTableauxStore} from "~/store/phases_finales_store";
 import type {Tableau} from "~/types/Tableau";
 
-const tableauxStore = useTableauxStore();
+const {$api} = useNuxtApp()
+const tableauxStore = useTableauxStore($api);
 
 const fields = [
   {key: 'id', label: 'ID', type: 'number'},

@@ -4,7 +4,7 @@ import {useAuthStore} from "~/store/auth_store";
 definePageMeta({
   name: 'Deconnexion'
 })
-
-useAuthStore().logout()
+const {$api} = useNuxtApp()
+useAuthStore($api).logout()
 navigateTo({name: 'Connexion'})
 </script>

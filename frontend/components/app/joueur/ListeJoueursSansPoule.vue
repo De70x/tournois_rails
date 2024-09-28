@@ -5,8 +5,9 @@ import {useJoueursStore} from "~/store/joueurs_store";
 import type {Joueur} from "~/types/Joueur";
 import {useModaleStore} from "~/store/modale_store";
 
-const {tournoiActif} = useTournoisStore()
-const joueursStore = useJoueursStore()
+const {$api} = useNuxtApp()
+const {tournoiActif} = useTournoisStore($api)
+const joueursStore = useJoueursStore($api)
 const {openModale, configModale} = useModaleStore()
 
 const creationJoueurEnCours = ref(false)

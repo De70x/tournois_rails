@@ -5,8 +5,9 @@ import {useStadesStore} from "~/store/stades_store";
 import {useMatchsStore} from "~/store/matchs_store";
 import {useTableauxStore} from "~/store/phases_finales_store";
 import {useTagsStore} from "~/store/tags_store";
+import type {Api} from "~/plugins/api";
 
-export const useTournoisStore = () => {
+export const useTournoisStore = (api: Api) => {
     const tournois = useState<Tournoi[]>('tournois', () => [])
     const tournoiActif = useState<Tournoi | null>('tournoiActif', () => null)
 
@@ -33,17 +34,20 @@ export const useTournoisStore = () => {
     }
 
     const setActif = async (id: number) => {
-        const {$api} = useNuxtApp()
-        const {joueurs, setJoueurs} = useJoueursStore()
-        const {poules, setPoules} = usePoulesStore()
-        const {stades, setStades} = useStadesStore()
-        const {matchs, setMatchs} = useMatchsStore()
-        const {tableaux, setTableaux} = useTableauxStore()
-        const {tags, setTags} = useTagsStore()
-        const response = await $api.get<Tournoi>(`/tournois/${id}`)
+        const {joueurs, setJoueurs} = useJoueursStore(api)
+        const {poules, setPoules} = usePoulesStore(api)
+        const {stades, setStades} = useStadesStore(api)
+        const {matchs, setMatchs} = useMatchsStore(api)
+        const {tableaux, setTableaux} = useTableauxStore(api)
+        const {tags, setTags} = useTagsStore(api)
+        const response = await api.get<Tournoi>(`/tournois/${id}`)
         if (response) {
             tournoiActif.value = response.data
-            localStorage.setItem('tournoiActifId', String(id))
+            const tournoiActifIdCookie = useCookie('tournoiActifId', {
+                maxAge: 60 * 60 * 24 * 7, // 7 jours
+                sameSite: 'strict'
+            })
+            tournoiActifIdCookie.value = id.toString()
             setJoueurs(response.data.joueurs)
             tournoiActif.value.joueurs = joueurs.value
             setPoules(response.data.poules)
@@ -60,7 +64,7 @@ export const useTournoisStore = () => {
     }
 
     const initTournoiActif = async () => {
-        const tournoiActifId = localStorage.getItem('tournoiActifId')
+        const tournoiActifId = useCookie('tournoiActifId').value
         if (tournoiActifId) {
             await setActif(parseInt(tournoiActifId))
         }

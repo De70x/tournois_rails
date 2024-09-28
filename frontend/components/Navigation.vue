@@ -3,8 +3,9 @@ import {computed} from 'vue';
 import {useAuthStore} from "~/store/auth_store";
 import type {HorizontalNavigationLink} from "#ui/types";
 
+const {$api} = useNuxtApp()
 const token = computed(() => useCookie('auth-token').value);
-const email = computed(() => useAuthStore().user?.email)
+const email = computed(() => useAuthStore($api).user?.value?.email)
 
 const links = computed(() => {
   const dynamicLinks: HorizontalNavigationLink[] = [
@@ -24,6 +25,10 @@ const links = computed(() => {
       label: 'Gestion',
       icon: 'i-heroicons-cog-6-tooth',
       to: '/gestion'
+    },{
+      label: 'Phases finales',
+      icon: 'i-heroicons-cog-6-tooth',
+      to: '/phases_finales'
     }
 
   ];

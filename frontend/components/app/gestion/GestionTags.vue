@@ -3,7 +3,8 @@ import type {Tableau} from "~/types/Tableau";
 import {useTagsStore} from "~/store/tags_store";
 import type {Tag} from "~/types/Tag";
 
-const tagsStore = useTagsStore();
+const {$api} = useNuxtApp()
+const tagsStore = useTagsStore($api);
 
 const fields = [
   {key: 'id', label: 'ID', type: 'number'},

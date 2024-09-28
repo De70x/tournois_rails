@@ -5,12 +5,14 @@ import {useMatchsStore} from "~/store/matchs_store";
 definePageMeta({
   name: 'Liste_Matchs_En_Cours'
 })
-
-const {getMatchsEnCours} = useMatchsStore()
+const {$api} = useNuxtApp()
+const {getMatchsEnCours} = useMatchsStore($api)
 </script>
 
 <template>
-  <ListeMatchs :matchs="getMatchsEnCours" />
+  <TournoiGuard>
+    <ListeMatchs :matchs="getMatchsEnCours"/>
+  </TournoiGuard>
 </template>
 
 <style scoped>

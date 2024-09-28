@@ -1,8 +1,9 @@
 import type {Stade} from "~/types/Stade";
 import {useMatchsStore} from "~/store/matchs_store";
+import type {Api} from "~/plugins/api";
 
-export const useStadesStore = () => {
-    const {getMatchsEnCours} = useMatchsStore();
+export const useStadesStore = (api: Api) => {
+    const {getMatchsEnCours} = useMatchsStore(api);
     const stades = useState<Stade[]>('stades', () => [])
 
     const getStadesDisponibles = computed(() => {
@@ -18,14 +19,12 @@ export const useStadesStore = () => {
     }
 
     const createStade = async (stade: Stade) => {
-        const {$api} = useNuxtApp()
-        const nouveauStade = await $api.post<Stade>('/stades', stade)
+        const nouveauStade = await api.post<Stade>('/stades', stade)
         stades.value.push(nouveauStade!.data)
     }
 
     const editStade = async (stade: Partial<Stade>) => {
-        const {$api} = useNuxtApp()
-        await $api.patch<Stade>(`/stades/${stade.id}`, {nom: stade.nom})
+        await api.patch<Stade>(`/stades/${stade.id}`, {nom: stade.nom})
         stades.value = stades.value.map(p => p.id === stade.id ? {
             ...p,
             nom: stade.nom!
@@ -33,8 +32,7 @@ export const useStadesStore = () => {
     }
 
     const deleteStade = async(id: number) => {
-        const {$api} = useNuxtApp()
-        await $api.delete<Stade>(`/stades/${id}`)
+        await api.delete<Stade>(`/stades/${id}`)
         stades.value = stades.value.filter(p => p.id !== id)
     }
 

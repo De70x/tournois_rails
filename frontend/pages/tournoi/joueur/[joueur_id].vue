@@ -8,7 +8,9 @@ definePageMeta({
 </script>
 
 <template>
-  <DetailJoueur/>
+  <TournoiGuard>
+    <DetailJoueur/>
+  </TournoiGuard>
 </template>
 
 <style scoped>

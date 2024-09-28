@@ -1,8 +1,9 @@
 import type {Joueur} from "~/types/Joueur";
 import {usePoulesStore} from "~/store/poules_store";
 import type {ComputedRef} from "vue";
+import type {Api} from "~/plugins/api";
 
-export const useJoueursStore = () => {
+export const useJoueursStore = (api: Api) => {
   const joueurs = useState<Joueur[]>('joueurs', () => [])
   const joueurFictif = useState<Joueur | {}>('joueurFictif', () => {
     return {}
@@ -40,7 +41,7 @@ export const useJoueursStore = () => {
   }
 
   const getJoueursDisponiblesDansPoule = (pouleId: number) => {
-    const poulesStore = usePoulesStore()
+    const poulesStore = usePoulesStore(api)
     const poule = poulesStore.getPoule(pouleId)
     return joueurs.value.filter(j =>
       j.poule_id === pouleId &&
@@ -61,16 +62,14 @@ export const useJoueursStore = () => {
   }
 
   const createJoueur = async (joueur: Partial<Joueur>) => {
-    const {$api} = useNuxtApp()
-    const nouveauJoueur = await $api.post<Joueur>('/joueurs', joueur)
+    const nouveauJoueur = await api.post<Joueur>('/joueurs', joueur)
     if (nouveauJoueur) {
       joueurs.value.push(nouveauJoueur!.data)
     }
   }
 
   const editJoueur = async (joueur: Partial<Joueur>) => {
-    const {$api} = useNuxtApp()
-    const poulesStore = usePoulesStore()
+    const poulesStore = usePoulesStore(api)
     const poule = poulesStore.getPoule(joueur.poule_id!)
     if (poule) {
       const joueurAModifier = poule.joueurs.find(j => j.id === joueur.id)
@@ -78,7 +77,7 @@ export const useJoueursStore = () => {
         poule.joueurs.push(joueurAModifier)
       }
     }
-    const joueurModifie = await $api.patch<Joueur>(`/joueurs/${joueur.id}`, {
+    const joueurModifie = await api.patch<Joueur>(`/joueurs/${joueur.id}`, {
       nom: joueur.nom,
       poule_id: joueur.poule_id === undefined ? null : joueur.poule_id,
       tournoi_id: joueur.tournoi_id
@@ -87,17 +86,15 @@ export const useJoueursStore = () => {
   }
 
   const inscrirePhaseFinale = async (joueur: Joueur, tableau_id: number) => {
-    const {$api} = useNuxtApp()
-    const joueurModifie = await $api.patch<Joueur>(`/joueurs/${joueur.id}`, {
+    const joueurModifie = await api.patch<Joueur>(`/joueurs/${joueur.id}`, {
       tableau_final_id: tableau_id
     })
     updateJoueurInStore(joueurModifie?.data)
   }
 
   const desinscrireJoueur = async (joueur: Joueur) => {
-    const {$api} = useNuxtApp()
-    const poulesStore = usePoulesStore()
-    await $api.patch<Joueur>(`/joueurs/${joueur.id}`, {
+    const poulesStore = usePoulesStore(api)
+    await api.patch<Joueur>(`/joueurs/${joueur.id}`, {
       nom: joueur.nom,
       poule_id: null,
       tournoi_id: joueur.tournoi_id
@@ -110,14 +107,12 @@ export const useJoueursStore = () => {
   }
 
   const deleteJoueur = async (id: number) => {
-    const {$api} = useNuxtApp()
-    await $api.delete<Joueur>(`/joueurs/${id}`)
+    await api.delete<Joueur>(`/joueurs/${id}`)
     joueurs.value = joueurs.value.filter(t => t.id !== id)
   }
 
   const ajouterTag = async (joueur: Partial<Joueur>, tag_id: number) => {
-    const {$api} = useNuxtApp()
-    const joueurModifie = await $api.patch<Joueur>(`/joueurs/${joueur.id}`, {tag_id})
+    const joueurModifie = await api.patch<Joueur>(`/joueurs/${joueur.id}`, {tag_id})
     updateJoueurInStore(joueurModifie?.data)
   }
 

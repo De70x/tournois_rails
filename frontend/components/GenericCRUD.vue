@@ -4,8 +4,9 @@ import type {FormSubmitEvent} from "#ui/types";
 import {useModaleStore} from "~/store/modale_store";
 import {useTournoisStore} from "~/store/tournois_store";
 
+const {$api} = useNuxtApp()
 const {openModale, configModale} = useModaleStore();
-const {tournoiActif} = useTournoisStore()
+const {tournoiActif} = useTournoisStore($api)
 
 if(!tournoiActif.value){
   navigateTo({name: 'Liste_Tournois'})

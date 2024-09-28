@@ -10,10 +10,10 @@ interface Props {
 
 defineProps<Props>()
 
-
-const {deleteMatch, editMatch} = useMatchsStore()
+const {$api} = useNuxtApp()
+const {deleteMatch, editMatch} = useMatchsStore($api)
 const {openModale, configModale} = useModaleStore()
-const {getJoueurById} = useJoueursStore()
+const {getJoueurById} = useJoueursStore($api)
 
 const matchEditable = ref(-1)
 const score1 = ref(0)

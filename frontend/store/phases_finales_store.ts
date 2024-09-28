@@ -1,7 +1,8 @@
 import type {Tableau} from "~/types/Tableau";
 import type {Joueur} from "~/types/Joueur";
+import type {Api} from "~/plugins/api";
 
-export const useTableauxStore = () => {
+export const useTableauxStore = (api: Api) => {
     const tableaux = useState<Tableau[]>('tableaux', () => [])
     const tableauSelectionne = useState<Tableau | null>('tableauSelectionne', () => null)
     const joueursSelectionnes = useState<Joueur[]>('joueursSelectionnes', () => [])
@@ -19,13 +20,11 @@ export const useTableauxStore = () => {
         }
     }
     const createTableau = async (tableau: Tableau) => {
-        const {$api} = useNuxtApp()
-        const nouveauTableau = await $api.post<Tableau>('/tableau_finals', tableau)
+        const nouveauTableau = await api.post<Tableau>('/tableau_finals', tableau)
         tableaux.value.push(nouveauTableau!.data)
     }
     const editTableau = async (tableau: Partial<Tableau>) => {
-        const {$api} = useNuxtApp()
-        await $api.patch<Tableau>(`/tableau_finals/${tableau.id}`, {nom: tableau.nom})
+        await api.patch<Tableau>(`/tableau_finals/${tableau.id}`, {nom: tableau.nom})
         tableaux.value = tableaux.value.map(p => p.id === tableau.id ? {
             ...p,
             nom: tableau.nom!
@@ -33,8 +32,7 @@ export const useTableauxStore = () => {
     }
 
     const deleteTableau = async (id: number) => {
-        const {$api} = useNuxtApp()
-        await $api.delete<Tableau>(`/tableau_finals/${id}`)
+        await api.delete<Tableau>(`/tableau_finals/${id}`)
         tableaux.value = tableaux.value.filter(p => p.id !== id)
     }
 

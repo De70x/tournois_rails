@@ -12,8 +12,8 @@ type SortType = {
   column: string;
   direction: 'asc' | 'desc';
 }
-
-const {tags} = useTagsStore()
+const {$api} = useNuxtApp()
+const {tags} = useTagsStore($api)
 
 const sort = ref<SortType>({column: 'points', direction: 'desc'})
 

@@ -1,6 +1,7 @@
 import type {Poule} from "~/types/Poule";
+import type {Api} from "~/plugins/api";
 
-export const usePoulesStore = () => {
+export const usePoulesStore = (api: Api) => {
     const poules = useState<Poule[]>('poules', () => [])
 
     const setPoules = (nouvellesPoules: Poule[]) => {
@@ -12,14 +13,12 @@ export const usePoulesStore = () => {
     }
 
     const createPoule = async (poule: Poule) => {
-        const {$api} = useNuxtApp()
-        const nouvellePoule = await $api.post<Poule>('/poules', poule)
+        const nouvellePoule = await api.post<Poule>('/poules', poule)
         poules.value.push(nouvellePoule!.data)
     }
 
     const editPoule = async (poule: Partial<Poule>) => {
-        const {$api} = useNuxtApp()
-        await $api.patch<Poule>(`/poules/${poule.id}`, {nom: poule.nom})
+        await api.patch<Poule>(`/poules/${poule.id}`, {nom: poule.nom})
         poules.value = poules.value.map(p => p.id === poule.id ? {
             ...p,
             nom: poule.nom!
@@ -27,8 +26,7 @@ export const usePoulesStore = () => {
     }
 
     const deletePoule = async (id: number) => {
-        const {$api} = useNuxtApp()
-        await $api.delete<Poule>(`/poules/${id}`)
+        await api.delete<Poule>(`/poules/${id}`)
         poules.value = poules.value.filter(p => p.id !== id)
     }
 

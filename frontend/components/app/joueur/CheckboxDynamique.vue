@@ -8,11 +8,11 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-
+const {$api} = useNuxtApp()
 const {getQualifiesPoule} = usePoule()
-const {getPoule} = usePoulesStore()
+const {getPoule} = usePoulesStore($api)
 const poule = getPoule(props.joueur.poule_id!)
-const {ajouterJoueur, retirerJoueur} = useTableauxStore()
+const {ajouterJoueur, retirerJoueur} = useTableauxStore($api)
 
 const isChecked = () => {
   return getQualifiesPoule(poule!).includes(props.joueur.id!)

@@ -2,7 +2,8 @@ import {useRouter} from 'vue-router'
 import {useAuthStore} from "~/store/auth_store";
 
 export default defineNuxtPlugin(() => {
-    const authStore = useAuthStore()
+    const {$api} = useNuxtApp()
+    const authStore = useAuthStore($api)
     const router = useRouter()
 
     const checkSessionExpiration = () => {

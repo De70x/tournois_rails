@@ -1,32 +1,26 @@
 import axios, {type AxiosRequestConfig, type AxiosResponse} from "axios";
-import {useAuthStore} from "~/store/auth_store";
-import {isTokenExpired} from "~/utils/auth";
 import type {ApiError} from "~/types/ApiError";
 
 type ApiResponse<T> = AxiosResponse<T> | undefined;
 
-interface Api {
+export interface Api {
   get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>>;
-
   post<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>>;
-
   put<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>>;
-
   patch<T>(url: string, data: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>>;
-
   delete<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>>;
 }
 
-export default defineNuxtPlugin
-(() => {
+export default defineNuxtPlugin(() => {
   const toast = useToast()
-  const authStore = useAuthStore()
+  const cookie = useCookie('auth-token')
+
+  const getToken = () => cookie.value;
 
   const handleError = async (error: ApiError) => {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         if (error.response.status === 401) {
-          await authStore.logout()
           await navigateTo({name: 'Connexion'})
           return
         }
@@ -66,8 +60,7 @@ export default defineNuxtPlugin
       return apiError?.response?.data.error
     else if (apiError?.response?.data) {
       return JSON.stringify(apiError?.response?.data)
-    }
-    else{
+    } else {
       return 'Unknown error'
     }
   }
@@ -75,12 +68,8 @@ export default defineNuxtPlugin
   axios.defaults.baseURL = useRuntimeConfig().public.BASE_URL
 
   axios.interceptors.request.use(async (config) => {
-    const token = useCookie('auth-token').value;
-    if (token) {
-      if (isTokenExpired(token)) {
-        await authStore.checkAndRefreshToken() // Implement this method in your auth store
-      }
-      config.headers.Authorization = `Bearer ${useCookie('auth-token').value}`;
+    if (getToken()) {
+      config.headers.Authorization = `Bearer ${getToken()}`;
     } else {
       await navigateTo({name: 'Connexion'})
     }
@@ -93,10 +82,8 @@ export default defineNuxtPlugin
       if (error.response?.status === 401 && error.config && !error.config.__isRetryRequest) {
         error.config.__isRetryRequest = true;
         try {
-          await authStore.checkAndRefreshToken();
           return axios(error.config);
         } catch (e) {
-          await authStore.logout();
           await navigateTo({name: 'Connexion'});
           return Promise.reject(e);
         }

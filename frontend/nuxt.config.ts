@@ -2,13 +2,23 @@
 export default defineNuxtConfig({
   devtools: {enabled: true},
 
+  debug: true,
+  typescript: {
+    typeCheck: true,
+    strict: true
+  },
+  vite: {
+    clearScreen: false,
+    logLevel: 'info'
+  },
+
   runtimeConfig: {
       public: {
           BASE_URL: process.env.API_URL,
       }
   },
 
-  modules: ['@nuxt/ui', '@pinia/nuxt', '@nuxt/image', '@nuxtjs/tailwindcss'],
+  modules: ['@nuxt/ui', '@nuxt/image', '@nuxtjs/tailwindcss'],
 
   tailwindcss: {
       // Your Tailwind CSS configuration options (if any)

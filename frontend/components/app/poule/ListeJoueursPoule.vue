@@ -3,7 +3,8 @@ import type {PropType} from "vue";
 import type {Joueur} from "~/types/Joueur";
 import {useJoueursStore} from "~/store/joueurs_store";
 
-const joueursStore = useJoueursStore()
+const {$api} = useNuxtApp()
+const joueursStore = useJoueursStore($api)
 
 defineProps({
   joueurs: {type: Object as PropType<Joueur[]>, required: true},

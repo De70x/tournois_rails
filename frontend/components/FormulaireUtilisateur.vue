@@ -3,6 +3,8 @@ import {userSchema, type User} from "~/types/User";
 import type {FormSubmitEvent} from "#ui/types";
 import {useAuthStore} from "~/store/auth_store";
 
+const {$api} = useNuxtApp()
+const authStore = useAuthStore($api)
 const props = defineProps({
   typeFormulaire: String,
 });
@@ -28,7 +30,7 @@ if (props.typeFormulaire === 'inscription') {
   fallbackLink = '/connexion'
 }
 
-const authStore = useAuthStore()
+
 
 const state = reactive({
   email: undefined,

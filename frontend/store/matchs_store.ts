@@ -1,7 +1,8 @@
 import type {Match} from "~/types/Match";
 import type {ComputedRef} from "vue";
+import type {Api} from "~/plugins/api";
 
-export const useMatchsStore = () => {
+export const useMatchsStore = (api: Api) => {
     const matchs = useState<Match[]>('matchs', () => [])
 
     const getMatchsEnCours: ComputedRef<Match[]> = computed(() => matchs.value.filter(m => m.statut === 'en_cours'))
@@ -11,14 +12,12 @@ export const useMatchsStore = () => {
     }
 
     const createMatch = async (match: Partial<Match>) => {
-        const {$api} = useNuxtApp()
-        const nouveauMatch = await $api.post<Match>('/matchs_tournois', match)
+        const nouveauMatch = await api.post<Match>('/matchs_tournois', match)
         matchs.value.push(nouveauMatch!.data)
     }
 
     const editMatch = async (match: Partial<Match>) => {
-        const {$api} = useNuxtApp()
-        await $api.patch<Match>(`/matchs_tournois/${match.id}`, {
+        await api.patch<Match>(`/matchs_tournois/${match.id}`, {
             score_1: match.score_1,
             score_2: match.score_2,
             statut: match.statut!
@@ -32,8 +31,7 @@ export const useMatchsStore = () => {
     }
 
     const deleteMatch = async (id: number) => {
-        const {$api} = useNuxtApp()
-        await $api.delete<Match>(`/matchs_tournois/${id}`)
+        await api.delete<Match>(`/matchs_tournois/${id}`)
         matchs.value = matchs.value.filter(p => p.id !== id)
     }
 

@@ -7,8 +7,8 @@ import {useJoueursStore} from "~/store/joueurs_store";
 const props = defineProps({
   poule: {type: Object as PropType<Poule>, required: true},
 })
-
-const {getJoueursSansTableau} = useJoueursStore()
+const {$api} = useNuxtApp()
+const {getJoueursSansTableau} = useJoueursStore($api)
 
 const listeJoueursSansTableau = getJoueursSansTableau(props.poule.id!)
 

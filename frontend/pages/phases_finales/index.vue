@@ -1,11 +1,10 @@
 <script setup lang="ts">
-definePageMeta({
-  name: 'Phases_Finales'
-})
+
 </script>
 
 <template>
   <TournoiGuard>
+    Phases finales
   </TournoiGuard>
 </template>
 

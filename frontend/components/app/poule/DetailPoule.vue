@@ -9,8 +9,8 @@ import {useModaleStore} from "~/store/modale_store";
 const props = defineProps({
   poule: {type: Object as PropType<Poule>, required: true},
 });
-
-const {editPoule, deletePoule} = usePoulesStore()
+const {$api} = useNuxtApp()
+const {editPoule, deletePoule} = usePoulesStore($api)
 const {openModale, configModale} = useModaleStore()
 
 const creationPouleEnCours = ref(false)

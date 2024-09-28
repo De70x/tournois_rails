@@ -9,10 +9,11 @@ definePageMeta({
   name: 'Prepa_Phase_Finale',
 })
 
-const {poules} = usePoulesStore()
-const {tableaux, joueursSelectionnes} = useTableauxStore()
-const {inscrirePhaseFinale} = useJoueursStore()
-const {tags} = useTagsStore()
+const {$api} = useNuxtApp()
+const {poules} = usePoulesStore($api)
+const {tableaux, joueursSelectionnes} = useTableauxStore($api)
+const {inscrirePhaseFinale} = useJoueursStore($api)
+const {tags} = useTagsStore($api)
 const idPrincipale = tableaux.value.find(t => t.nom === 'Principale')!.id
 const idTableauSelectionne = ref(idPrincipale)
 
@@ -32,25 +33,28 @@ const genererTableau = async () => {
 </script>
 
 <template>
-  <div>
-    <h3>Génération tableaux finaux</h3>
-    <USelect v-model="idTableauSelectionne" :options="tableaux" option-attribute="nom" value-attribute="id"
-             @change="selectionTableau"/>
-    <i>Les joueurs cochés iront dans le tableau sélectionné</i>
+  <TournoiGuard>
+    <div>
+      <h3>Génération tableaux finaux</h3>
+      <USelect v-model="idTableauSelectionne" :options="tableaux" option-attribute="nom" value-attribute="id"
+               @change="selectionTableau"/>
+      <i>Les joueurs cochés iront dans le tableau sélectionné</i>
 
-    <div class="flex justify-evenly mt-2">
-      <UButton v-for="tag in tags" :title="`sélectionner tous les joueurs portant le tag ${tag.nom}`" variant="outline" :icon="tag.icon">
-        {{tag.nom}}
+      <div class="flex justify-evenly mt-2">
+        <UButton v-for="tag in tags" :title="`sélectionner tous les joueurs portant le tag ${tag.nom}`"
+                 variant="outline" :icon="tag.icon">
+          {{ tag.nom }}
+        </UButton>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4 gap-y-14 w-full mt-5">
+        <PoulePrepa v-for="poule in poules" :poule="poule"/>
+      </div>
+      <UButton :disabled="idTableauSelectionne === -1" @click="genererTableau">
+        Envoyer dans le tableau sélectionné
       </UButton>
     </div>
-
-    <div class="grid grid-cols-3 gap-4 gap-y-14 w-full mt-5">
-      <PoulePrepa v-for="poule in poules" :poule="poule"/>
-    </div>
-    <UButton :disabled="idTableauSelectionne === -1" @click="genererTableau">
-      Envoyer dans le tableau sélectionné
-    </UButton>
-  </div>
+  </TournoiGuard>
 </template>
 
 <style scoped>

@@ -2,7 +2,8 @@
 import {useStadesStore} from "~/store/stades_store";
 import type {Stade} from "~/types/Stade";
 
-const stadesStore = useStadesStore();
+const {$api} = useNuxtApp()
+const stadesStore = useStadesStore($api);
 
 const fields = [
   { key: 'id', label: 'ID', type: 'number' },

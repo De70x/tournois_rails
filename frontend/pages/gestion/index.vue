@@ -16,27 +16,29 @@ const items = [{
 </script>
 
 <template>
-  <UTabs :items="items" class="w-full">
-    <template #stades="{ item }">
-      <h3 class="text-lg font-bold">
-        {{ item.label }}
-      </h3>
-      <GestionStades/>
-    </template>
+  <TournoiGuard>
+    <UTabs :items="items" class="w-full">
+      <template #stades="{ item }">
+        <h3 class="text-lg font-bold">
+          {{ item.label }}
+        </h3>
+        <GestionStades/>
+      </template>
 
-    <template #tagsJoueurs="{ item }">
-      <h3 class="text-lg font-bold">
-        {{ item.label }}
-      </h3>
-      <GestionTags/>
-    </template>
+      <template #tagsJoueurs="{ item }">
+        <h3 class="text-lg font-bold">
+          {{ item.label }}
+        </h3>
+        <GestionTags/>
+      </template>
 
-    <template #tableaux="{ item }">
-      <h3 class="text-lg font-bold">
-        {{ item.label }}
-      </h3>
-      <GestionTableaux/>
-    </template>
-  </UTabs>
+      <template #tableaux="{ item }">
+        <h3 class="text-lg font-bold">
+          {{ item.label }}
+        </h3>
+        <GestionTableaux/>
+      </template>
+    </UTabs>
+  </TournoiGuard>
 </template>
 

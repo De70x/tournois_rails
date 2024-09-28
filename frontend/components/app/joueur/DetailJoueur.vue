@@ -2,13 +2,16 @@
 import {useJoueursStore} from "~/store/joueurs_store";
 import ListeMatchs from "~/components/app/match/ListeMatchs.vue";
 import {useTagsStore} from "~/store/tags_store";
+import {useNuxtApp} from "nuxt/app";
 
-const {getJoueurById, ajouterTag} = useJoueursStore()
+const {$api} = useNuxtApp()
+const {getJoueurById, ajouterTag} = useJoueursStore($api)
+const {tags} = useTagsStore($api)
+
 const route = useRoute()
 const id = Array.isArray(route.params.joueur_id) ? route.params.joueur_id[0] : route.params.joueur_id
-const joueur = getJoueurById.value(Number(id));
 
-const {tags} = useTagsStore()
+const joueur = getJoueurById.value(Number(id));
 
 const selected = ref<number>(joueur?.tag_id ?? -1)
 
