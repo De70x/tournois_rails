@@ -28,6 +28,7 @@ const genererTableau = async () => {
   for (const j of listeJoueursSelectionnes.value.value) {
     await inscrirePhaseFinale(j, idTableauSelectionne.value!)
   }
+  joueursSelectionnes.value = []
   await navigateTo({name: 'Detail_Tournoi'})
 }
 </script>

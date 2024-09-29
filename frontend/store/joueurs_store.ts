@@ -16,7 +16,7 @@ export const useJoueursStore = (api: Api) => {
 
   const getJoueursSansPoules = () => joueurs.value.filter(j => !j.poule_id)
 
-  const getJoueurParPoule = (pouleId: number) => joueurs.value.filter(j => j.poule_id === pouleId)
+  const getJoueursParPoule = (pouleId: number) => joueurs.value.filter(j => j.poule_id === pouleId)
 
   const getAdversairesValides = (joueurId: number, pouleId: number) => {
     const joueur = joueurs.value.find(j => j.id === joueurId);
@@ -48,6 +48,10 @@ export const useJoueursStore = (api: Api) => {
       !j.matchs.some(m => m.statut === 'en_cours') &&
       j.matchs.length < poule!.joueurs.length - 1
     ).sort(triParNombreDeMatchs);
+  }
+
+  const getJoueursParTableau = (tabId: number) => {
+    return joueurs.value.filter(j => j.tableau_final_id === tabId)
   }
 
   const getJoueursSansTableau = (pouleId: number) => {
@@ -139,11 +143,12 @@ export const useJoueursStore = (api: Api) => {
     setJoueurs,
     inscrirePhaseFinale,
     getJoueursSansPoules,
-    getJoueurParPoule,
+    getJoueursParPoule,
     getAdversairesValides,
     getJoueursDisponiblesDansPoule,
     createJoueur,
     getJoueursSansTableau,
+    getJoueursParTableau,
     ajouterTag
   }
 }

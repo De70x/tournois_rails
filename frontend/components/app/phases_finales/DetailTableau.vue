@@ -1,16 +1,32 @@
 <script setup lang="ts">
 import type {Tableau} from "~/types/Tableau";
+import {useJoueursStore} from "~/store/joueurs_store";
+import Bracket from "~/components/app/phases_finales/Bracket.vue";
+import type {PlayerPF} from "~/types/PhasesFinales";
 
 interface IProps {
   tableau: Tableau
 }
-defineProps<IProps>()
 
-console.log('coucou')
+const props = defineProps<IProps>()
+const {$api} = useNuxtApp()
+const {getJoueursParTableau} = useJoueursStore($api)
+
+const joueursPhaseFinale = computed(() => {
+  return getJoueursParTableau(props.tableau.id!).map(j => ({
+    id: j.id,
+    seedPoints: j.points,
+    name: j.nom
+  } as PlayerPF))
+})
+
+console.log(joueursPhaseFinale.value)
+
 </script>
 
 <template>
-<div>{{tableau.nom}}</div>
+  <div>{{ tableau.nom }}</div>
+  <Bracket :players="joueursPhaseFinale"/>
 </template>
 
 <style scoped>

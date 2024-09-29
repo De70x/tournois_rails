@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {useTableauxStore} from "~/store/phases_finales_store";
 import DetailTableau from "~/components/app/phases_finales/DetailTableau.vue";
+import type {TabItem} from "#ui/types/tabs";
 
 const {$api} = useNuxtApp()
 const {tableaux} = useTableauxStore($api)
 
-const items = computed(() => tableaux.value.map((t, index) => ({
+const items : ComputedRef<TabItem[]> = computed(() => tableaux.value.map((t, index) => ({
   label: t.nom,
   slot: `tableau-${index}`,
   tableau: t
@@ -16,11 +17,11 @@ const items = computed(() => tableaux.value.map((t, index) => ({
 <template>
   <TournoiGuard>
     <UTabs :items="items" class="w-full">
-      <template v-for="item in items" :key="item.slot" #[item.slot]="{ item }">
+      <template v-for="itemi in items" :key="itemi.slot" #[itemi.slot]="{ item }">
         <h3 class="text-lg font-bold">
-          {{ item.label }}
+          {{ itemi.label }}
         </h3>
-        <DetailTableau :tableau="item.tableau" />
+        <DetailTableau :tableau="itemi.tableau" />
       </template>
     </UTabs>
   </TournoiGuard>

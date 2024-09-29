@@ -12,7 +12,7 @@ const {$api} = useNuxtApp()
 const {getQualifiesPoule} = usePoule()
 const {getPoule} = usePoulesStore($api)
 const poule = getPoule(props.joueur.poule_id!)
-const {ajouterJoueur, retirerJoueur} = useTableauxStore($api)
+const {ajouterJoueur, retirerJoueur, joueursSelectionnes} = useTableauxStore($api)
 
 const isChecked = () => {
   return getQualifiesPoule(poule!).includes(props.joueur.id!)
@@ -26,6 +26,7 @@ const changementCheckbox = (value: boolean) => {
   } else {
     retirerJoueur(props.joueur)
   }
+  console.log(joueursSelectionnes.value.length)
 }
 
 onMounted(() => {
