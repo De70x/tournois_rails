@@ -2,14 +2,14 @@
 export default defineNuxtConfig({
   devtools: {enabled: true},
 
-  debug: true,
+  debug: false,
   typescript: {
     typeCheck: true,
     strict: true
   },
   vite: {
     clearScreen: false,
-    logLevel: 'info'
+    logLevel: 'error'
   },
 
   runtimeConfig: {

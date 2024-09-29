@@ -1,9 +1,10 @@
 <script setup>
-import { useTournoisStore } from '~/store/tournois_store'
+import {useTournoisStore} from '~/store/tournois_store'
 
-const tournoiStore = useTournoisStore()
+const {$api} = useNuxtApp
+const tournoiStore = useTournoisStore($api)
 
-const { data: tournoiChecked } = await useAsyncData('tournoiCheck', async () => {
+const {data: tournoiChecked} = await useAsyncData('tournoiCheck', async () => {
   if (!tournoiStore.tournoiActif) {
     await navigateTo({name: 'Liste_Tournois'})
     return false

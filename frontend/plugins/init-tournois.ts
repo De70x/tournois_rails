@@ -5,8 +5,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const tournoiStore = useTournoisStore($api)
   const route = useRoute()
 
-  console.log('init tournoi')
-
   if (!tournoiStore.tournoiActif) {
     await tournoiStore.initTournoiActif()
 
