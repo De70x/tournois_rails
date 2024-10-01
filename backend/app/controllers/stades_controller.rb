@@ -39,13 +39,14 @@ class StadesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_stade
-      @stade = Stade.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def stade_params
-      params.require(:stade).permit(:nom, :tournoi_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_stade
+    @stade = Stade.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def stade_params
+    params.require(:stade).permit(:nom, :tournoi_id)
+  end
 end

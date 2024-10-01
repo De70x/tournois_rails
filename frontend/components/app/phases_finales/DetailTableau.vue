@@ -20,8 +20,6 @@ const joueursPhaseFinale = computed(() => {
   } as PlayerPF))
 })
 
-console.log(joueursPhaseFinale.value)
-
 </script>
 
 <template>

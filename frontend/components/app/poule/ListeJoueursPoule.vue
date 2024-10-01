@@ -34,7 +34,8 @@ const columns = [{
   key: 'delete'
 }]
 
-const desinscrire = (joueur: Joueur) => {
+const desinscrire = (e: any, joueur: Joueur) => {
+  e.stopPropagation()
   joueursStore.desinscrireJoueur(joueur)
 }
 
@@ -63,7 +64,7 @@ const test = (row: any) => {
     </template>
 
     <template #delete-data="{ row }">
-      <UButton color="red" variant="ghost" icon="i-heroicons-user-minus-20-solid" @click="desinscrire(row)"/>
+      <UButton color="red" variant="ghost" icon="i-heroicons-user-minus-20-solid" @click="(e) => desinscrire(e, row)"/>
     </template>
 
   </UTable>

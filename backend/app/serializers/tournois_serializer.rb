@@ -17,7 +17,7 @@ class TournoisSerializer
       stades: tournoi.stades,
       matchs: tournoi.matchs_tournois,
       tableaux: tournoi.tableau_finals,
-      tags: tournoi.tags,
+      tags: tournoi.tags.map { |t| TagsSerializer.light(t) }
     }
   end
 end

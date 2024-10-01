@@ -18,6 +18,9 @@ const formState = reactive({
 })
 const joueursSansPoule = computed(() => joueursStore.getJoueursSansPoules())
 
+const nomInput : Ref<any> = ref(null)
+
+
 const creationJoueur = () => {
   formState.id = -1
   formState.nom = ''
@@ -86,7 +89,7 @@ const tirageAuSort = () => {
     <div class="text-secondary italic">{{ joueursStore.joueurs.value.length }} joueurs inscrits</div>
     <UButton @click="creationJoueur" variant="outline">Créer un joueur</UButton>
     <UForm v-if="creationJoueurEnCours" :state="formState" @submit="creationTerminee">
-      <UInput v-model="formState.nom"></UInput>
+      <UInput v-model="formState.nom" :autofocus='true'></UInput>
       <UButton type="submit">Valider</UButton>
     </UForm>
     <div v-for="joueur in joueursSansPoule" @dblclick="editerJoueur(joueur)" class="flex items-center justify-between">

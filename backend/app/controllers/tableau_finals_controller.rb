@@ -39,13 +39,14 @@ class TableauFinalsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_tableau_final
-      @tableau_final = TableauFinal.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def tableau_final_params
-      params.require(:tableau_final).permit(:nom, :tournoi_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_tableau_final
+    @tableau_final = TableauFinal.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def tableau_final_params
+    params.require(:tableau_final).permit(:nom, :tournoi_id)
+  end
 end

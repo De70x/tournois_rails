@@ -26,7 +26,6 @@ const changementCheckbox = (value: boolean) => {
   } else {
     retirerJoueur(props.joueur)
   }
-  console.log(joueursSelectionnes.value.length)
 }
 
 onMounted(() => {

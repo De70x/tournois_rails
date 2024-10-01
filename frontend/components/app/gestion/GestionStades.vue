@@ -8,7 +8,6 @@ const stadesStore = useStadesStore($api);
 const fields = [
   { key: 'id', label: 'ID', type: 'number' },
   { key: 'nom', label: 'Nom', type: 'text' },
-  { key: 'disponible', label: 'Disponible', type: 'boolean' }
 ];
 
 const createStade = async (stade: Partial<Stade>) => {

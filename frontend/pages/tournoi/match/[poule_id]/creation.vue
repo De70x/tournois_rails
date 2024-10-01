@@ -3,7 +3,7 @@ import {usePoulesStore} from "~/store/poules_store";
 import type {Joueur} from "~/types/Joueur";
 import {useStadesStore} from "~/store/stades_store";
 import type {FormSubmitEvent} from "#ui/types";
-import type {Match} from "~/types/Match";
+import {type Match, MatchStatuses} from "~/types/Match";
 import {useJoueursStore} from "~/store/joueurs_store";
 import {useMatchsStore} from "~/store/matchs_store";
 
@@ -55,7 +55,8 @@ const handleSubmit = async (event: FormSubmitEvent<Match>) => {
   await matchsStore.createMatch({
     joueur1_id: event.data.joueur1_id,
     joueur2_id: event.data.joueur2_id,
-    stade_id: event.data.stade_id
+    stade_id: event.data.stade_id,
+    statut: MatchStatuses.EN_COURS
   })
   navigateTo({name: 'Detail_Tournoi'})
 }

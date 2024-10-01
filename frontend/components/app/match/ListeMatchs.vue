@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {Match} from "~/types/Match";
+import {type Match, MatchStatuses} from "~/types/Match";
 import {useMatchsStore} from "~/store/matchs_store";
 import {useModaleStore} from "~/store/modale_store";
 import {useJoueursStore} from "~/store/joueurs_store";
@@ -38,7 +38,7 @@ const validerMatch = (matchId: number) => {
     id: matchId,
     score_1: score1.value,
     score_2: score2.value,
-    statut: 'termine'
+    statut: MatchStatuses.TERMINE
   })
   matchEditable.value = -1
 }

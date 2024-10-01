@@ -110,11 +110,10 @@ const supprimerItem = async (item: any) => {
     </div>
     <div class="flex gap-2">
       <UCard v-for="item in items" :key="item.id" @dblclick="edition(item)" class="w-1/4">
-        <template #header>
           <div class="flex justify-between items-center">
             <UIcon v-if="item.icon" :name="item.icon" class="text-lg"/>
             <div v-else></div>
-            <h3 class="text-base font-semibold leading-6">{{ item.nom }}</h3>
+            <h3 class="text-base font-semibold leading-6">{{ item.nom ? item.nom : item.name }}</h3>
             <UButton
                 color="red"
                 variant="ghost"
@@ -122,12 +121,6 @@ const supprimerItem = async (item: any) => {
                 @click="supprimerItem(item)"
             />
           </div>
-        </template>
-        <div v-for="field in fields" :key="field.key">
-          <p v-if="field.key !== 'id' && field.key !== 'nom' && field.key !== 'icon'">
-            {{ field.label }}: {{ item[field.key] }}
-          </p>
-        </div>
       </UCard>
     </div>
   </div>

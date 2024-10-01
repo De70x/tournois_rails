@@ -9,7 +9,7 @@ setTimeout(() => {
 </script>
 
 <template>
-  <NuxtImg src="/tirage.gif" width="500px"/>
+  <NuxtImg src="/tirage.gif" width="1500px"/>
 </template>
 
 <style scoped>

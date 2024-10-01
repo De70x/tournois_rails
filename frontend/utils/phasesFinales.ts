@@ -1,45 +1,79 @@
 import type {Bracket, MatchPF, PlayerPF} from "~/types/PhasesFinales";
+import {useJoueursStore} from "~/store/joueurs_store";
+import type {Joueur} from "~/types/Joueur";
+import {useMatchsStore} from "~/store/matchs_store";
+import {MatchStatuses} from "~/types/Match";
+import {useTournoisStore} from "~/store/tournois_store";
 
-export const generateBracket = (players: PlayerPF[]): Bracket => {
-  const totalPlayers = nextPowerOfTwo(players.length);
-  const rounds = Math.log2(totalPlayers);
-  const matches: MatchPF[] = [];
+const {$api} = useNuxtApp()
+const {joueurFictif, joueurEnAttente} = useJoueursStore($api)
+const {createMatch} = useMatchsStore($api)
+const {tournoiActif} = useTournoisStore($api)
 
-  // Seed players
-  const seededPlayers = seedPlayers(players);
+export const generateBracket = (joueurs: Joueur[]) => {
+  const nbJoueursNecessaires = nextPowerOfTwo(joueurs.length);
+  const nbMatchs = nbJoueursNecessaires / 2;
+  const nbTours = Math.log2(nbJoueursNecessaires);
 
-  // Generate initial round
-  for (let i = 0; i < totalPlayers / 2; i++) {
-    matches.push({
-      id: i,
+  const tabIndice = getTableauIndices(nbMatchs);
+
+  // premier tour
+  for (let i = 0; i < nbMatchs; i++) {
+    const j1 = joueurs[i];
+    const j2 =
+      nbJoueursNecessaires - i - 1 >= joueurs.length
+        ? joueurFictif.value
+        : joueurs[nbJoueursNecessaires - i - 1];
+
+    // createMatch(j1, j2, tournoi._id, null, 0, type, "init", tabIndice[i])
+    createMatch({
+      tournoi_id: tournoiActif.value?.id,
+      joueur1_id: j1.id!,
+      joueur2_id: 0,
       phase: 0,
-      index: i,
-      player1: seededPlayers[i * 2] || { id: -1, name: 'BYE' },
-      player2: seededPlayers[i * 2 + 1] || { id: -1, name: 'BYE' },
-      nextMatchId: Math.floor(i / 2) + totalPlayers / 2 - 1
-    });
+      statut: MatchStatuses.INIT,
+      indice: tabIndice[i],
+    })
   }
 
-  // Generate subsequent rounds
-  for (let round = 1; round < rounds; round++) {
-    const matchesInRound = totalPlayers / Math.pow(2, round + 1);
-    for (let i = 0; i < matchesInRound; i++) {
-      matches.push({
-        id: matches.length,
-        phase: round,
-        index: i,
-        nextMatchId: round < rounds - 1 ? matches.length + Math.floor(i / 2) : undefined
-      });
+  // Les tours suivant n'auront pas de joueurs
+  for (let i = 1; i < nbTours; i++) {
+    const diviseur = Math.pow(2, i);
+    const nbMatchDuTour = nbMatchs / diviseur;
+    for (let j = 0; j < nbMatchDuTour; j++) {
+      createMatch({
+        tournoi_id: tournoiActif.value?.id,
+        joueur1_id: j1.id!,
+        joueur2_id: 0,
+        phase: i,
+        statut: MatchStatuses.INIT,
+        indice: j
+      })
     }
   }
 
-  return { id: Date.now(), name: 'New Bracket', matches };
 };
 
-const seedPlayers = (players: PlayerPF[]): PlayerPF[] => {
-  return players
-    .sort((a, b) => (b.seedPoints || 0) - (a.seedPoints || 0))
-    .concat(Array(nextPowerOfTwo(players.length) - players.length).fill({ id: -1, name: 'BYE' }));
+
+/**
+ * Les joueurs sont triés par score, on va chercher à écarter les meilleurs pour avoir
+ * de belles finales, on fait ça pour les 4 premiers, puis on fait du random
+ * @param nbMatchs
+ */
+const getTableauIndices = (nbMatchs: number) => {
+  const tabOrdre = [0, nbMatchs - 1, nbMatchs / 4, nbMatchs - nbMatchs / 4 - 1];
+
+  while (tabOrdre.length < nbMatchs) {
+    let indiceAleatoire = Math.floor(Math.random() * nbMatchs);
+
+    // tant que l'indice est présent dans le tableau, on tire un autre numéro au sort
+    while (tabOrdre.includes(indiceAleatoire)) {
+      indiceAleatoire = Math.floor(Math.random() * nbMatchs);
+    }
+
+    tabOrdre.push(indiceAleatoire);
+  }
+  return tabOrdre;
 };
 
 const nextPowerOfTwo = (n: number): number => Math.pow(2, Math.ceil(Math.log2(n)));

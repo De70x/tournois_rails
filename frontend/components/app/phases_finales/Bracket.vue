@@ -12,7 +12,7 @@ const modalMatch = ref<MatchPF | null>(null);
 
 onMounted(() => {
   // Générer le bracket au montage du composant
-  bracket.value = generateBracket(props.players);
+  // bracket.value = generateBracket(props.players);
 });
 
 const isModalMatch = computed(() => Number.isInteger(modalMatch.value?.id))
@@ -29,8 +29,6 @@ const getMatchesByRound = (round: number) => {
 
 const openScoreModal = (match: MatchPF) => {
   modalMatch.value = match;
-  console.log(isModalMatch.value)
-  console.log(modalMatch.value?.id)
 };
 
 const updateScore = (score1: number, score2: number) => {
