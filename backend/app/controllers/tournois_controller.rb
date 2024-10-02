@@ -18,6 +18,8 @@ class TournoisController < ApplicationController
     @tournoi = Tournoi.new(tournoi_params)
 
     if @tournoi.save
+      Joueur.create(nom: 'BYE', type_joueur: 1, tournoi_id: @tournoi.id)
+      Joueur.create(nom: '???', type_joueur: 2, tournoi_id: @tournoi.id)
       render json: @tournoi, status: :created, location: @tournoi
     else
       render json: @tournoi.errors, status: :unprocessable_entity

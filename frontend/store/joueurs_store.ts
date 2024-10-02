@@ -1,20 +1,21 @@
 import type {Joueur} from "~/types/Joueur";
+import {JoueurTypes} from "~/types/Joueur";
 import {usePoulesStore} from "~/store/poules_store";
 import type {ComputedRef} from "vue";
 import type {Api} from "~/plugins/api";
 
 export const useJoueursStore = (api: Api) => {
   const joueurs = useState<Joueur[]>('joueurs', () => [])
-  const joueurFictif = useState<Joueur | {}>('joueurFictif', () => {
-    return {}
+  const joueurFictif = useState<Joueur | undefined>('joueurFictif', () => {
+    return joueurs.value.find(j => j.type_joueur === JoueurTypes.FICTIF)
   })
-  const joueurEnAttente = useState<Joueur | {}>('joueurEnAttente', () => {
-    return {}
+  const joueurEnAttente = useState<Joueur | undefined>('joueurEnAttente', () => {
+    return joueurs.value.find(j => j.type_joueur === JoueurTypes.ATTENTE)
   })
 
   const getJoueurById: ComputedRef<(id: number) => Joueur | undefined> = computed(() => (id: number) => joueurs.value.find(j => j.id === id))
 
-  const getJoueursSansPoules = () => joueurs.value.filter(j => !j.poule_id)
+  const getJoueursSansPoules = () => joueurs.value.filter(j => !j.poule_id && j.type_joueur === JoueurTypes.CLASSIQUE)
 
   const getJoueursParPoule = (pouleId: number) => joueurs.value.filter(j => j.poule_id === pouleId)
 

@@ -10,7 +10,7 @@ const {joueurFictif, joueurEnAttente} = useJoueursStore($api)
 const {createMatch} = useMatchsStore($api)
 const {tournoiActif} = useTournoisStore($api)
 
-export const generateBracket = (joueurs: Joueur[]) => {
+export const generateBracket = (joueurs: Partial<Joueur>[]) => {
   const nbJoueursNecessaires = nextPowerOfTwo(joueurs.length);
   const nbMatchs = nbJoueursNecessaires / 2;
   const nbTours = Math.log2(nbJoueursNecessaires);
@@ -25,11 +25,9 @@ export const generateBracket = (joueurs: Joueur[]) => {
         ? joueurFictif.value
         : joueurs[nbJoueursNecessaires - i - 1];
 
-    // createMatch(j1, j2, tournoi._id, null, 0, type, "init", tabIndice[i])
     createMatch({
-      tournoi_id: tournoiActif.value?.id,
-      joueur1_id: j1.id!,
-      joueur2_id: 0,
+      joueur1_id: j1.id,
+      joueur2_id: j2?.id,
       phase: 0,
       statut: MatchStatuses.INIT,
       indice: tabIndice[i],
@@ -42,9 +40,8 @@ export const generateBracket = (joueurs: Joueur[]) => {
     const nbMatchDuTour = nbMatchs / diviseur;
     for (let j = 0; j < nbMatchDuTour; j++) {
       createMatch({
-        tournoi_id: tournoiActif.value?.id,
-        joueur1_id: j1.id!,
-        joueur2_id: 0,
+        joueur1_id: joueurEnAttente.value?.id,
+        joueur2_id: joueurEnAttente.value?.id,
         phase: i,
         statut: MatchStatuses.INIT,
         indice: j
