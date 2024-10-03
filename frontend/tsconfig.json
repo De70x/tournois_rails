@@ -6,6 +6,5 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "types": ["@nuxt/types", "@nuxtjs/tailwindcss"],
-    "sourceMap": true
   }
 }

@@ -1,5 +1,8 @@
 <script setup>
 
+
+import {useTournoisStore} from "~/stores/useTournoisStore.ts";
+
 const {$api} = useNuxtApp
 const tournoiStore = useTournoisStore($api)
 

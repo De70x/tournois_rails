@@ -6,5 +6,4 @@ definePageMeta({
 })
 const {$api} = useNuxtApp()
 useAuthStore($api).logout()
-navigateTo({name: 'Connexion'})
 </script>

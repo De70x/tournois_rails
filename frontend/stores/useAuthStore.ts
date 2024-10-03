@@ -1,11 +1,14 @@
 import type {User} from "~/types/User";
-import {usePermissionsStore} from "~/store/permissions_store";
-import {useTournoisStore} from "~/store/tournois_store";
 import type {Api} from "~/plugins/api";
+import {usePermissionsStore} from "~/stores/usePermissionsStore";
+import {useTournoisStore} from "~/stores/useTournoisStore";
 
 export const useAuthStore = (api: Api) => {
   const authToken = useState<string | null>('authToken', () => null)
   const user = useState<User | null>('user', () => null)
+
+  const {fetchPermissions, clearPermissions} = usePermissionsStore(api)
+  const {tournoiActif} = useTournoisStore(api)
 
   const login = async (credentials: { email: string; password: string }) => {
     const response = await api.post<any>('/users/sign_in', {user: credentials})
@@ -13,17 +16,16 @@ export const useAuthStore = (api: Api) => {
     user.value = response?.data.user
     const authCookie = useCookie('auth-token', {sameSite: 'strict'})
     authCookie.value = authToken.value
-    const permissionsStore = usePermissionsStore(api)
-    await permissionsStore.fetchPermissions()
+    await fetchPermissions()
   }
   const logout = async () => {
     await api.delete<any>('/users/sign_out')
     authToken.value = null
     user.value = null
-    usePermissionsStore(api).clearPermissions()
-    useTournoisStore(api).tournoiActif.value = null
+    clearPermissions()
+    tournoiActif.value = null
     useCookie('auth-token', {sameSite: 'strict'}).value = null
-    navigateTo({name: 'Connexion'})
+    await navigateTo({name: 'Connexion'})
   }
 
   const signup = async (credentials: { email: string; password: string }) => {

@@ -14,11 +14,7 @@ const {getPoule} = usePoulesStore($api)
 const poule = getPoule(props.joueur.poule_id!)
 const {ajouterJoueur, retirerJoueur, joueursSelectionnes} = useTableauxStore($api)
 
-const isChecked = () => {
-  return getQualifiesPoule(poule!).includes(props.joueur.id!)
-}
-
-const selected = ref(isChecked())
+const isChecked = computed(() => joueursSelectionnes.value.includes(props.joueur))
 
 const changementCheckbox = (value: boolean) => {
   if (value) {
@@ -41,7 +37,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <UCheckbox v-model="selected" @change="changementCheckbox"/>
+  <UCheckbox v-model="isChecked" @change="changementCheckbox"/>
 </template>
 
 <style scoped>
