@@ -16,7 +16,8 @@ export const matchSchema = object({
   score_2: number().required('Required').default(0),
   statut: string().oneOf(Object.values(MatchStatuses), 'Statut invalide').required('Le statut est requis'),
   phase: number().required('Required').default(0),
-  indice: number()
+  indice: number(),
+  tableau_final_id: number()
 });
 
 export type Match = InferType<typeof matchSchema>;

@@ -1,33 +1,31 @@
 <script setup lang="ts">
 
-import {generateBracket} from "~/utils/phasesFinales";
-import type {Bracket, PlayerPF} from "~/types/PhasesFinales";
+import type {Bracket} from "~/types/PhasesFinales";
 import {useMatchsStore} from "~/stores/useMatchsStore";
 import type {Match} from "~/types/Match";
 
 const props = defineProps<{
-  players: PlayerPF[];
+  tableau: number;
 }>();
 
 const {$api} = useNuxtApp()
-const {matchs} = useMatchsStore($api)
+const {getMatchsTableau} = useMatchsStore($api)
 const bracket = ref<Bracket | null>(null);
 const modalMatch = ref<Match | null>(null);
 
-onMounted(() => {
-  // Générer le bracket au montage du composant
-  generateBracket(props.players);
-});
+
 
 const isModalMatch = computed(() => Number.isInteger(modalMatch.value?.id))
 
+const matchs = getMatchsTableau.value(props.tableau)
+
 const rounds = computed(() => {
-  const maxPhase = Math.max(...matchs.value.map(m => m.phase));
+  const maxPhase = Math.max(...matchs.map(m => m.phase));
   return Array.from({ length: maxPhase + 1 }, (_, i) => i);
 });
 
 const getMatchesByRound = (round: number) => {
-  return matchs.value.filter(m => m.phase === round) || [];
+  return matchs.filter(m => m.phase === round) || [];
 };
 
 const openScoreModal = (match: Match) => {

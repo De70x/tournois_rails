@@ -1,16 +1,13 @@
-import type {Bracket, MatchPF, PlayerPF} from "~/types/PhasesFinales";
 import {useJoueursStore} from "~/stores/useJoueursStore";
 import type {Joueur} from "~/types/Joueur";
 import {useMatchsStore} from "~/stores/useMatchsStore";
 import {MatchStatuses} from "~/types/Match";
-import {useTournoisStore} from "~/stores/useTournoisStore";
 
 const {$api} = useNuxtApp()
 const {joueurFictif, joueurEnAttente} = useJoueursStore($api)
 const {createMatch} = useMatchsStore($api)
-const {tournoiActif} = useTournoisStore($api)
 
-export const generateBracket = (joueurs: Partial<Joueur>[]) => {
+export const generateBracket = (joueurs: Partial<Joueur>[], idTableau: number) => {
   const nbJoueursNecessaires = nextPowerOfTwo(joueurs.length);
   const nbMatchs = nbJoueursNecessaires / 2;
   const nbTours = Math.log2(nbJoueursNecessaires);
@@ -31,6 +28,7 @@ export const generateBracket = (joueurs: Partial<Joueur>[]) => {
       phase: 0,
       statut: MatchStatuses.INIT,
       indice: tabIndice[i],
+      tableau_final_id: idTableau
     })
   }
 
@@ -44,7 +42,8 @@ export const generateBracket = (joueurs: Partial<Joueur>[]) => {
         joueur2_id: joueurEnAttente.value?.id,
         phase: i,
         statut: MatchStatuses.INIT,
-        indice: j
+        indice: j,
+        tableau_final_id: idTableau
       })
     }
   }

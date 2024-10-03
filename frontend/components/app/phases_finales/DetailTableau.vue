@@ -24,7 +24,7 @@ const joueursPhaseFinale = computed(() => {
 
 <template>
   <div>{{ tableau.nom }}</div>
-  <Bracket :players="joueursPhaseFinale"/>
+  <Bracket :tableau="tableau.id"/>
 </template>
 
 <style scoped>

@@ -43,7 +43,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_14_052424) do
     t.integer "score_1", default: 0, null: false
     t.integer "score_2", default: 0, null: false
     t.integer "statut", default: 0, null: false
-    t.bigint "stade_id", null: false
+    t.bigint "stade_id"
+    t.bigint "tableau_final_id"
     t.integer "phase", default: -1, null: false
     t.integer "indice"
     t.datetime "created_at", null: false
@@ -51,6 +52,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_14_052424) do
     t.index ["joueur1_id"], name: "index_matchs_tournois_on_joueur1_id"
     t.index ["joueur2_id"], name: "index_matchs_tournois_on_joueur2_id"
     t.index ["stade_id"], name: "index_matchs_tournois_on_stade_id"
+    t.index ["tableau_final_id"], name: "index_matchs_tournois_on_tableau_final_id"
   end
 
   create_table "permissions", force: :cascade do |t|
@@ -143,6 +145,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_14_052424) do
   add_foreign_key "matchs_tournois", "joueurs", column: "joueur1_id"
   add_foreign_key "matchs_tournois", "joueurs", column: "joueur2_id"
   add_foreign_key "matchs_tournois", "stades"
+  add_foreign_key "matchs_tournois", "tableau_finals"
   add_foreign_key "poules", "tournois"
   add_foreign_key "role_permissions", "permissions"
   add_foreign_key "role_permissions", "roles"

@@ -4,6 +4,7 @@ import PoulePrepa from "~/components/app/poule/PoulePrepa.vue";
 import {useTableauxStore} from "~/stores/useTableauxStore";
 import {useJoueursStore} from "~/stores/useJoueursStore";
 import {useTagsStore} from "~/stores/useTagsStore";
+import {generateBracket} from "~/utils/phasesFinales";
 
 definePageMeta({
   name: 'Prepa_Phase_Finale',
@@ -18,7 +19,6 @@ const idPrincipale = tableaux.value.find(t => t.nom === 'Principale')!.id
 const idTableauSelectionne = ref(idPrincipale)
 
 
-
 const selectionTableau = (idSelectionne: number) => {
   idTableauSelectionne.value = idSelectionne
 }
@@ -27,6 +27,7 @@ const genererTableau = async () => {
   for (const j of joueursSelectionnes.value) {
     await inscrirePhaseFinale(j, idTableauSelectionne.value!)
   }
+  generateBracket(joueursSelectionnes.value, idTableauSelectionne.value!);
   joueursSelectionnes.value = []
   await navigateTo({name: 'Detail_Tournoi'})
 }
