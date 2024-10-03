@@ -52,5 +52,4 @@ export const useAuthStore = (api: Api) => {
     signup,
     checkAndRefreshToken
   }
-
 }
