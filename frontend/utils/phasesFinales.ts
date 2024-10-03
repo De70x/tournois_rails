@@ -1,9 +1,9 @@
 import type {Bracket, MatchPF, PlayerPF} from "~/types/PhasesFinales";
-import {useJoueursStore} from "~/store/joueurs_store";
+import {useJoueursStore} from "~/stores/useJoueursStore";
 import type {Joueur} from "~/types/Joueur";
-import {useMatchsStore} from "~/store/matchs_store";
+import {useMatchsStore} from "~/stores/useMatchsStore";
 import {MatchStatuses} from "~/types/Match";
-import {useTournoisStore} from "~/store/tournois_store";
+import {useTournoisStore} from "~/stores/useTournoisStore";
 
 const {$api} = useNuxtApp()
 const {joueurFictif, joueurEnAttente} = useJoueursStore($api)

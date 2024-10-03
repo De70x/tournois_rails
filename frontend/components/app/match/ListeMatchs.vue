@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {type Match, MatchStatuses} from "~/types/Match";
-import {useMatchsStore} from "~/store/matchs_store";
-import {useModaleStore} from "~/store/modale_store";
-import {useJoueursStore} from "~/store/joueurs_store";
+import {useMatchsStore} from "~/stores/useMatchsStore";
+import {useModaleStore} from "~/stores/useModaleStore";
+import {useJoueursStore} from "~/stores/useJoueursStore";
 
 interface Props {
   matchs: Match[]

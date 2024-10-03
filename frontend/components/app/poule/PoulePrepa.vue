@@ -2,7 +2,7 @@
 import type {Poule} from "~/types/Poule";
 import type {PropType} from "vue";
 import PrepaListeJoueursPoule from "~/components/app/poule/PrepaListeJoueursPoule.vue";
-import {useJoueursStore} from "~/store/joueurs_store";
+import {useJoueursStore} from "~/stores/useJoueursStore";
 
 const props = defineProps({
   poule: {type: Object as PropType<Poule>, required: true},

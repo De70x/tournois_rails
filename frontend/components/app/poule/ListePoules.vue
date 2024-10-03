@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {usePoulesStore} from "~/store/poules_store";
+import {usePoulesStore} from "~/stores/usePoulesStore";
 import type {FormSubmitEvent} from "#ui/types";
 import type {Joueur} from "~/types/Joueur";
-import {useTournoisStore} from "~/store/tournois_store";
+import {useTournoisStore} from "~/stores/useTournoisStore";
 import DetailPoule from "~/components/app/poule/DetailPoule.vue";
 
 const {$api} = useNuxtApp()

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {Tableau} from "~/types/Tableau";
-import {useTagsStore} from "~/store/tags_store";
+import {useTagsStore} from "~/stores/useTagsStore";
 import type {Tag} from "~/types/Tag";
 
 const {$api} = useNuxtApp()

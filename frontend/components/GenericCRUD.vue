@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {reactive, ref} from 'vue';
 import type {FormSubmitEvent} from "#ui/types";
-import {useModaleStore} from "~/store/modale_store";
-import {useTournoisStore} from "~/store/tournois_store";
+import {useModaleStore} from "~/stores/useModaleStore";
+import {useTournoisStore} from "~/stores/useTournoisStore";
 
 const {$api} = useNuxtApp()
 const {openModale, configModale} = useModaleStore();

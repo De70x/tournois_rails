@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {useModaleStore} from "~/store/modale_store";
+import {useModaleStore} from "~/stores/useModaleStore";
 
 const {closeModale, isOpen, objetASupprimer, fonctionDeSuppression} = useModaleStore()
 

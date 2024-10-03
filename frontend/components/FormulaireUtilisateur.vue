@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {userSchema, type User} from "~/types/User";
 import type {FormSubmitEvent} from "#ui/types";
-import {useAuthStore} from "~/store/auth_store";
+import {useAuthStore} from "~/stores/useAuthStore";
 
-const {$api} = useNuxtApp()
+const {$api, $auth} = useNuxtApp()
 const authStore = useAuthStore($api)
 const props = defineProps({
   typeFormulaire: String,
@@ -40,6 +40,7 @@ const state = reactive({
 const handleSubmit = async (event: FormSubmitEvent<User>) => {
   if (props.typeFormulaire === 'connexion') {
     await authStore.login(event.data)
+    await $auth.login(event.data)
   }
 
   if (props.typeFormulaire === 'inscription') {

@@ -1,4 +1,4 @@
-import { useTournoisStore } from '~/store/tournois_store'
+import { useTournoisStore } from '~/stores/useTournoisStore'
 
 export default defineNuxtPlugin(async (nuxtApp) => {
   const {$api} = useNuxtApp()

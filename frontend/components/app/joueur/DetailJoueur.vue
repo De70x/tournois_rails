@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {useJoueursStore} from "~/store/joueurs_store";
+import {useJoueursStore} from "~/stores/useJoueursStore";
 import ListeMatchs from "~/components/app/match/ListeMatchs.vue";
-import {useTagsStore} from "~/store/tags_store";
+import {useTagsStore} from "~/stores/useTagsStore";
 import {useNuxtApp} from "nuxt/app";
 
 const {$api} = useNuxtApp()

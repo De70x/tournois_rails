@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import {usePoulesStore} from "~/store/poules_store";
+import {usePoulesStore} from "~/stores/usePoulesStore";
 import type {Joueur} from "~/types/Joueur";
-import {useStadesStore} from "~/store/stades_store";
+import {useStadesStore} from "~/stores/useStadesStore";
 import type {FormSubmitEvent} from "#ui/types";
 import {type Match, MatchStatuses} from "~/types/Match";
-import {useJoueursStore} from "~/store/joueurs_store";
-import {useMatchsStore} from "~/store/matchs_store";
+import {useJoueursStore} from "~/stores/useJoueursStore";
+import {useMatchsStore} from "~/stores/useMatchsStore";
 
 definePageMeta({
   name: 'Creation_Match_Poule'

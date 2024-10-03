@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {Joueur} from "~/types/Joueur";
-import {usePoulesStore} from "~/store/poules_store";
-import {useTableauxStore} from "~/store/phases_finales_store";
+import {usePoulesStore} from "~/stores/usePoulesStore";
+import {useTableauxStore} from "~/stores/useTableauxStore";
 
 interface Props {
   joueur: Joueur

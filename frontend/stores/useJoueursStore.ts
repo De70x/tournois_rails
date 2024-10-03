@@ -1,6 +1,6 @@
 import type {Joueur} from "~/types/Joueur";
 import {JoueurTypes} from "~/types/Joueur";
-import {usePoulesStore} from "~/store/poules_store";
+import {usePoulesStore} from "~/stores/usePoulesStore";
 import type {ComputedRef} from "vue";
 import type {Api} from "~/plugins/api";
 

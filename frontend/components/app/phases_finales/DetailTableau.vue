@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {Tableau} from "~/types/Tableau";
-import {useJoueursStore} from "~/store/joueurs_store";
+import {useJoueursStore} from "~/stores/useJoueursStore";
 import Bracket from "~/components/app/phases_finales/Bracket.vue";
 import type {PlayerPF} from "~/types/PhasesFinales";
 

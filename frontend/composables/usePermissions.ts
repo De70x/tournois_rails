@@ -1,4 +1,4 @@
-import {usePermissionsStore} from "~/store/permissions_store";
+import {usePermissionsStore} from "~/stores/usePermissionsStore";
 
 export const usePermissions = () => {
   const {$api} = useNuxtApp()

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useTableauxStore} from "~/store/phases_finales_store";
+import {useTableauxStore} from "~/stores/useTableauxStore";
 import DetailTableau from "~/components/app/phases_finales/DetailTableau.vue";
 import type {TabItem} from "#ui/types/tabs";
 

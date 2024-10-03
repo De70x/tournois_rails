@@ -1,5 +1,5 @@
 import type {Stade} from "~/types/Stade";
-import {useMatchsStore} from "~/store/matchs_store";
+import {useMatchsStore} from "~/stores/useMatchsStore";
 import type {Api} from "~/plugins/api";
 
 export const useStadesStore = (api: Api) => {

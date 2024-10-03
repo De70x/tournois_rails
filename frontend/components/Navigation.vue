@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from 'vue';
-import {useAuthStore} from "~/store/auth_store";
+import {useAuthStore} from "~/stores/useAuthStore";
 import type {HorizontalNavigationLink} from "#ui/types";
 
 const {$api} = useNuxtApp()

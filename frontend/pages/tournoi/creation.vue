@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {type Tournoi} from "~/types/Tournoi";
 import type {FormSubmitEvent} from "#ui/types";
-import {useTournoisStore} from "~/store/tournois_store";
+import {useTournoisStore} from "~/stores/useTournoisStore";
 
 definePageMeta({
   name: 'Creation_Tournoi'

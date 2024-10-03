@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {usePoulesStore} from "~/store/poules_store";
+import {usePoulesStore} from "~/stores/usePoulesStore";
 import PoulePrepa from "~/components/app/poule/PoulePrepa.vue";
-import {useTableauxStore} from "~/store/phases_finales_store";
-import {useJoueursStore} from "~/store/joueurs_store";
-import {useTagsStore} from "~/store/tags_store";
+import {useTableauxStore} from "~/stores/useTableauxStore";
+import {useJoueursStore} from "~/stores/useJoueursStore";
+import {useTagsStore} from "~/stores/useTagsStore";
 
 definePageMeta({
   name: 'Prepa_Phase_Finale',

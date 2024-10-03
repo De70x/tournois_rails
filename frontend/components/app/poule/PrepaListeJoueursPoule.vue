@@ -2,7 +2,7 @@
 import type {PropType} from "vue";
 import type {Joueur} from "~/types/Joueur";
 import CheckboxDynamique from "~/components/app/joueur/CheckboxDynamique.vue";
-import {useTagsStore} from "~/store/tags_store";
+import {useTagsStore} from "~/stores/useTagsStore";
 
 defineProps({
   joueurs: {type: Object as PropType<Joueur[]>, required: true},

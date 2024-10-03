@@ -1,5 +1,5 @@
 import {useRouter} from 'vue-router'
-import {useAuthStore} from "~/store/auth_store";
+import {useAuthStore} from "~/stores/useAuthStore";
 
 export default defineNuxtPlugin(() => {
     const {$api} = useNuxtApp()

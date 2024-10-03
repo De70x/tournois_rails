@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {useTournoisStore} from "~/store/tournois_store";
-import {useModaleStore} from "~/store/modale_store";
+import {useTournoisStore} from "~/stores/useTournoisStore";
+import {useModaleStore} from "~/stores/useModaleStore";
 import type {Tournoi} from "~/types/Tournoi";
 import {usePermissions} from "~/composables/usePermissions";
 import {computedAsync} from "@vueuse/core";

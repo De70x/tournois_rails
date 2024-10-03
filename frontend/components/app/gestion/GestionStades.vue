@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useStadesStore} from "~/store/stades_store";
+import {useStadesStore} from "~/stores/useStadesStore";
 import type {Stade} from "~/types/Stade";
 
 const {$api} = useNuxtApp()

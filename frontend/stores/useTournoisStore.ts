@@ -1,10 +1,10 @@
 import type {Tournoi} from "~/types/Tournoi";
-import {useJoueursStore} from "~/store/joueurs_store";
-import {usePoulesStore} from "~/store/poules_store";
-import {useStadesStore} from "~/store/stades_store";
-import {useMatchsStore} from "~/store/matchs_store";
-import {useTableauxStore} from "~/store/phases_finales_store";
-import {useTagsStore} from "~/store/tags_store";
+import {useJoueursStore} from "~/stores/useJoueursStore";
+import {usePoulesStore} from "~/stores/usePoulesStore";
+import {useStadesStore} from "~/stores/useStadesStore";
+import {useMatchsStore} from "~/stores/useMatchsStore";
+import {useTableauxStore} from "~/stores/useTableauxStore";
+import {useTagsStore} from "~/stores/useTagsStore";
 import type {Api} from "~/plugins/api";
 
 export const useTournoisStore = (api: Api) => {

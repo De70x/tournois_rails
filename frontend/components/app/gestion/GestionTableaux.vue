@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useTableauxStore} from "~/store/phases_finales_store";
+import {useTableauxStore} from "~/stores/useTableauxStore";
 import type {Tableau} from "~/types/Tableau";
 
 const {$api} = useNuxtApp()

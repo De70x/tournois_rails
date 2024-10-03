@@ -2,7 +2,7 @@
 
 import {generateBracket} from "~/utils/phasesFinales";
 import type {Bracket, PlayerPF} from "~/types/PhasesFinales";
-import {useMatchsStore} from "~/store/matchs_store";
+import {useMatchsStore} from "~/stores/useMatchsStore";
 import type {Match} from "~/types/Match";
 
 const props = defineProps<{

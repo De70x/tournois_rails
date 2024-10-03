@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useTournoisStore} from "~/store/tournois_store";
+import {useTournoisStore} from "~/stores/useTournoisStore";
 import ListeJoueursSansPoule from "~/components/app/joueur/ListeJoueursSansPoule.vue";
 import ListePoules from "~/components/app/poule/ListePoules.vue";
 

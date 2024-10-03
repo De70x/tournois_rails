@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {PropType} from "vue";
 import type {Joueur} from "~/types/Joueur";
-import {useJoueursStore} from "~/store/joueurs_store";
+import {useJoueursStore} from "~/stores/useJoueursStore";
 
 const {$api} = useNuxtApp()
 const joueursStore = useJoueursStore($api)
