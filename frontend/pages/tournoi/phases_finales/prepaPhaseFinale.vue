@@ -47,7 +47,7 @@ const selectByTag = (id: number) => {
 
       <div class="flex justify-evenly mt-2">
         <UButton v-for="tag in tags" :title="`sélectionner tous les joueurs portant le tag ${tag.nom}`"
-                 variant="outline" :icon="tag.icon" @click="() => selectByTag(tag.id)" :id="tag.id">
+                 variant="outline" :icon="tag.icon" @click="() => selectByTag(tag.id!)" :id="tag.id">
           {{ tag.nom }}
         </UButton>
       </div>
