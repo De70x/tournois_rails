@@ -3,6 +3,7 @@
 import type {Bracket} from "~/types/PhasesFinales";
 import {useMatchsStore} from "~/stores/useMatchsStore";
 import type {Match} from "~/types/Match";
+import {useJoueursStore} from "~/stores/useJoueursStore";
 
 const props = defineProps<{
   tableau: number;
@@ -10,10 +11,7 @@ const props = defineProps<{
 
 const {$api} = useNuxtApp()
 const {getMatchsTableau} = useMatchsStore($api)
-const bracket = ref<Bracket | null>(null);
 const modalMatch = ref<Match | null>(null);
-
-
 
 const isModalMatch = computed(() => Number.isInteger(modalMatch.value?.id))
 
@@ -23,6 +21,7 @@ const rounds = computed(() => {
   const maxPhase = Math.max(...matchs.map(m => m.phase));
   return Array.from({ length: maxPhase + 1 }, (_, i) => i);
 });
+
 
 const getMatchesByRound = (round: number) => {
   return matchs.filter(m => m.phase === round) || [];
@@ -43,7 +42,7 @@ const updateScore = (score1: number, score2: number) => {
 </script>
 
 <template>
-  <div v-if="bracket" class="bracket">
+  <div class="bracket">
     <div v-for="round in rounds" :key="round" class="round">
       <div v-for="match in getMatchesByRound(round)" :key="match.id" class="match" @click="openScoreModal(match)">
         <div class="player">{{ match.joueur1_id || 'TBD' }}</div>
