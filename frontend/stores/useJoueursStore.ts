@@ -6,12 +6,8 @@ import type {Api} from "~/plugins/api";
 
 export const useJoueursStore = (api: Api) => {
   const joueurs = useState<Joueur[]>('joueurs', () => [])
-  const joueurFictif = useState<Joueur | undefined>('joueurFictif', () => {
-    return joueurs.value.find(j => j.type_joueur === JoueurTypes.FICTIF)
-  })
-  const joueurEnAttente = useState<Joueur | undefined>('joueurEnAttente', () => {
-    return joueurs.value.find(j => j.type_joueur === JoueurTypes.ATTENTE)
-  })
+  const joueurFictif = computed(() => joueurs.value.find(j => j.type_joueur === JoueurTypes.FICTIF))
+  const joueurEnAttente = computed(() => joueurs.value.find(j => j.type_joueur === JoueurTypes.ATTENTE))
 
   const getJoueurById: ComputedRef<(id: number) => Joueur | undefined> = computed(() => (id: number) => joueurs.value.find(j => j.id === id))
 

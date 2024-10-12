@@ -34,6 +34,7 @@ const handleSelectionChange = (newValue: any) => {
   <div class="flex flex-col gap-2">
     <p>Détail de <strong>{{ joueur?.nom}}</strong></p>
   <URadioGroup
+      v-if="options.length > 1"
       legend="Tag"
       v-model="selected"
       :options="options"

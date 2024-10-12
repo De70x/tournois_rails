@@ -5,7 +5,7 @@ import {MatchStatuses} from "~/types/Match";
 
 const {$api} = useNuxtApp()
 const {joueurFictif, joueurEnAttente} = useJoueursStore($api)
-const {createMatch} = useMatchsStore($api)
+const {createMatch, matchs} = useMatchsStore($api)
 
 export const generateBracket = (joueurs: Partial<Joueur>[], idTableau: number) => {
   const nbJoueursNecessaires = nextPowerOfTwo(joueurs.length);
@@ -47,6 +47,9 @@ export const generateBracket = (joueurs: Partial<Joueur>[], idTableau: number) =
       })
     }
   }
+
+  // Enfin on qualifie automatiquement les joueurs qui sont contre BYE
+
 
 };
 

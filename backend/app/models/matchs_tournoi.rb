@@ -17,7 +17,7 @@ class MatchsTournoi < ApplicationRecord
                                     .where.not(id: id)
                                     .exists?
       if existing_match
-        errors.add(:base, "Un match existe déjà pour ces joueurs dans la phase -1")
+        errors.add(:base, "Un match existe déjà pour ces joueurs dans les phases de poules")
       end
     end
   end
