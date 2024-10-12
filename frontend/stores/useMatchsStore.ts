@@ -37,6 +37,7 @@ export const useMatchsStore = (api: Api) => {
       score_2: match.score_2,
       joueur1_id: match.joueur1_id,
       joueur2_id: match.joueur2_id,
+      stade_id: match.stade_id,
       statut: match.statut!
     })
     matchs.value = matchs.value.map(m => m.id === match.id ? {
@@ -45,6 +46,7 @@ export const useMatchsStore = (api: Api) => {
       score_2: match.score_2!,
       joueur1_id: match.joueur1_id!,
       joueur2_id: match.joueur2_id!,
+      stade_id: match.stade_id!,
       statut: match.statut!
     } : m)
   }
