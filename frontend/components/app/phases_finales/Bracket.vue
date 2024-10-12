@@ -32,7 +32,7 @@ const getMatchesByRound = (round: number) => {
 };
 
 const openModal = (match: Match) => {
-  if(match.statut === MatchStatuses.INIT && match.joueur1_id !== joueurEnAttente.value?.id && match.joueur2_id !== joueurEnAttente.value?.id){
+  if (match.statut === MatchStatuses.INIT && match.joueur1_id !== joueurEnAttente.value?.id && match.joueur2_id !== joueurEnAttente.value?.id) {
     modalStade.value = match
   }
   if (match.statut === MatchStatuses.EN_COURS) {
@@ -62,6 +62,26 @@ const updateStade = () => {
   }
 }
 
+const computedClass = (match: Match) => {
+  switch (match.statut) {
+    case MatchStatuses.INIT:
+      if (match.joueur1_id === joueurEnAttente.value?.id || match.joueur2_id === joueurEnAttente.value?.id)
+        return 'pointer-events-none opacity-50'
+      else
+        return ''
+    case MatchStatuses.EN_COURS:
+      return 'italic'
+    case MatchStatuses.TERMINE:
+      return 'bg-gray-100 pointer-events-none opacity-50'
+  }
+}
+
+const matchPret = (match: Match) => {
+    return match.statut === MatchStatuses.INIT
+        && match.joueur1_id !== joueurEnAttente.value?.id
+        && match.joueur2_id !== joueurEnAttente.value?.id
+}
+
 getByesNonTermines.value.forEach(m => {
   const matchSuivant = getMatchSuivant.value(m)
   if (m.indice! % 2 === 0) {
@@ -72,12 +92,16 @@ getByesNonTermines.value.forEach(m => {
   editMatch({...m, statut: MatchStatuses.TERMINE})
   editMatch(matchSuivant!)
 })
+
 </script>
 
 <template>
   <div class="bracket">
     <div v-for="round in rounds" :key="round" class="round">
-      <div v-for="match in getMatchesByRound(round)" :key="match.id" class="match" @click="openModal(match)">
+      <div v-for="match in getMatchesByRound(round)" :key="match.id" class="match" @click="openModal(match)"
+           :class="computedClass(match)">
+        <div v-if="match.statut === MatchStatuses.EN_COURS">match en cours sur le stade : {{match.stade_id}}</div>
+        <div v-if="matchPret(match) && getStadesDisponibles.length === 0">En attente de stade disponible</div>
         <div class="player">{{ getJoueurById(match.joueur1_id)?.nom }}</div>
         <div class="score" v-if="match.score_1 !== undefined && match.score_2 !== undefined">
           {{ match.score_1 }} - {{ match.score_2 }}
@@ -101,9 +125,10 @@ getByesNonTermines.value.forEach(m => {
     <template v-if="modalStade">
       <h3>Choisir un stade</h3>
       <p>{{ modalStade.joueur1_id }} vs {{ modalStade.joueur2_id }}</p>
-      <USelect v-if="getStadesDisponibles.length > 0" v-model="modalStade.stade_id" :options="getStadesDisponibles" option-attribute="nom"
+      <USelect v-if="getStadesDisponibles.length > 0" v-model="modalStade.stade_id" :options="getStadesDisponibles"
+               option-attribute="nom"
                value-attribute="id"/>
-      <div v-else>Pas de stades disponibles</div>
+      <div v-else class="text-red-500 italic">Pas de stades disponibles</div>
       <UButton @click="updateStade">Save</UButton>
     </template>
   </UModal>
