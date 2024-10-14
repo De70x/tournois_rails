@@ -10,25 +10,29 @@ const props = defineProps<{
 }>();
 
 const {$api} = useNuxtApp()
-const {getMatchsTableau, getMatchSuivant, editMatch, getByesNonTermines} = useMatchsStore($api)
+const {matchs, getMatchSuivant, editMatch, getByesNonTermines, getMatchsEnCours} = useMatchsStore($api)
 const {getJoueurById, joueurEnAttente} = useJoueursStore($api)
-const {getStadesDisponibles} = useStadesStore($api)
+const {stades} = useStadesStore($api)
 const modalMatch = ref<Match | null>(null);
 const modalStade = ref<Match | null>(null);
+
+const superWinner = ref<undefined | string>(undefined)
+
+const matchsTableau = computed(() => matchs.value.filter(m => m.tableau_final_id === props.tableau))
+const stadesDisponibles = computed(() => stades.value.filter(s => !getMatchsEnCours.value.some(m => m.stade_id === s.id)))
 
 const isModalMatch = computed(() => Number.isInteger(modalMatch.value?.id))
 const isModalStade = computed(() => Number.isInteger(modalStade.value?.id))
 
-const matchs = getMatchsTableau.value(props.tableau)
 
 const rounds = computed(() => {
-  const maxPhase = Math.max(...matchs.map(m => m.phase));
+  const maxPhase = Math.max(...matchsTableau.value.map(m => m.phase));
   return Array.from({length: maxPhase + 1}, (_, i) => i);
 });
 
 
 const getMatchesByRound = (round: number) => {
-  return matchs.filter(m => m.phase === round).sort((m1, m2) => m1.indice! - m2.indice!) || [];
+  return matchsTableau.value.filter(m => m.phase === round).sort((m1, m2) => m1.indice! - m2.indice!) || [];
 };
 
 const openModal = (match: Match) => {
@@ -42,14 +46,18 @@ const openModal = (match: Match) => {
 
 const updateScore = () => {
   if (modalMatch.value) {
-    const matchSuivant = getMatchSuivant.value(modalMatch.value!)
     const gagnant = modalMatch.value.score_1 > modalMatch.value.score_2 ? modalMatch.value.joueur1_id : modalMatch.value.joueur2_id
-    if (modalMatch.value.indice! % 2 === 0) {
-      matchSuivant!.joueur1_id = gagnant;
+    if (modalMatch.value.phase === rounds.value.length - 1) {
+      superWinner.value = getJoueurById.value(gagnant)?.nom
     } else {
-      matchSuivant!.joueur2_id = gagnant;
+      const matchSuivant = getMatchSuivant.value(modalMatch.value!)
+      if (modalMatch.value.indice! % 2 === 0) {
+        matchSuivant!.joueur1_id = gagnant;
+      } else {
+        matchSuivant!.joueur2_id = gagnant;
+      }
+      editMatch(matchSuivant!)
     }
-    editMatch(matchSuivant!)
     editMatch({...modalMatch.value, statut: MatchStatuses.TERMINE})
     modalMatch.value = null
   }
@@ -72,38 +80,34 @@ const computedClass = (match: Match) => {
     case MatchStatuses.EN_COURS:
       return 'italic'
     case MatchStatuses.TERMINE:
-      return 'bg-gray-100 pointer-events-none opacity-50'
+      return 'pointer-events-none opacity-40'
   }
-}
-
-const matchPret = (match: Match) => {
-    return match.statut === MatchStatuses.INIT
-        && match.joueur1_id !== joueurEnAttente.value?.id
-        && match.joueur2_id !== joueurEnAttente.value?.id
 }
 
 getByesNonTermines.value.forEach(m => {
   const matchSuivant = getMatchSuivant.value(m)
-  if (m.indice! % 2 === 0) {
-    matchSuivant!.joueur1_id = m.joueur1_id;
-  } else {
-    matchSuivant!.joueur2_id = m.joueur1_id;
+  if (matchSuivant) {
+    if (m.indice! % 2 === 0) {
+      matchSuivant!.joueur1_id = m.joueur1_id;
+    } else {
+      matchSuivant!.joueur2_id = m.joueur1_id;
+    }
+    editMatch({...m, statut: MatchStatuses.TERMINE})
+    editMatch(matchSuivant!)
   }
-  editMatch({...m, statut: MatchStatuses.TERMINE})
-  editMatch(matchSuivant!)
 })
 
 </script>
 
 <template>
+  <div v-if="superWinner">YATAAA {{ superWinner }}</div>
+  <div v-if="stadesDisponibles.length ===0" class="italic text-red-500">Pas de stade disponible</div>
   <div class="bracket">
     <div v-for="round in rounds" :key="round" class="round">
       <div v-for="match in getMatchesByRound(round)" :key="match.id" class="match" @click="openModal(match)"
            :class="computedClass(match)">
-        <div v-if="match.statut === MatchStatuses.EN_COURS">match en cours sur le stade : {{match.stade_id}}</div>
-        <div v-if="matchPret(match) && getStadesDisponibles.length === 0">En attente de stade disponible</div>
         <div class="player">{{ getJoueurById(match.joueur1_id)?.nom }}</div>
-        <div class="score" v-if="match.score_1 !== undefined && match.score_2 !== undefined">
+        <div class="font-bold bg-gray-100 py-2" v-if="match.score_1 !== undefined && match.score_2 !== undefined">
           {{ match.score_1 }} - {{ match.score_2 }}
         </div>
         <div class="player">{{ getJoueurById(match.joueur2_id)?.nom }}</div>
@@ -112,25 +116,31 @@ getByesNonTermines.value.forEach(m => {
   </div>
 
   <UModal v-model="isModalMatch" @close="() => modalMatch = null">
-    <template v-if="modalMatch">
+    <UCard v-if="modalMatch">
       <h3>Saisir le score</h3>
-      <p>{{ modalMatch.joueur1_id }} vs {{ modalMatch.joueur2_id }}</p>
-      <UInput v-model="modalMatch.score_1" type="number"/>
-      <UInput v-model="modalMatch.score_2" type="number"/>
-      <UButton @click="updateScore">Save</UButton>
-    </template>
+      <p class="text-center m-2">{{ getJoueurById(modalMatch.joueur1_id)?.nom }} vs
+        {{ getJoueurById(modalMatch.joueur2_id)?.nom }}</p>
+      <div class="flex justify-between">
+        <UInput v-model="modalMatch.score_1" type="number" class="m-2"/>
+        <UInput v-model="modalMatch.score_2" type="number" class="m-2"/>
+      </div>
+      <UButton @click="updateScore" class="w-full m-2">Save</UButton>
+    </UCard>
   </UModal>
 
   <UModal v-model="isModalStade" @close="() => modalStade = null">
-    <template v-if="modalStade">
-      <h3>Choisir un stade</h3>
-      <p>{{ modalStade.joueur1_id }} vs {{ modalStade.joueur2_id }}</p>
-      <USelect v-if="getStadesDisponibles.length > 0" v-model="modalStade.stade_id" :options="getStadesDisponibles"
+    <UCard v-if="modalStade">
+      <h3>Choix du stade</h3>
+      <p class="text-center m-2">{{ getJoueurById(modalStade.joueur1_id)?.nom }} vs
+        {{ getJoueurById(modalStade.joueur2_id)?.nom }}</p>
+      <USelect v-if="stadesDisponibles.length > 0" v-model="modalStade.stade_id" :options="stadesDisponibles"
                option-attribute="nom"
-               value-attribute="id"/>
+               value-attribute="id"
+               class="m-2"/>
+
       <div v-else class="text-red-500 italic">Pas de stades disponibles</div>
-      <UButton @click="updateStade">Save</UButton>
-    </template>
+      <UButton @click="updateStade" class="w-full m-2">Save</UButton>
+    </UCard>
   </UModal>
 
 </template>
@@ -150,16 +160,11 @@ getByesNonTermines.value.forEach(m => {
 
 .match {
   border: 1px solid #ccc;
-  padding: 10px;
   margin: 5px;
   cursor: pointer;
 }
 
 .player {
   margin: 5px 0;
-}
-
-.score {
-  font-weight: bold;
 }
 </style>

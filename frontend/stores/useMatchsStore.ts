@@ -9,7 +9,7 @@ export const useMatchsStore = (api: Api) => {
 
   const matchs = useState<Match[]>('matchs', () => [])
 
-  const getMatchsEnCours: ComputedRef<Match[]> = computed(() => matchs.value.filter(m => m.statut === 'en_cours'))
+  const getMatchsEnCours: ComputedRef<Match[]> = computed(() => matchs.value.filter(m => m.statut === MatchStatuses.EN_COURS))
 
   const getMatchSuivant: ComputedRef<(match: Match) => Match | undefined> = computed(() => (match: Match) => {
     const indiceSuivant = Math.floor(match.indice! / 2)
