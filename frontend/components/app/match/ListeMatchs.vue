@@ -3,6 +3,7 @@ import {type Match, MatchStatuses} from "~/types/Match";
 import {useMatchsStore} from "~/stores/useMatchsStore";
 import {useModaleStore} from "~/stores/useModaleStore";
 import {useJoueursStore} from "~/stores/useJoueursStore";
+import {computedAsync} from "@vueuse/core";
 
 interface Props {
   matchs: Match[]
@@ -14,6 +15,7 @@ const {$api} = useNuxtApp()
 const {deleteMatch, editMatch} = useMatchsStore($api)
 const {openModale, configModale} = useModaleStore()
 const {getJoueurById} = useJoueursStore($api)
+const {hasPermission} = usePermissions()
 
 const matchEditable = ref(-1)
 const score1 = ref(0)
@@ -43,6 +45,8 @@ const validerMatch = (matchId: number) => {
   matchEditable.value = -1
 }
 
+const hasPerm = computedAsync(async () => await hasPermission('edit_matchs'), false)
+
 </script>
 
 <template>
@@ -51,11 +55,13 @@ const validerMatch = (matchId: number) => {
     <UCard v-for="match in matchs">
       <template #header>
         <div class="flex items-center justify-between">
-          <UButton color="primary" variant="ghost" icon="i-heroicons-pencil-20-solid"
+          <UButton v-if="hasPerm" color="primary" variant="ghost" icon="i-heroicons-pencil-20-solid"
                    @click="() => editerMatch(match)"/>
+          <div v-else></div>
           <div><span class="font-bold">{{ getJoueurById(match.joueur1_id)?.nom }}</span> - <span class="font-bold">{{ getJoueurById(match.joueur2_id)?.nom }}</span></div>
-          <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
+          <UButton v-if="hasPerm" color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
                    @click="() => supprimerMatch(match)"/>
+          <div v-else></div>
         </div>
       </template>
       <template #default>

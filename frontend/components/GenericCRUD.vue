@@ -3,12 +3,14 @@ import {reactive, ref} from 'vue';
 import type {FormSubmitEvent} from "#ui/types";
 import {useModaleStore} from "~/stores/useModaleStore";
 import {useTournoisStore} from "~/stores/useTournoisStore";
+import {computedAsync} from "@vueuse/core";
 
 const {$api} = useNuxtApp()
 const {openModale, configModale} = useModaleStore();
 const {tournoiActif} = useTournoisStore($api)
+const {hasPermission} = usePermissions()
 
-if(!tournoiActif.value){
+if (!tournoiActif.value) {
   navigateTo({name: 'Liste_Tournois'})
 }
 
@@ -60,7 +62,7 @@ const creationTerminee = async (event: FormSubmitEvent<any>) => {
       ...dataWithoutId,
       tournoi_id: tournoiActif.value?.id
     }
-    if(dataWithoutId.icon){
+    if (dataWithoutId.icon) {
       dataToSave.icon = dataWithoutId.icon.value
     }
     await props.createItem(dataToSave);
@@ -77,6 +79,9 @@ const supprimerItem = async (item: any) => {
   }, () => props.deleteItem(item.id));
   openModale();
 };
+
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
+
 </script>
 
 <template>
@@ -86,15 +91,15 @@ const supprimerItem = async (item: any) => {
       <UForm v-if="creationEnCours" :state="formState" @submit="creationTerminee">
         <div v-for="field in fields" :key="field.key">
           <UInput
-              v-if="field.type === 'text'"
-              v-model="formState[field.key]"
-              :label="field.label"
+            v-if="field.type === 'text'"
+            v-model="formState[field.key]"
+            :label="field.label"
           />
           <div v-else-if="field.type === 'icon'">
             <label>{{ field.label }}</label>
             <USelectMenu
-                v-model="formState[field.key]"
-                :options="iconOptions"
+              v-model="formState[field.key]"
+              :options="iconOptions"
             >
               <template #option="{ option }">
                 <div class="flex items-center">
@@ -110,17 +115,19 @@ const supprimerItem = async (item: any) => {
     </div>
     <div class="flex gap-2">
       <UCard v-for="item in items" :key="item.id" @dblclick="edition(item)" class="w-1/4">
-          <div class="flex justify-between items-center">
-            <UIcon v-if="item.icon" :name="item.icon" class="text-lg"/>
-            <div v-else></div>
-            <h3 class="text-base font-semibold leading-6">{{ item.nom ? item.nom : item.name }}</h3>
-            <UButton
-                color="red"
-                variant="ghost"
-                icon="i-heroicons-trash-20-solid"
-                @click="supprimerItem(item)"
-            />
-          </div>
+        <div class="flex justify-between items-center">
+          <UIcon v-if="item.icon" :name="item.icon" class="text-lg"/>
+          <div v-else></div>
+          <h3 class="text-base font-semibold leading-6">{{ item.nom ? item.nom : item.name }}</h3>
+          <UButton
+            v-if="hasPerm"
+            color="red"
+            variant="ghost"
+            icon="i-heroicons-trash-20-solid"
+            @click="supprimerItem(item)"
+          />
+          <div v-else></div>
+        </div>
       </UCard>
     </div>
   </div>

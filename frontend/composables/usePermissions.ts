@@ -12,6 +12,8 @@ export const usePermissions = () => {
     const rootPermission = permissionItems[0]
     const parentPermission = `${permissionItems[0]}_${permissionItems[1]}`
 
+    console.log(permissions.value)
+
     return permissions.value.includes(rootPermission) ||
       permissions.value.includes(parentPermission) ||
       permissions.value.includes(permission)

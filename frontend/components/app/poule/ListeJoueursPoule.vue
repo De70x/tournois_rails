@@ -2,9 +2,12 @@
 import type {PropType} from "vue";
 import type {Joueur} from "~/types/Joueur";
 import {useJoueursStore} from "~/stores/useJoueursStore";
+import {usePermissions} from "~/composables/usePermissions";
+import {computedAsync} from "@vueuse/core";
 
 const {$api} = useNuxtApp()
 const joueursStore = useJoueursStore($api)
+const {hasPermission} = usePermissions()
 
 defineProps({
   joueurs: {type: Object as PropType<Joueur[]>, required: true},
@@ -43,7 +46,7 @@ const test = (row: any) => {
   navigateTo({name: 'Detail_Joueur', params: {joueur_id: row.id}})
 }
 
-
+const hasPerm = computedAsync(async () => await hasPermission('edit_joueurs'), false)
 </script>
 
 <template>
@@ -64,7 +67,7 @@ const test = (row: any) => {
     </template>
 
     <template #delete-data="{ row }">
-      <UButton color="red" variant="ghost" icon="i-heroicons-user-minus-20-solid" @click="(e) => desinscrire(e, row)"/>
+      <UButton v-if="hasPerm" color="red" variant="ghost" icon="i-heroicons-user-minus-20-solid" @click="(e) => desinscrire(e, row)"/>
     </template>
 
   </UTable>
