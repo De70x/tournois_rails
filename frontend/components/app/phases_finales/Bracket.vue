@@ -11,7 +11,7 @@ const props = defineProps<{
 
 const {$api} = useNuxtApp()
 const {matchs, getMatchSuivant, editMatch, getByesNonTermines, getMatchsEnCours} = useMatchsStore($api)
-const {getJoueurById, joueurEnAttente} = useJoueursStore($api)
+const {getJoueurById, joueurEnAttente, joueurFictif} = useJoueursStore($api)
 const {stades} = useStadesStore($api)
 const modalMatch = ref<Match | null>(null);
 const modalStade = ref<Match | null>(null);
@@ -19,7 +19,7 @@ const modalStade = ref<Match | null>(null);
 const superWinner = ref<undefined | string>(undefined)
 
 const matchsTableau = computed(() => matchs.value.filter(m => m.tableau_final_id === props.tableau))
-const stadesDisponibles = computed(() => stades.value.filter(s => !getMatchsEnCours.value.some(m => m.stade_id === s.id)))
+const stadesDisponibles = computed(() => stades.value.filter(s => !getMatchsEnCours.value.some(m => Number(m.stade_id) === s.id)))
 
 const isModalMatch = computed(() => Number.isInteger(modalMatch.value?.id))
 const isModalStade = computed(() => Number.isInteger(modalStade.value?.id))
@@ -43,6 +43,14 @@ const openModal = (match: Match) => {
     modalMatch.value = match;
   }
 };
+
+const editMatchModal = (match: Match, e: any) => {
+  e.preventDefault()
+  const matchSuivant = getMatchSuivant.value(match)
+  if(matchSuivant?.statut === MatchStatuses.INIT && match.statut === MatchStatuses.TERMINE && match.joueur2_id !== joueurFictif.value?.id){
+    modalMatch.value = match;
+  }
+}
 
 const updateScore = () => {
   if (modalMatch.value) {
@@ -80,7 +88,7 @@ const computedClass = (match: Match) => {
     case MatchStatuses.EN_COURS:
       return 'italic'
     case MatchStatuses.TERMINE:
-      return 'pointer-events-none opacity-40'
+      return 'opacity-40'
   }
 }
 
@@ -104,10 +112,14 @@ getByesNonTermines.value.forEach(m => {
   <div v-if="stadesDisponibles.length ===0" class="italic text-red-500">Pas de stade disponible</div>
   <div class="bracket">
     <div v-for="round in rounds" :key="round" class="round">
-      <div v-for="match in getMatchesByRound(round)" :key="match.id" class="match" @click="openModal(match)"
-           :class="computedClass(match)">
+      <div v-for="match in getMatchesByRound(round)"
+           :key="match.id" class="match"
+           @click="openModal(match)"
+           :class="computedClass(match)"
+           @contextmenu="(e) => editMatchModal(match, e)"
+      >
         <div class="player">{{ getJoueurById(match.joueur1_id)?.nom }}</div>
-        <div class="font-bold bg-gray-100 py-2" v-if="match.score_1 !== undefined && match.score_2 !== undefined">
+        <div class="font-bold bg-gray-100 py-2">
           {{ match.score_1 }} - {{ match.score_2 }}
         </div>
         <div class="player">{{ getJoueurById(match.joueur2_id)?.nom }}</div>
