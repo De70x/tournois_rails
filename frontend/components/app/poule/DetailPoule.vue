@@ -2,16 +2,18 @@
 import type {Poule} from "~/types/Poule";
 import type {PropType} from "vue";
 import type {FormSubmitEvent} from "#ui/types";
-import {usePoulesStore} from "~/store/poules_store";
+import {usePoulesStore} from "~/stores/usePoulesStore";
 import ListeJoueursPoule from "~/components/app/poule/ListeJoueursPoule.vue";
-import {useModaleStore} from "~/store/modale_store";
+import {useModaleStore} from "~/stores/useModaleStore";
+import {useStadesStore} from "~/stores/useStadesStore";
 
 const props = defineProps({
   poule: {type: Object as PropType<Poule>, required: true},
 });
-
-const poulesStore = usePoulesStore()
+const {$api} = useNuxtApp()
+const {editPoule, deletePoule} = usePoulesStore($api)
 const {openModale, configModale} = useModaleStore()
+const {getStadesDisponibles} = useStadesStore($api)
 
 const creationPouleEnCours = ref(false)
 const formState = reactive({
@@ -26,7 +28,7 @@ const editerPoule = (poule: Poule) => {
 }
 
 const creationTerminee = async (event: FormSubmitEvent<Partial<Poule>>) => {
-  await poulesStore.editPoule({
+  await editPoule({
     id: event.data.id,
     nom: event.data.nom!
   })
@@ -37,7 +39,7 @@ const supprimerPoule = async (poule: Poule) => {
   configModale({
     id: poule.id!,
     message: `Êtes vous certain de vouloir supprimer la poule : ${poule.nom} ?`
-  }, () => poulesStore.deletePoule(poule.id!))
+  }, () => deletePoule(poule.id!))
   openModale()
 }
 
@@ -77,7 +79,9 @@ const resteDesMatchs = computed(() => {
       </template>
       <ListeJoueursPoule :joueurs="poule.joueurs"/>
     </UCard>
-    <UButton v-if="resteDesMatchs" class="m-2" @click="creerMatch">Lancer un match</UButton>
+    <UButton v-if="resteDesMatchs && getStadesDisponibles.length > 0" class="m-2" @click="creerMatch">Lancer un match</UButton>
+    <div v-else-if="!resteDesMatchs" class="italic text-red-500">Il n'y a plus de matchs à faire pour cette poule</div>
+    <div v-else-if="!(getStadesDisponibles.length > 0)" class="italic text-red-500">Il n'y a plus de stades disponibles</div>
   </div>
 </template>
 

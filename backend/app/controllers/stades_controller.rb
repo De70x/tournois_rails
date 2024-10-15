@@ -17,7 +17,7 @@ class StadesController < ApplicationController
   def create
     @stade = Stade.new(stade_params)
 
-    if @stade.save
+    if @stade.save!
       render json: @stade, status: :created, location: @stade
     else
       render json: @stade.errors, status: :unprocessable_entity
@@ -26,7 +26,7 @@ class StadesController < ApplicationController
 
   # PATCH/PUT /stades/1
   def update
-    if @stade.update(stade_params)
+    if @stade.update!(stade_params)
       render json: @stade
     else
       render json: @stade.errors, status: :unprocessable_entity
@@ -39,13 +39,14 @@ class StadesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_stade
-      @stade = Stade.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def stade_params
-      params.require(:stade).permit(:nom, :tournoi_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_stade
+    @stade = Stade.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def stade_params
+    params.require(:stade).permit(:nom, :tournoi_id)
+  end
 end

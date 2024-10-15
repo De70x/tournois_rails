@@ -1,6 +1,5 @@
 import type {CallbackType, DeleteType} from "~/types/Commun"
-import {useStadesStore} from "~/store/stades_store";
-import {message} from "memfs/lib/internal/errors";
+import type {Api} from "~/plugins/api";
 
 export const useModaleStore = () => {
     const isOpen = useState<boolean>('is-open', () => false)

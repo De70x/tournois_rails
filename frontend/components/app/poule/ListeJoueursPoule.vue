@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type {PropType} from "vue";
 import type {Joueur} from "~/types/Joueur";
-import {useJoueursStore} from "~/store/joueurs_store";
+import {useJoueursStore} from "~/stores/useJoueursStore";
 
-const joueursStore = useJoueursStore()
+const {$api} = useNuxtApp()
+const joueursStore = useJoueursStore($api)
 
 defineProps({
   joueurs: {type: Object as PropType<Joueur[]>, required: true},
@@ -33,8 +34,13 @@ const columns = [{
   key: 'delete'
 }]
 
-const desinscrire = (joueur: Joueur) => {
+const desinscrire = (e: any, joueur: Joueur) => {
+  e.stopPropagation()
   joueursStore.desinscrireJoueur(joueur)
+}
+
+const test = (row: any) => {
+  navigateTo({name: 'Detail_Joueur', params: {joueur_id: row.id}})
 }
 
 
@@ -49,6 +55,7 @@ const desinscrire = (joueur: Joueur) => {
       sort-asc-icon="i-heroicons-arrow-up-20-solid"
       sort-desc-icon="i-heroicons-arrow-down-20-solid"
       :sort-button="{ icon: 'i-heroicons-arrows-up-down-20-solid', color: 'primary', variant: 'ghost', size: '2xs', square: false }"
+      @select="test"
   >
     <template #nom-data="{ row }">
       <div class="truncate w-[200px]" :title="row.nom">
@@ -57,7 +64,7 @@ const desinscrire = (joueur: Joueur) => {
     </template>
 
     <template #delete-data="{ row }">
-      <UButton color="red" variant="ghost" icon="i-heroicons-user-minus-20-solid" @click="desinscrire(row)"/>
+      <UButton color="red" variant="ghost" icon="i-heroicons-user-minus-20-solid" @click="(e) => desinscrire(e, row)"/>
     </template>
 
   </UTable>

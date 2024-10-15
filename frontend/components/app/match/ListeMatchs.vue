@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import type {Match} from "~/types/Match";
-import {useMatchsStore} from "~/store/matchs_store";
-import {useModaleStore} from "~/store/modale_store";
-import {useJoueur} from "~/composables/useJoueur";
+import {type Match, MatchStatuses} from "~/types/Match";
+import {useMatchsStore} from "~/stores/useMatchsStore";
+import {useModaleStore} from "~/stores/useModaleStore";
+import {useJoueursStore} from "~/stores/useJoueursStore";
 
-const matchsStore = useMatchsStore()
+interface Props {
+  matchs: Match[]
+}
+
+defineProps<Props>()
+
+const {$api} = useNuxtApp()
+const {deleteMatch, editMatch} = useMatchsStore($api)
 const {openModale, configModale} = useModaleStore()
-const {getNomJoueurById} = useJoueur()
+const {getJoueurById} = useJoueursStore($api)
 
 const matchEditable = ref(-1)
 const score1 = ref(0)
@@ -21,17 +28,17 @@ const editerMatch = (match: Match) => {
 const supprimerMatch = (match: Match) => {
   configModale({
     id: match.id!,
-    message: `Êtes vous certain de vouloir supprimer le match : ${getNomJoueurById(match.joueur1_id)} - ${getNomJoueurById(match.joueur2_id)} ?`
-  }, () => matchsStore.deleteMatch(match.id!))
+    message: `Êtes vous certain de vouloir supprimer le match : ${getJoueurById.value(match.joueur1_id)?.nom} - ${getJoueurById.value(match.joueur2_id)?.nom} ?`
+  }, () => deleteMatch(match.id!))
   openModale()
 }
 
 const validerMatch = (matchId: number) => {
-  matchsStore.editMatch({
+  editMatch({
     id: matchId,
     score_1: score1.value,
     score_2: score2.value,
-    statut: 'termine'
+    statut: MatchStatuses.TERMINE
   })
   matchEditable.value = -1
 }
@@ -39,13 +46,14 @@ const validerMatch = (matchId: number) => {
 </script>
 
 <template>
+  Matchs joués
   <div class="grid grid-cols-3 gap-2">
-    <UCard v-for="match in matchsStore.getMatchsEnCours">
+    <UCard v-for="match in matchs">
       <template #header>
         <div class="flex items-center justify-between">
           <UButton color="primary" variant="ghost" icon="i-heroicons-pencil-20-solid"
                    @click="() => editerMatch(match)"/>
-          <div><span class="font-bold">{{ getNomJoueurById(match.joueur1_id) }}</span> - <span class="font-bold">{{ getNomJoueurById(match.joueur2_id) }}</span></div>
+          <div><span class="font-bold">{{ getJoueurById(match.joueur1_id)?.nom }}</span> - <span class="font-bold">{{ getJoueurById(match.joueur2_id)?.nom }}</span></div>
           <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
                    @click="() => supprimerMatch(match)"/>
         </div>
@@ -58,6 +66,16 @@ const validerMatch = (matchId: number) => {
           <UButton @click="() => validerMatch(match.id!)" class="col-span-1 col-start-2 m-auto">Valider</UButton>
         </div>
         <div v-else>{{ match.score_1 }} - {{ match.score_2 }}</div>
+      </template>
+    </UCard>
+  </div>
+  <div v-if="matchs.length === 0" class="w-1/2 m-auto">
+    <UCard>
+      <template #header>
+        Aucun match en cours
+      </template>
+      <template #default>
+        <UButton @click="() => navigateTo({name: 'Detail_Tournoi'})">Retour au détail du tournoi</UButton>
       </template>
     </UCard>
   </div>

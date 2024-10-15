@@ -8,5 +8,6 @@ export default defineNuxtRouteMiddleware(async () => {
         }
     } catch (error: any) {
         useCookie('auth-token', {sameSite:'strict'}).value = null
+        throw error
     }
 })

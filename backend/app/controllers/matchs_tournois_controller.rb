@@ -39,13 +39,15 @@ class MatchsTournoisController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_matchs_tournoi
-      @matchs_tournoi = MatchsTournoi.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def matchs_tournoi_params
-      params.require(:matchs_tournoi).permit(:joueur1_id, :joueur2_id, :score_1, :score_2, :statut, :stade_id, :phase, :indice)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_matchs_tournoi
+    @matchs_tournoi = MatchsTournoi.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def matchs_tournoi_params
+    params.require(:matchs_tournoi).permit(:joueur1_id, :joueur2_id, :score_1, :score_2, :statut, :stade_id, :phase, 
+                                           :indice, :tableau_final_id)
+  end
 end

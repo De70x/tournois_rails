@@ -5,7 +5,7 @@ class TournoisController < ApplicationController
   def index
     @tournois = Tournoi.all
 
-    render json: @tournois.map{ |t| TournoisSerializer.light(t)}
+    render json: @tournois.map { |t| TournoisSerializer.light(t) }
   end
 
   # GET /tournois/1
@@ -18,6 +18,8 @@ class TournoisController < ApplicationController
     @tournoi = Tournoi.new(tournoi_params)
 
     if @tournoi.save
+      Joueur.create(nom: 'BYE', type_joueur: 1, tournoi_id: @tournoi.id)
+      Joueur.create(nom: '???', type_joueur: 2, tournoi_id: @tournoi.id)
       render json: @tournoi, status: :created, location: @tournoi
     else
       render json: @tournoi.errors, status: :unprocessable_entity
@@ -39,14 +41,15 @@ class TournoisController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_tournoi
-      @tournoi = Tournoi.find(params[:id])
-      p @tournoi.joueurs
-    end
 
-    # Only allow a list of trusted parameters through.
-    def tournoi_params
-      params.require(:tournoi).permit(:nom, :annee, :actif)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_tournoi
+    @tournoi = Tournoi.find(params[:id])
+    p @tournoi.joueurs
+  end
+
+  # Only allow a list of trusted parameters through.
+  def tournoi_params
+    params.require(:tournoi).permit(:nom, :annee, :actif)
+  end
 end

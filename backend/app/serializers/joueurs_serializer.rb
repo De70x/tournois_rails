@@ -5,7 +5,8 @@ class JoueursSerializer
       nom: joueur.nom,
       poule_id: joueur.poule_id,
       points: joueur.calculate_points,
-      nb_matchs: joueur.nb_matchs
+      nb_matchs: joueur.nb_matchs,
+      type_joueur: joueur.type_joueur,
     }
   end
 
@@ -17,6 +18,9 @@ class JoueursSerializer
       poule_id: joueur.poule_id,
       points: joueur.calculate_points,
       nb_matchs: joueur.nb_matchs,
+      tableau_final_id: joueur.tableau_final&.id,
+      tag_id: joueur.tag_id,
+      type_joueur: joueur.type_joueur,
     }
   end
 end

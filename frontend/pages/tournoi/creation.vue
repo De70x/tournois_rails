@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import {type Tournoi, tournoiSchema} from "~/types/Tournoi";
+import {type Tournoi} from "~/types/Tournoi";
 import type {FormSubmitEvent} from "#ui/types";
-import {useTournoisStore} from "~/store/tournois_store";
+import {useTournoisStore} from "~/stores/useTournoisStore";
 
 definePageMeta({
   name: 'Creation_Tournoi'
 })
 
-const tournoisStore = useTournoisStore();
+const {$api} = useNuxtApp()
+const tournoisStore = useTournoisStore($api);
 const annee = new Date().getFullYear()
 
 const state = reactive({
@@ -21,14 +22,16 @@ const handleSubmit = async (event: FormSubmitEvent<Tournoi>) => {
 </script>
 
 <template>
-  <UCard class="max-h-auto mx-auto max-w-xl w-full">
-    <UForm :state="state" class="space-y-4" @submit="handleSubmit">
-      <UFormGroup label="nom" name="nom">
-        <UInput v-model="state.nom"/>
-      </UFormGroup>
-      <UButton type="submit">
-        Créer Tournoi
-      </UButton>
-    </UForm>
-  </UCard>
+  <TournoiGuard>
+    <UCard class="max-h-auto mx-auto max-w-xl w-full">
+      <UForm :state="state" class="space-y-4" @submit="handleSubmit">
+        <UFormGroup label="nom" name="nom">
+          <UInput v-model="state.nom"/>
+        </UFormGroup>
+        <UButton type="submit">
+          Créer Tournoi
+        </UButton>
+      </UForm>
+    </UCard>
+  </TournoiGuard>
 </template>

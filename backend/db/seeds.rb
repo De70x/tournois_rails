@@ -2,9 +2,13 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-Role.create(name: 'admin')
+user = User.create(email:'test@test.test', password: 'testtest')
+
+admin = Role.create(name: 'admin')
 Role.create(name: 'editor')
 Role.create(name: 'viewer')
 
-Joueur.create(nom: 'BYE', type_joueur: 1)
-Joueur.create(nom: '???', type_joueur: 2)
+edit = Permission.create(name: 'edit')
+
+RolePermission.create(role:admin, permission: edit)
+UserRole.create(user: user, role: admin)

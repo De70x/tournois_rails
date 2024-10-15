@@ -1,9 +1,8 @@
-<template/>
 <script setup lang="ts">
 const authCookie = useCookie('auth-token')
 
 definePageMeta({
-  name: 'Home'
+  name: 'Home',
 })
 
 if (authCookie.value) {
@@ -12,3 +11,4 @@ if (authCookie.value) {
   navigateTo({name: 'Connexion'})
 }
 </script>
+<template/>

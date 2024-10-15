@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import {usePoulesStore} from "~/store/poules_store";
+import {usePoulesStore} from "~/stores/usePoulesStore";
 import type {Joueur} from "~/types/Joueur";
-import {useStadesStore} from "~/store/stades_store";
+import {useStadesStore} from "~/stores/useStadesStore";
 import type {FormSubmitEvent} from "#ui/types";
-import type {Match} from "~/types/Match";
-import {useJoueursStore} from "~/store/joueurs_store";
-import {useMatchsStore} from "~/store/matchs_store";
+import {type Match, MatchStatuses} from "~/types/Match";
+import {useJoueursStore} from "~/stores/useJoueursStore";
+import {useMatchsStore} from "~/stores/useMatchsStore";
 
 definePageMeta({
   name: 'Creation_Match_Poule'
 })
 
+const {$api} = useNuxtApp()
 const route = useRoute()
-const poulesStore = usePoulesStore()
-const stadesStore = useStadesStore()
-const joueursStore = useJoueursStore()
-const matchsStore = useMatchsStore()
+const poulesStore = usePoulesStore($api)
+const stadesStore = useStadesStore($api)
+const joueursStore = useJoueursStore($api)
+const matchsStore = useMatchsStore($api)
 const id = Array.isArray(route.params.poule_id) ? route.params.poule_id[0] : route.params.poule_id
 const poule_id = parseInt(id, 10)
 const poule = poulesStore.getPoule(poule_id)
@@ -42,6 +43,7 @@ const editListe2 = (event: string) => {
 const getListeFiltree = (idSelectionne: number) => {
   let nouvelleListe = joueursStore.getAdversairesValides(idSelectionne, poule_id)
   nouvelleListe = nouvelleListe.filter(j => j.id !== idSelectionne)
+  nouvelleListe = nouvelleListe.sort(triParNombreDeMatchs)
   return nouvelleListe
 }
 
@@ -53,38 +55,51 @@ const handleSubmit = async (event: FormSubmitEvent<Match>) => {
   await matchsStore.createMatch({
     joueur1_id: event.data.joueur1_id,
     joueur2_id: event.data.joueur2_id,
-    stade_id: event.data.stade_id
+    stade_id: event.data.stade_id,
+    statut: MatchStatuses.EN_COURS
   })
   navigateTo({name: 'Detail_Tournoi'})
 }
 
+onMounted(() => {
+  formState.joueur1_id = `${j1Select.value[0].id}`
+  editListe1(`${j1Select.value[0].id}`)
+  formState.joueur2_id = `${j2Select.value[0].id}`
+  formState.stade_id = `${stades.value[0].id}`
+})
+
 </script>
 
 <template>
-  <h1 class="text-xl">Création du match pour la poule {{ poule?.nom }}</h1>
-  <UCard>
-    <UForm :state="formState" class="space-y-4" @submit="handleSubmit">
-      <div class="flex gap-10">
-        <UFormGroup label="joueur 1" name="j1">
-          <USelect v-if="j1Select.length > 0" v-model="formState.joueur1_id" :options="j1Select" option-attribute="nom" value-attribute="id"
-                   @change="editListe1"/>
-          <div v-else>Pas de joueur disponible</div>
+  <TournoiGuard>
+    <h1 class="text-xl">Création du match pour la poule {{ poule?.nom }}</h1>
+    <UCard>
+      <UForm :state="formState" class="space-y-4" @submit="handleSubmit">
+        <div class="flex gap-10">
+          <UFormGroup label="joueur 1" name="j1">
+            <USelect v-if="j1Select.length > 0" v-model="formState.joueur1_id" :options="j1Select"
+                     option-attribute="nom" value-attribute="id"
+                     @change="editListe1"/>
+            <div v-else>Pas de joueur disponible</div>
+          </UFormGroup>
+          <UFormGroup label="joueur 2" name="j2">
+            <USelect v-if="j2Select.length > 0" v-model="formState.joueur2_id" :options="j2Select"
+                     option-attribute="nom" value-attribute="id"
+                     @change="editListe2"/>
+            <div v-else>Pas de joueur disponible</div>
+          </UFormGroup>
+        </div>
+        <UFormGroup label="stade" name="stade">
+          <USelect v-if="stades.length > 0" v-model="formState.stade_id" :options="stades" option-attribute="nom"
+                   value-attribute="id"/>
+          <div v-else>Pas de stades disponibles</div>
         </UFormGroup>
-        <UFormGroup label="joueur 2" name="j2">
-          <USelect v-if="j2Select.length > 0" v-model="formState.joueur2_id" :options="j2Select" option-attribute="nom" value-attribute="id"
-                   @change="editListe2"/>
-          <div v-else>Pas de joueur disponible</div>
-        </UFormGroup>
-      </div>
-      <UFormGroup label="stade" name="stade">
-        <USelect v-if="stades.length > 0" v-model="formState.stade_id" :options="stades" option-attribute="nom" value-attribute="id"/>
-        <div v-else>Pas de stades disponibles</div>
-      </UFormGroup>
-      <UButton type="submit">
-        Créer match
-      </UButton>
-    </UForm>
-  </UCard>
+        <UButton type="submit">
+          Créer match
+        </UButton>
+      </UForm>
+    </UCard>
+  </TournoiGuard>
 </template>
 
 <style scoped>

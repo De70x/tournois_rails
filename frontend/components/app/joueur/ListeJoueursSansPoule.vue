@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import type {FormSubmitEvent} from '#ui/types'
-import {useTournoisStore} from "~/store/tournois_store";
-import {useJoueursStore} from "~/store/joueurs_store";
-import type {Joueur} from "~/types/Joueur";
-import {useModaleStore} from "~/store/modale_store";
+import {useTournoisStore} from "~/stores/useTournoisStore";
+import {useJoueursStore} from "~/stores/useJoueursStore";
+import {type Joueur, JoueurTypes} from "~/types/Joueur";
+import {useModaleStore} from "~/stores/useModaleStore";
+import {usePoulesStore} from "~/stores/usePoulesStore";
 
-const tournoisStore = useTournoisStore()
-const joueursStore = useJoueursStore()
+const {$api} = useNuxtApp()
+const {tournoiActif} = useTournoisStore($api)
+const {getJoueursSansPoules, joueurs, createJoueur, deleteJoueur, editJoueur} = useJoueursStore($api)
 const {openModale, configModale} = useModaleStore()
+const {poules} = usePoulesStore($api)
 
 const creationJoueurEnCours = ref(false)
 const formState = reactive({
@@ -15,7 +18,10 @@ const formState = reactive({
   nom: "",
   poule_id: -1
 })
-const joueursSansPoule = computed(() => joueursStore.getJoueursSansPoules)
+const joueursSansPoule = computed(() => getJoueursSansPoules())
+
+const nombreInscrits = computed(() => joueurs.value.filter(j => j.type_joueur === JoueurTypes.CLASSIQUE).length)
+
 
 const creationJoueur = () => {
   formState.id = -1
@@ -25,18 +31,20 @@ const creationJoueur = () => {
 }
 
 const creationTerminee = async (event: FormSubmitEvent<Joueur>) => {
-  if (event.data.id === -1) {
-    await joueursStore.createJoueur({
-      nom: event.data.nom!,
-      tournoi_id: tournoisStore.tournoiActif.id!
-    })
-  } else {
-    await joueursStore.editJoueur({
-      id: event.data.id,
-      nom: event.data.nom!,
-      poule_id: event.data.poule_id,
-      tournoi_id: tournoisStore.tournoiActif.id!
-    })
+  if (tournoiActif.value) {
+    if (event.data.id === -1) {
+      await createJoueur({
+        nom: event.data.nom!,
+        tournoi_id: tournoiActif.value.id!
+      } as Joueur)
+    } else {
+      await editJoueur({
+        id: event.data.id,
+        nom: event.data.nom!,
+        poule_id: event.data.poule_id,
+        tournoi_id: tournoiActif.value.id!
+      })
+    }
   }
   creationJoueurEnCours.value = false
 }
@@ -52,7 +60,7 @@ const supprimerJoueur = async (joueur: Joueur) => {
   configModale({
     id: joueur.id!,
     message: `Êtes vous certain de vouloir supprimer le joueur ${joueur.nom} ?`
-  }, () => joueursStore.deleteJoueur(joueur.id!))
+  }, () => deleteJoueur(joueur.id!))
   openModale()
 }
 
@@ -60,7 +68,7 @@ const tirageAuSort = () => {
   navigateTo({name: 'Tirage_Au_Sort'})
   let joueursRestants = [...joueursSansPoule.value]
   while (joueursRestants.length !== 0) {
-    tournoisStore.tournoiActif.poules.forEach((p) => {
+    tournoiActif?.value?.poules.forEach((p) => {
       // On prend un joueur au hasard
       let randomPlayer = joueursRestants[Math.floor(Math.random() * joueursRestants.length)]
       // On le retire du tableau
@@ -70,7 +78,7 @@ const tirageAuSort = () => {
           ...randomPlayer,
           poule_id: p.id!,
         }
-        joueursStore.editJoueur(randomPlayer)
+        editJoueur(randomPlayer)
       }
     });
   }
@@ -80,17 +88,17 @@ const tirageAuSort = () => {
 
 <template>
   <div>
-    <div class="text-secondary italic">{{ joueursStore.joueurs.length }} joueurs inscrits</div>
+    <div class="text-secondary italic">{{ nombreInscrits }} joueurs inscrits</div>
     <UButton @click="creationJoueur" variant="outline">Créer un joueur</UButton>
     <UForm v-if="creationJoueurEnCours" :state="formState" @submit="creationTerminee">
-      <UInput v-model="formState.nom"></UInput>
+      <UInput v-model="formState.nom" :autofocus='true'></UInput>
       <UButton type="submit">Valider</UButton>
     </UForm>
     <div v-for="joueur in joueursSansPoule" @dblclick="editerJoueur(joueur)" class="flex items-center justify-between">
       <div class="truncate" :title="joueur.nom">{{ joueur.nom }}</div>
       <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerJoueur(joueur)"/>
     </div>
-    <UButton v-if="joueursSansPoule.length > 0" @click="tirageAuSort" variant="outline" color="red">Tirage au sort
+    <UButton v-if="joueursSansPoule.length > 0 && poules.length > 0" @click="tirageAuSort" variant="outline" color="red">Tirage au sort
     </UButton>
   </div>
 </template>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_14_052424) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,7 +21,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
     t.bigint "tournoi_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "tableau_final_id"
+    t.bigint "tag_id"
     t.index ["poule_id"], name: "index_joueurs_on_poule_id"
+    t.index ["tableau_final_id"], name: "index_joueurs_on_tableau_final_id"
+    t.index ["tag_id"], name: "index_joueurs_on_tag_id"
     t.index ["tournoi_id"], name: "index_joueurs_on_tournoi_id"
   end
 
@@ -39,7 +43,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
     t.integer "score_1", default: 0, null: false
     t.integer "score_2", default: 0, null: false
     t.integer "statut", default: 0, null: false
-    t.bigint "stade_id", null: false
+    t.bigint "stade_id"
+    t.bigint "tableau_final_id"
     t.integer "phase", default: -1, null: false
     t.integer "indice"
     t.datetime "created_at", null: false
@@ -47,6 +52,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
     t.index ["joueur1_id"], name: "index_matchs_tournois_on_joueur1_id"
     t.index ["joueur2_id"], name: "index_matchs_tournois_on_joueur2_id"
     t.index ["stade_id"], name: "index_matchs_tournois_on_stade_id"
+    t.index ["tableau_final_id"], name: "index_matchs_tournois_on_tableau_final_id"
   end
 
   create_table "permissions", force: :cascade do |t|
@@ -86,6 +92,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
     t.index ["tournoi_id"], name: "index_stades_on_tournoi_id"
   end
 
+  create_table "tableau_finals", force: :cascade do |t|
+    t.string "nom"
+    t.bigint "tournoi_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tournoi_id"], name: "index_tableau_finals_on_tournoi_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "nom"
+    t.string "icon"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "tournoi_id", null: false
+    t.index ["tournoi_id"], name: "index_tags_on_tournoi_id"
+  end
+
   create_table "tournois", force: :cascade do |t|
     t.string "nom"
     t.integer "annee"
@@ -116,14 +139,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_19_034505) do
   end
 
   add_foreign_key "joueurs", "poules"
+  add_foreign_key "joueurs", "tableau_finals"
+  add_foreign_key "joueurs", "tags"
   add_foreign_key "joueurs", "tournois"
   add_foreign_key "matchs_tournois", "joueurs", column: "joueur1_id"
   add_foreign_key "matchs_tournois", "joueurs", column: "joueur2_id"
   add_foreign_key "matchs_tournois", "stades"
+  add_foreign_key "matchs_tournois", "tableau_finals"
   add_foreign_key "poules", "tournois"
   add_foreign_key "role_permissions", "permissions"
   add_foreign_key "role_permissions", "roles"
   add_foreign_key "stades", "tournois"
+  add_foreign_key "tableau_finals", "tournois"
+  add_foreign_key "tags", "tournois"
   add_foreign_key "user_roles", "roles"
   add_foreign_key "user_roles", "users"
 end

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import {computed} from 'vue';
-import {useAuthStore} from "~/store/auth_store";
+import {useAuthStore} from "~/stores/useAuthStore";
 import type {HorizontalNavigationLink} from "#ui/types";
+import {useTournoisStore} from "~/stores/useTournoisStore";
 
+const {$api} = useNuxtApp()
 const token = computed(() => useCookie('auth-token').value);
-const email = computed(() => useAuthStore().user?.email)
+const {tournoiActif} = useTournoisStore($api)
 
 const links = computed(() => {
   const dynamicLinks: HorizontalNavigationLink[] = [
@@ -12,23 +14,26 @@ const links = computed(() => {
       label: 'Accueil',
       icon: 'i-heroicons-home',
       to: '/tournoi/liste'
-    },
-    {
-      label: 'Tournoi en cours',
-      icon: 'i-heroicons-beaker',
-      to: '/tournoi/detail'
-    },
-    {
-      label: 'Matchs en cours',
-      icon: 'i-heroicons-play-circle',
-      to: '/tournoi/match/liste'
     }
   ];
 
-  if (email.value) {
-    dynamicLinks.unshift({
-      label: email.value,
-      icon: 'i-heroicons-user',
+  if(tournoiActif.value){
+    dynamicLinks.push({
+      label: 'Tournoi en cours',
+      icon: 'i-heroicons-beaker',
+      to: '/tournoi/detail'
+    },{
+      label: 'Matchs en cours',
+      icon: 'i-heroicons-play-circle',
+      to: '/tournoi/match/liste'
+    },{
+      label: 'Gestion',
+      icon: 'i-heroicons-cog-6-tooth',
+      to: '/gestion'
+    },{
+      label: 'Phases finales',
+      icon: 'i-heroicons-cog-6-tooth',
+      to: '/phases_finales'
     })
   }
 
@@ -40,7 +45,7 @@ const links = computed(() => {
     });
   } else {
     dynamicLinks.unshift({
-      label: 'Log-in',
+      label: 'Connexion',
       icon: 'i-heroicons-home',
       to: '/connexion'
     });

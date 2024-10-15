@@ -3,6 +3,8 @@ class Joueur < ApplicationRecord
 
   belongs_to :tournoi, optional: true
   belongs_to :poule, optional: true
+  belongs_to :tableau_final, optional: true
+  belongs_to :tag, optional: true
   has_many :matchs1, class_name: 'MatchsTournoi', foreign_key: :joueur1_id
   has_many :matchs2, class_name: 'MatchsTournoi', foreign_key: :joueur2_id
 
