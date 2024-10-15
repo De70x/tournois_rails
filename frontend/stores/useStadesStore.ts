@@ -14,6 +14,10 @@ export const useStadesStore = (api: Api) => {
         return getStadesDisponibles.value.map(s => s.id).includes(id)
     }
 
+    const getNomStadeById = (id:number) => {
+        return stades.value.find(s => s.id === id)?.nom
+    }
+
     const setStades = (nouveauxStades: Stade[]) => {
         stades.value = nouveauxStades;
     }
@@ -43,6 +47,7 @@ export const useStadesStore = (api: Api) => {
         setStades,
         createStade,
         editStade,
-        deleteStade
+        deleteStade,
+        getNomStadeById
     }
 }

@@ -12,7 +12,7 @@ const props = defineProps<{
 const {$api} = useNuxtApp()
 const {matchs, getMatchSuivant, editMatch, getByesNonTermines, getMatchsEnCours} = useMatchsStore($api)
 const {getJoueurById, joueurEnAttente, joueurFictif} = useJoueursStore($api)
-const {stades} = useStadesStore($api)
+const {stades, getNomStadeById} = useStadesStore($api)
 const modalMatch = ref<Match | null>(null);
 const modalStade = ref<Match | null>(null);
 
@@ -35,6 +35,10 @@ const getMatchesByRound = (round: number) => {
   return matchsTableau.value.filter(m => m.phase === round).sort((m1, m2) => m1.indice! - m2.indice!) || [];
 };
 
+const dernierMatch = getMatchesByRound(rounds.value.length - 1)[0]
+
+superWinner.value = dernierMatch.statut === MatchStatuses.TERMINE ? dernierMatch.score_1 > dernierMatch.score_2 ? getJoueurById.value(dernierMatch.joueur1_id)?.nom : getJoueurById.value(dernierMatch.joueur2_id)?.nom : undefined
+
 const openModal = (match: Match) => {
   if (match.statut === MatchStatuses.INIT && match.joueur1_id !== joueurEnAttente.value?.id && match.joueur2_id !== joueurEnAttente.value?.id) {
     modalStade.value = match
@@ -47,7 +51,7 @@ const openModal = (match: Match) => {
 const editMatchModal = (match: Match, e: any) => {
   e.preventDefault()
   const matchSuivant = getMatchSuivant.value(match)
-  if(matchSuivant?.statut === MatchStatuses.INIT && match.statut === MatchStatuses.TERMINE && match.joueur2_id !== joueurFictif.value?.id){
+  if (matchSuivant?.statut === MatchStatuses.INIT && match.statut === MatchStatuses.TERMINE && match.joueur2_id !== joueurFictif.value?.id) {
     modalMatch.value = match;
   }
 }
@@ -82,13 +86,13 @@ const computedClass = (match: Match) => {
   switch (match.statut) {
     case MatchStatuses.INIT:
       if (match.joueur1_id === joueurEnAttente.value?.id || match.joueur2_id === joueurEnAttente.value?.id)
-        return 'pointer-events-none opacity-50'
+        return 'match pointer-events-none opacity-50'
       else
-        return ''
+        return 'match cursor-pointer'
     case MatchStatuses.EN_COURS:
-      return 'italic'
+      return 'italic border border-red-500 cursor-pointer'
     case MatchStatuses.TERMINE:
-      return 'opacity-40'
+      return 'match opacity-40 cursor-default'
   }
 }
 
@@ -108,16 +112,17 @@ getByesNonTermines.value.forEach(m => {
 </script>
 
 <template>
-  <div v-if="superWinner">YATAAA {{ superWinner }}</div>
-  <div v-if="stadesDisponibles.length ===0" class="italic text-red-500">Pas de stade disponible</div>
+  <div v-if="superWinner">Nous avons un gagnant : {{ superWinner }}</div>
+  <div v-if="stadesDisponibles.length === 0" class="italic text-red-500">Pas de stade disponible</div>
   <div class="bracket">
     <div v-for="round in rounds" :key="round" class="round">
       <div v-for="match in getMatchesByRound(round)"
-           :key="match.id" class="match"
+           :key="match.id"
            @click="openModal(match)"
            :class="computedClass(match)"
            @contextmenu="(e) => editMatchModal(match, e)"
       >
+        <div v-if="match.statut === MatchStatuses.EN_COURS">match en cours : {{ getNomStadeById(Number(match.stade_id)) }}</div>
         <div class="player">{{ getJoueurById(match.joueur1_id)?.nom }}</div>
         <div class="font-bold bg-gray-100 py-2">
           {{ match.score_1 }} - {{ match.score_2 }}
@@ -173,7 +178,6 @@ getByesNonTermines.value.forEach(m => {
 .match {
   border: 1px solid #ccc;
   margin: 5px;
-  cursor: pointer;
 }
 
 .player {

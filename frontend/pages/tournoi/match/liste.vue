@@ -7,11 +7,12 @@ definePageMeta({
 })
 const {$api} = useNuxtApp()
 const {getMatchsEnCours} = useMatchsStore($api)
+const matchs = getMatchsEnCours.value.filter(m => m.phase === -1)
 </script>
 
 <template>
   <TournoiGuard>
-    <ListeMatchs :matchs="getMatchsEnCours"/>
+    <ListeMatchs :matchs="matchs"/>
   </TournoiGuard>
 </template>
 
