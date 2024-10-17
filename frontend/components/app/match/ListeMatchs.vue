@@ -45,7 +45,7 @@ const validerMatch = (matchId: number) => {
   matchEditable.value = -1
 }
 
-const hasPerm = computedAsync(async () => await hasPermission('edit_matchs'), false)
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
 
 </script>
 

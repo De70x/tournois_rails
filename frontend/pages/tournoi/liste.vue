@@ -44,7 +44,7 @@ const select = async (row: any) => {
   await navigateTo({name: 'Detail_Tournoi'})
 }
 
-const hasPerm = computedAsync(async () => await hasPermission('edit_tournoi'), false)
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
 
 </script>
 
@@ -64,6 +64,6 @@ const hasPerm = computedAsync(async () => await hasPermission('edit_tournoi'), f
                  @click="(e) => supprimerTournoi(row, e)"/>
       </template>
     </UTable>
-    <UButton @click="creationTournoi()">Créer un tournoi</UButton>
+    <UButton v-if="hasPerm" @click="creationTournoi()">Créer un tournoi</UButton>
   </TournoiGuard>
 </template>

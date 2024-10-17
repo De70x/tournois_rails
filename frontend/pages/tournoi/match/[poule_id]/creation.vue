@@ -6,6 +6,7 @@ import type {FormSubmitEvent} from "#ui/types";
 import {type Match, MatchStatuses} from "~/types/Match";
 import {useJoueursStore} from "~/stores/useJoueursStore";
 import {useMatchsStore} from "~/stores/useMatchsStore";
+import {computedAsync} from "@vueuse/core";
 
 definePageMeta({
   name: 'Creation_Match_Poule'
@@ -17,6 +18,7 @@ const poulesStore = usePoulesStore($api)
 const stadesStore = useStadesStore($api)
 const joueursStore = useJoueursStore($api)
 const matchsStore = useMatchsStore($api)
+const {hasPermission} = usePermissions()
 const id = Array.isArray(route.params.poule_id) ? route.params.poule_id[0] : route.params.poule_id
 const poule_id = parseInt(id, 10)
 const poule = poulesStore.getPoule(poule_id)
@@ -68,6 +70,7 @@ onMounted(() => {
   formState.stade_id = `${stades.value[0].id}`
 })
 
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
 </script>
 
 <template>
@@ -94,7 +97,7 @@ onMounted(() => {
                    value-attribute="id"/>
           <div v-else>Pas de stades disponibles</div>
         </UFormGroup>
-        <UButton type="submit">
+        <UButton v-if="hasPerm" type="submit">
           Créer match
         </UButton>
       </UForm>

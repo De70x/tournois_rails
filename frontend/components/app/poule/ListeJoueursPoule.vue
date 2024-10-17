@@ -46,7 +46,7 @@ const test = (row: any) => {
   navigateTo({name: 'Detail_Joueur', params: {joueur_id: row.id}})
 }
 
-const hasPerm = computedAsync(async () => await hasPermission('edit_joueurs'), false)
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
 </script>
 
 <template>

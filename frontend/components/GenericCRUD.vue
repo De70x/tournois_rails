@@ -48,13 +48,6 @@ const creation = () => {
   creationEnCours.value = true;
 };
 
-const edition = (item: any) => {
-  props.fields.forEach(field => {
-    formState[field.key] = item[field.key];
-  });
-  creationEnCours.value = true;
-};
-
 const creationTerminee = async (event: FormSubmitEvent<any>) => {
   if (event.data.id === -1) {
     const {id, ...dataWithoutId} = event.data
@@ -82,24 +75,33 @@ const supprimerItem = async (item: any) => {
 
 const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
 
+const edition = (item: any) => {
+  if (hasPerm.value) {
+    props.fields.forEach(field => {
+      formState[field.key] = item[field.key];
+    });
+    creationEnCours.value = true;
+  }
+};
+
 </script>
 
 <template>
   <div>
     <div class="m-2">
-      <UButton @click="creation" variant="outline">Créer un {{ itemName }}</UButton>
+      <UButton v-if="hasPerm" @click="creation" variant="outline">Créer un {{ itemName }}</UButton>
       <UForm v-if="creationEnCours" :state="formState" @submit="creationTerminee">
         <div v-for="field in fields" :key="field.key">
           <UInput
-            v-if="field.type === 'text'"
-            v-model="formState[field.key]"
-            :label="field.label"
+              v-if="field.type === 'text'"
+              v-model="formState[field.key]"
+              :label="field.label"
           />
           <div v-else-if="field.type === 'icon'">
             <label>{{ field.label }}</label>
             <USelectMenu
-              v-model="formState[field.key]"
-              :options="iconOptions"
+                v-model="formState[field.key]"
+                :options="iconOptions"
             >
               <template #option="{ option }">
                 <div class="flex items-center">
@@ -120,11 +122,11 @@ const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
           <div v-else></div>
           <h3 class="text-base font-semibold leading-6">{{ item.nom ? item.nom : item.name }}</h3>
           <UButton
-            v-if="hasPerm"
-            color="red"
-            variant="ghost"
-            icon="i-heroicons-trash-20-solid"
-            @click="supprimerItem(item)"
+              v-if="hasPerm"
+              color="red"
+              variant="ghost"
+              icon="i-heroicons-trash-20-solid"
+              @click="supprimerItem(item)"
           />
           <div v-else></div>
         </div>

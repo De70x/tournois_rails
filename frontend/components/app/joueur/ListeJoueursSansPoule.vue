@@ -89,14 +89,14 @@ const tirageAuSort = () => {
   }
 }
 
-const hasPerm = computedAsync(async () => await hasPermission('edit_joueurs'), false)
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
 
 </script>
 
 <template>
   <div>
     <div class="text-secondary italic">{{ nombreInscrits }} joueurs inscrits</div>
-    <UButton @click="creationJoueur" variant="outline">Créer un joueur</UButton>
+    <UButton v-if="hasPerm" @click="creationJoueur" variant="outline">Créer un joueur</UButton>
     <UForm v-if="creationJoueurEnCours" :state="formState" @submit="creationTerminee">
       <UInput v-model="formState.nom" :autofocus='true'></UInput>
       <UButton type="submit">Valider</UButton>

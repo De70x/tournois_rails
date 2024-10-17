@@ -6,6 +6,7 @@ import {usePoulesStore} from "~/stores/usePoulesStore";
 import ListeJoueursPoule from "~/components/app/poule/ListeJoueursPoule.vue";
 import {useModaleStore} from "~/stores/useModaleStore";
 import {useStadesStore} from "~/stores/useStadesStore";
+import {computedAsync} from "@vueuse/core";
 
 const props = defineProps({
   poule: {type: Object as PropType<Poule>, required: true},
@@ -14,6 +15,7 @@ const {$api} = useNuxtApp()
 const {editPoule, deletePoule} = usePoulesStore($api)
 const {openModale, configModale} = useModaleStore()
 const {getStadesDisponibles} = useStadesStore($api)
+const {hasPermission} = usePermissions()
 
 const creationPouleEnCours = ref(false)
 const formState = reactive({
@@ -58,6 +60,7 @@ const resteDesMatchs = computed(() => {
   return ilResteDesMatchs;
 })
 
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
 </script>
 
 <template>
@@ -79,7 +82,7 @@ const resteDesMatchs = computed(() => {
       </template>
       <ListeJoueursPoule :joueurs="poule.joueurs"/>
     </UCard>
-    <UButton v-if="resteDesMatchs && getStadesDisponibles.length > 0" class="m-2" @click="creerMatch">Lancer un match</UButton>
+    <UButton v-if="resteDesMatchs && getStadesDisponibles.length > 0 && hasPerm" class="m-2" @click="creerMatch">Lancer un match</UButton>
     <div v-else-if="!resteDesMatchs" class="italic text-red-500">Il n'y a plus de matchs à faire pour cette poule</div>
     <div v-else-if="!(getStadesDisponibles.length > 0)" class="italic text-red-500">Il n'y a plus de stades disponibles</div>
   </div>
