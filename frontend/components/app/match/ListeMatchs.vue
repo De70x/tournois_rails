@@ -4,6 +4,7 @@ import {useMatchsStore} from "~/stores/useMatchsStore";
 import {useModaleStore} from "~/stores/useModaleStore";
 import {useJoueursStore} from "~/stores/useJoueursStore";
 import {computedAsync} from "@vueuse/core";
+import {useStadesStore} from "~/stores/useStadesStore";
 
 interface Props {
   matchs: Match[]
@@ -15,6 +16,7 @@ const {$api} = useNuxtApp()
 const {deleteMatch, editMatch} = useMatchsStore($api)
 const {openModale, configModale} = useModaleStore()
 const {getJoueurById} = useJoueursStore($api)
+const {getNomStadeById} = useStadesStore($api)
 const {hasPermission} = usePermissions()
 
 const matchEditable = ref(-1)
@@ -58,7 +60,14 @@ const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
           <UButton v-if="hasPerm" color="primary" variant="ghost" icon="i-heroicons-pencil-20-solid"
                    @click="() => editerMatch(match)"/>
           <div v-else></div>
-          <div><span class="font-bold">{{ getJoueurById(match.joueur1_id)?.nom }}</span> - <span class="font-bold">{{ getJoueurById(match.joueur2_id)?.nom }}</span></div>
+          <div>
+            <span>{{ getNomStadeById(match.stade_id) }}</span>
+            <div>
+              <span class="font-bold">{{ getJoueurById(match.joueur1_id)?.nom }}</span>
+              -
+              <span class="font-bold">{{ getJoueurById(match.joueur2_id)?.nom }}</span>
+            </div>
+          </div>
           <UButton v-if="hasPerm" color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
                    @click="() => supprimerMatch(match)"/>
           <div v-else></div>
