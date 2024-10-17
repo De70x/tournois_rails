@@ -116,7 +116,7 @@ const edition = (item: any) => {
       </UForm>
     </div>
     <div class="flex gap-2">
-      <UCard v-for="item in items" :key="item.id" @dblclick="edition(item)" class="w-1/4">
+      <UCard v-for="item in items" :key="item.id" @dblclick="edition(item)">
         <div class="flex justify-between items-center">
           <UIcon v-if="item.icon" :name="item.icon" class="text-lg"/>
           <div v-else></div>
