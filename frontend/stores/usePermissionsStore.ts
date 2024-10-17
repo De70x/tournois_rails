@@ -6,7 +6,11 @@ export const usePermissionsStore = (api: Api) => {
   const fetchPermissions = async () => {
     const response = await api.get<string[]>('/user/permissions')
     if (response) {
-      permissions.value = response.data
+      if (response.data.length > 0) {
+        permissions.value = response.data
+      } else {
+        permissions.value = ['no_permissions']
+      }
     }
   }
 

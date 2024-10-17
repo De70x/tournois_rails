@@ -5,12 +5,15 @@ import {useJoueursStore} from "~/stores/useJoueursStore";
 import {type Joueur, JoueurTypes} from "~/types/Joueur";
 import {useModaleStore} from "~/stores/useModaleStore";
 import {usePoulesStore} from "~/stores/usePoulesStore";
+import {computedAsync} from "@vueuse/core";
+import {usePermissions} from "~/composables/usePermissions";
 
 const {$api} = useNuxtApp()
 const {tournoiActif} = useTournoisStore($api)
 const {getJoueursSansPoules, joueurs, createJoueur, deleteJoueur, editJoueur} = useJoueursStore($api)
 const {openModale, configModale} = useModaleStore()
 const {poules} = usePoulesStore($api)
+const {hasPermission} = usePermissions()
 
 const creationJoueurEnCours = ref(false)
 const formState = reactive({
@@ -50,10 +53,12 @@ const creationTerminee = async (event: FormSubmitEvent<Joueur>) => {
 }
 
 const editerJoueur = (joueur: Joueur) => {
-  formState.id = joueur.id!
-  formState.nom = joueur.nom
-  formState.poule_id = joueur.poule_id!
-  creationJoueurEnCours.value = true
+  if (hasPerm.value) {
+    formState.id = joueur.id!
+    formState.nom = joueur.nom
+    formState.poule_id = joueur.poule_id!
+    creationJoueurEnCours.value = true
+  }
 }
 
 const supprimerJoueur = async (joueur: Joueur) => {
@@ -84,21 +89,24 @@ const tirageAuSort = () => {
   }
 }
 
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
+
 </script>
 
 <template>
   <div>
     <div class="text-secondary italic">{{ nombreInscrits }} joueurs inscrits</div>
-    <UButton @click="creationJoueur" variant="outline">Créer un joueur</UButton>
+    <UButton v-if="hasPerm" @click="creationJoueur" variant="outline">Créer un joueur</UButton>
     <UForm v-if="creationJoueurEnCours" :state="formState" @submit="creationTerminee">
       <UInput v-model="formState.nom" :autofocus='true'></UInput>
       <UButton type="submit">Valider</UButton>
     </UForm>
     <div v-for="joueur in joueursSansPoule" @dblclick="editerJoueur(joueur)" class="flex items-center justify-between">
       <div class="truncate" :title="joueur.nom">{{ joueur.nom }}</div>
-      <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerJoueur(joueur)"/>
+      <UButton v-if="hasPerm" color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="supprimerJoueur(joueur)"/>
     </div>
-    <UButton v-if="joueursSansPoule.length > 0 && poules.length > 0" @click="tirageAuSort" variant="outline" color="red">Tirage au sort
+    <UButton v-if="joueursSansPoule.length > 0 && poules.length > 0 && hasPerm" @click="tirageAuSort" variant="outline"
+             color="red">Tirage au sort
     </UButton>
   </div>
 </template>

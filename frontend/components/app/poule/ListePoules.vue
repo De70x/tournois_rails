@@ -4,10 +4,12 @@ import type {FormSubmitEvent} from "#ui/types";
 import type {Joueur} from "~/types/Joueur";
 import {useTournoisStore} from "~/stores/useTournoisStore";
 import DetailPoule from "~/components/app/poule/DetailPoule.vue";
+import {computedAsync} from "@vueuse/core";
 
 const {$api} = useNuxtApp()
 const poulesStore = usePoulesStore($api)
 const tournoisStore = useTournoisStore($api)
+const {hasPermission} = usePermissions()
 const poules = computed(() => poulesStore.poules)
 
 const creationPouleEnCours = ref(false)
@@ -32,12 +34,14 @@ const creationTerminee = async (event: FormSubmitEvent<Partial<Joueur>>) => {
   creationPouleEnCours.value = false
 }
 
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
+
 </script>
 
 <template>
   <div>
-    <UButton @click="creationPoule" variant="outline" class="m-5">Créer une poule</UButton>
-    <UButton @click="navigateTo({name: 'Prepa_Phase_Finale'})">Générer les tableaux finaux</UButton>
+    <UButton v-if="hasPerm" @click="creationPoule" variant="outline" class="m-5">Créer une poule</UButton>
+    <UButton v-if="hasPerm"  @click="navigateTo({name: 'Prepa_Phase_Finale'})" class="m-5">Générer les tableaux finaux</UButton>
     <UForm v-if="creationPouleEnCours" :state="formState" @submit="creationTerminee">
       <UInput v-model="formState.nom"></UInput>
       <UButton type="submit">Valider</UButton>

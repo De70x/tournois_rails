@@ -2,6 +2,8 @@
 import {type Tournoi} from "~/types/Tournoi";
 import type {FormSubmitEvent} from "#ui/types";
 import {useTournoisStore} from "~/stores/useTournoisStore";
+import {computedAsync} from "@vueuse/core";
+import {usePermissionsStore} from "~/stores/usePermissionsStore";
 
 definePageMeta({
   name: 'Creation_Tournoi'
@@ -9,6 +11,7 @@ definePageMeta({
 
 const {$api} = useNuxtApp()
 const tournoisStore = useTournoisStore($api);
+const {hasPermission} = usePermissions()
 const annee = new Date().getFullYear()
 
 const state = reactive({
@@ -19,6 +22,9 @@ const handleSubmit = async (event: FormSubmitEvent<Tournoi>) => {
   await tournoisStore.createTournoi({...event.data, annee})
   await navigateTo({name: 'Liste_Tournois'});
 };
+
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
+
 </script>
 
 <template>
@@ -28,7 +34,7 @@ const handleSubmit = async (event: FormSubmitEvent<Tournoi>) => {
         <UFormGroup label="nom" name="nom">
           <UInput v-model="state.nom"/>
         </UFormGroup>
-        <UButton type="submit">
+        <UButton type="submit" v-if="hasPerm">
           Créer Tournoi
         </UButton>
       </UForm>
