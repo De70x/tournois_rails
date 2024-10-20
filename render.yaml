@@ -2,6 +2,7 @@ services:
   - type: web
     name: rails-api
     env: ruby
+    rootDir: backend
     buildCommand: bundle install && bundle exec rails db:migrate
     startCommand: bundle exec rails s
     envVars:
@@ -10,4 +11,14 @@ services:
       - key: RAILS_MASTER_KEY
         sync: false
       - key: FRONTEND_URL
+        sync: false
+
+  - type: web
+    name: nuxt-frontend
+    env: node
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: API_URL
         sync: false

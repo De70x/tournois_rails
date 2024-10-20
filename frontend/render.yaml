@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: nuxt-frontend
-    env: node
-    buildCommand: npm ci && npm run build
-    startCommand: npm run start
-    envVars:
-      - key: API_URL
-        sync: false
