@@ -24,9 +24,11 @@ const formState = reactive({
 })
 
 const editerPoule = (poule: Poule) => {
-  formState.id = poule.id!
-  formState.nom = poule.nom
-  creationPouleEnCours.value = true
+  if (hasPerm.value) {
+    formState.id = poule.id!
+    formState.nom = poule.nom
+    creationPouleEnCours.value = true
+  }
 }
 
 const creationTerminee = async (event: FormSubmitEvent<Partial<Poule>>) => {
@@ -74,7 +76,7 @@ const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
         </UForm>
         <div v-else @dblclick="editerPoule(poule)" class="flex items-center relative">
           <span class="flex-grow text-center">{{ poule.nom }}</span>
-          <UButton v-if="poule.joueurs.length === 0" color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
+          <UButton v-if="poule.joueurs.length === 0 && hasPerm" color="red" variant="ghost" icon="i-heroicons-trash-20-solid"
                    @click="supprimerPoule(poule)"
                    class="absolute right-0"/>
         </div>
@@ -82,9 +84,15 @@ const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
       </template>
       <ListeJoueursPoule :joueurs="poule.joueurs"/>
     </UCard>
-    <UButton v-if="resteDesMatchs && getStadesDisponibles.length > 0 && hasPerm" class="m-2" @click="creerMatch">Lancer un match</UButton>
-    <div v-else-if="!resteDesMatchs" class="italic text-red-500">Il n'y a plus de matchs à faire pour cette poule</div>
-    <div v-else-if="!(getStadesDisponibles.length > 0)" class="italic text-red-500">Il n'y a plus de stades disponibles</div>
+    <UButton v-if="resteDesMatchs && getStadesDisponibles.length > 0 && hasPerm" class="m-2" @click="creerMatch">Lancer
+      un match
+    </UButton>
+    <div v-else-if="!resteDesMatchs && hasPerm" class="italic text-red-500">Il n'y a plus de matchs à faire pour cette
+      poule
+    </div>
+    <div v-else-if="!(getStadesDisponibles.length > 0) && hasPerm" class="italic text-red-500">Il n'y a plus de stades
+      disponibles
+    </div>
   </div>
 </template>
 

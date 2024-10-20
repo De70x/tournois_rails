@@ -21,11 +21,11 @@ const isDark = computed({
   },
 });
 const horizontalLinks = computed(() => {
-  const dynamicLinks: HorizontalNavigationLink[] = [
+  let dynamicLinks: HorizontalNavigationLink[] = [
     {
       label: 'Accueil',
       icon: 'i-heroicons-home',
-      to: '/tournoi/liste'
+      to: '/',
     }
   ];
 
@@ -70,22 +70,40 @@ const horizontalLinks = computed(() => {
     });
   }
 
+  dynamicLinks = dynamicLinks.map(d => ({
+    ...d,
+    click: toggleMenu
+  }))
+
   return dynamicLinks;
 });
-const verticalLinks = [...horizontalLinks.value];
+const verticalLinks = computed(() => [...horizontalLinks.value]);
 </script>
 
 <template>
-  <UContainer class="w-full flex items-center justify-between">
-    <UButton @click="toggleMenu()" class="block md:hidden">
+  <UContainer class="w-full flex items-center justify-between relative">
+    <UButton @click="toggleMenu()" class="block md:hidden z-99" variant="ghost">
       <Icon :name="isMenuOpen ? 'pajamas:close' : 'pajamas:hamburger'" class="w-4 h-4 mt-1"/>
     </UButton>
     <div class="hidden md:flex">
       <UHorizontalNavigation :links="horizontalLinks"/>
     </div>
-    <div v-if="isMenuOpen" class="flex flex-col md:hidden absolute top-10 z-10 left-1/2 transform -translate-x-1/2 p-4 items-center">
-      <UVerticalNavigation :links="verticalLinks"/>
-    </div>
+    <Transition
+        enter-active-class="transition ease-out duration-300"
+        enter-from-class="transform -translate-x-full"
+        enter-to-class="transform translate-x-0"
+        leave-active-class="transition ease-in duration-300"
+        leave-from-class="transform translate-x-0"
+        leave-to-class="transform -translate-x-full"
+    >
+      <div v-if="isMenuOpen"
+           class="md:hidden fixed inset-y-0 left-0 z-50 min-w-64 bg-white shadow-lg overflow-y-auto">
+        <UButton @click="toggleMenu()" class="block md:hidden z-99" variant="ghost">
+          <Icon :name="isMenuOpen ? 'pajamas:close' : 'pajamas:hamburger'" class="w-4 h-4 mt-1"/>
+        </UButton>
+        <UVerticalNavigation :links="verticalLinks"/>
+      </div>
+    </Transition>
     <div class="flex items-center justify-center gap-2">
       <UToggle v-model="isDark" on-icon="i-heroicons-moon" off-icon="i-heroicons-sun" size="lg"/>
     </div>

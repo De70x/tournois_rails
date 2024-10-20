@@ -3,7 +3,7 @@
 
 <template>
   <div class="flex flex-col h-screen justify-between">
-    <header class="">
+    <header>
       <NavBar/>
     </header>
 
