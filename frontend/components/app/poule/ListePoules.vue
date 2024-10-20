@@ -46,8 +46,8 @@ const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
       <UInput v-model="formState.nom"></UInput>
       <UButton type="submit">Valider</UButton>
     </UForm>
-    <div class="grid grid-cols-2 gap-4 gap-y-14 w-full">
-      <DetailPoule v-for="poule in poules.value" :poule="poule"/>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-1 gap-y-2 lg:gap-4 lg:gap-y-14 w-full">
+      <DetailPoule v-for="poule in poules.value" :key="poule.id" :poule="poule"/>
     </div>
   </div>
 </template>

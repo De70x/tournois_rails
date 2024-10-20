@@ -61,7 +61,7 @@ const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
       @select="test"
   >
     <template #nom-data="{ row }">
-      <div class="truncate w-[200px]" :title="row.nom">
+      <div class="truncate w-[100px] lg:w-[200px]" :title="row.nom">
         {{ row.nom }}
       </div>
     </template>

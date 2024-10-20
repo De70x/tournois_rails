@@ -4,6 +4,7 @@ import {useMatchsStore} from "~/stores/useMatchsStore";
 import {type Match, MatchStatuses} from "~/types/Match";
 import {useJoueursStore} from "~/stores/useJoueursStore";
 import {useStadesStore} from "~/stores/useStadesStore";
+import {computedAsync} from "@vueuse/core";
 
 const props = defineProps<{
   tableau: number;
@@ -13,6 +14,8 @@ const {$api} = useNuxtApp()
 const {matchs, getMatchSuivant, editMatch, getByesNonTermines, getMatchsEnCours} = useMatchsStore($api)
 const {getJoueurById, joueurEnAttente, joueurFictif} = useJoueursStore($api)
 const {stades, getNomStadeById} = useStadesStore($api)
+const {hasPermission} = usePermissions()
+const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
 const modalMatch = ref<Match | null>(null);
 const modalStade = ref<Match | null>(null);
 
@@ -40,19 +43,23 @@ const dernierMatch = getMatchesByRound(rounds.value.length - 1)[0]
 superWinner.value = dernierMatch.statut === MatchStatuses.TERMINE ? dernierMatch.score_1 > dernierMatch.score_2 ? getJoueurById.value(dernierMatch.joueur1_id)?.nom : getJoueurById.value(dernierMatch.joueur2_id)?.nom : undefined
 
 const openModal = (match: Match) => {
-  if (match.statut === MatchStatuses.INIT && match.joueur1_id !== joueurEnAttente.value?.id && match.joueur2_id !== joueurEnAttente.value?.id) {
-    modalStade.value = match
-  }
-  if (match.statut === MatchStatuses.EN_COURS) {
-    modalMatch.value = match;
+  if (hasPerm.value) {
+    if (match.statut === MatchStatuses.INIT && match.joueur1_id !== joueurEnAttente.value?.id && match.joueur2_id !== joueurEnAttente.value?.id) {
+      modalStade.value = match
+    }
+    if (match.statut === MatchStatuses.EN_COURS) {
+      modalMatch.value = match;
+    }
   }
 };
 
 const editMatchModal = (match: Match, e: any) => {
   e.preventDefault()
-  const matchSuivant = getMatchSuivant.value(match)
-  if (matchSuivant?.statut === MatchStatuses.INIT && match.statut === MatchStatuses.TERMINE && match.joueur2_id !== joueurFictif.value?.id) {
-    modalMatch.value = match;
+  if (hasPerm.value) {
+    const matchSuivant = getMatchSuivant.value(match)
+    if (matchSuivant?.statut === MatchStatuses.INIT && match.statut === MatchStatuses.TERMINE && match.joueur2_id !== joueurFictif.value?.id) {
+      modalMatch.value = match;
+    }
   }
 }
 
@@ -83,6 +90,14 @@ const updateStade = () => {
 }
 
 const computedClass = (match: Match) => {
+
+  if (hasPerm.value) {
+    const matchSuivant = getMatchSuivant.value(match)
+    if (matchSuivant?.statut === MatchStatuses.INIT && match.statut === MatchStatuses.TERMINE && match.joueur2_id !== joueurFictif.value?.id) {
+      return 'italic border border-blue-500 cursor-pointer'
+    }
+  }
+
   switch (match.statut) {
     case MatchStatuses.INIT:
       if (match.joueur1_id === joueurEnAttente.value?.id || match.joueur2_id === joueurEnAttente.value?.id)
@@ -122,7 +137,10 @@ getByesNonTermines.value.forEach(m => {
            :class="computedClass(match)"
            @contextmenu="(e) => editMatchModal(match, e)"
       >
-        <div v-if="match.statut === MatchStatuses.EN_COURS">match en cours : {{ getNomStadeById(Number(match.stade_id)) }}</div>
+        <div v-if="match.statut === MatchStatuses.EN_COURS">match en cours : {{
+            getNomStadeById(Number(match.stade_id))
+          }}
+        </div>
         <div class="player">{{ getJoueurById(match.joueur1_id)?.nom }}</div>
         <div class="font-bold bg-gray-100 py-2">
           {{ match.score_1 }} - {{ match.score_2 }}

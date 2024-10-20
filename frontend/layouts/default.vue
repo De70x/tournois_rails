@@ -3,8 +3,8 @@
 
 <template>
   <div class="flex flex-col h-screen justify-between">
-    <header class="">
-      <Navigation/>
+    <header>
+      <NavBar/>
     </header>
 
     <main class="container mb-auto text-center mx-auto mt-4">
