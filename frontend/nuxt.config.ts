@@ -3,15 +3,19 @@ export default defineNuxtConfig({
   devtools: {enabled: true},
 
   runtimeConfig: {
-      public: {
-          BASE_URL: process.env.API_URL,
-      }
+    public: {
+      BASE_URL: process.env.API_URL,
+    }
   },
 
   modules: ['@nuxt/ui', '@nuxt/image', '@nuxtjs/tailwindcss'],
 
   tailwindcss: {
-      // Your Tailwind CSS configuration options (if any)
+    // Your Tailwind CSS configuration options (if any)
+  },
+
+  nitro: {
+    preset: 'node-server'
   },
 
   compatibilityDate: '2024-09-10'
