@@ -90,6 +90,14 @@ const updateStade = () => {
 }
 
 const computedClass = (match: Match) => {
+
+  if (hasPerm.value) {
+    const matchSuivant = getMatchSuivant.value(match)
+    if (matchSuivant?.statut === MatchStatuses.INIT && match.statut === MatchStatuses.TERMINE && match.joueur2_id !== joueurFictif.value?.id) {
+      return 'italic border border-blue-500 cursor-pointer'
+    }
+  }
+
   switch (match.statut) {
     case MatchStatuses.INIT:
       if (match.joueur1_id === joueurEnAttente.value?.id || match.joueur2_id === joueurEnAttente.value?.id)
