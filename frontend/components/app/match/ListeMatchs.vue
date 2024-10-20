@@ -52,8 +52,8 @@ const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
 </script>
 
 <template>
-  Matchs joués
-  <div class="grid grid-cols-3 gap-2">
+  Liste des Matchs
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
     <UCard v-for="match in matchs">
       <template #header>
         <div class="flex items-center justify-between">
@@ -61,7 +61,7 @@ const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
                    @click="() => editerMatch(match)"/>
           <div v-else></div>
           <div>
-            <span>{{ getNomStadeById(match.stade_id) }}</span>
+            <span v-if="match.statut === MatchStatuses.EN_COURS">En cours : {{ getNomStadeById(match.stade_id) }}</span>
             <div>
               <span class="font-bold">{{ getJoueurById(match.joueur1_id)?.nom }}</span>
               -

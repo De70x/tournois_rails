@@ -67,7 +67,7 @@ const hasPerm = computedAsync(async () => await hasPermission('edit'), false)
 
 <template>
   <div>
-    <UCard :key="poule.id" class="w-full h-full">
+    <UCard :key="poule.id" class="w-full h-full" :ui="{header:{ background: 'bg-primary-400'}}">
       <template #header>
         <UForm v-if="creationPouleEnCours" :state="formState" @submit="creationTerminee"
                class="flex gap-2 justify-center">
