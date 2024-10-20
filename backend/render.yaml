@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: rails-api
+    env: ruby
+    buildCommand: bundle install && bundle exec rails db:migrate
+    startCommand: bundle exec rails s
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
